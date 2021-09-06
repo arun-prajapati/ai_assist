@@ -5,10 +5,11 @@ import {
 } from "../../helpers/errors/custom-error";
 import Users from "../../models/user.model";
 import Tokens from "../../models/token.model";
-import { encrypt, handleResponse } from "../../helpers/utility";
+import { handleResponse } from "../../helpers/utility";
 import { logger, level } from "../../config/logger/logger";
 import * as Usersrv from "../../services/user/user.service";
 import { createTokens } from "../../helpers/jwt_auth/jwt_auth";
+
 export const userLogin = async (req, res, next) => {
   logger.log(level.info, `>> Controller: userLogin()`);
   let body = req.body;
