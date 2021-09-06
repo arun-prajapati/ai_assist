@@ -34,6 +34,10 @@ export default class SchemaModel {
     const dbOperation = await this.model.countDocuments(query);
     return dbOperation;
   }
+  async findOneDocument(query) {
+    const dbOperation = await this.model.findOne(query);
+    return dbOperation;
+  }
 
   async updateData(query, updateJson, opts) {
     const option = {
