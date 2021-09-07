@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { CONSTANTS as SYSTEM_CONSTANTS } from "../../constants/system/system";
 import Devices from "../../models/device.model";
 export const validate = (method) => {
@@ -19,6 +19,18 @@ export const validate = (method) => {
       ];
       break;
     }
+    case SYSTEM_CONSTANTS.GET_SINGLE_DEVICE: {
+      error = [param("deviceId").custom(deviceExist)];
+      break;
+    }
+    case SYSTEM_CONSTANTS.REMOVE_SINGLE_DEVICE: {
+      error = [param("deviceId").custom(deviceExist)];
+      break;
+    }
+    case SYSTEM_CONSTANTS.UPDATE_SINGLE_DEVICE: {
+      error = [param("deviceId").custom(deviceExist)];
+      break;
+    }
   }
   return error;
 };
@@ -32,5 +44,11 @@ export const verifyPumpMacAddress = async (value) => {
 export const verifyValveMacAddress = async (value) => {
   let valveMacExist = await Devices.findOneDocument({ vmac: value });
   if (valveMacExist) throw new Error("This valve mac already exist");
+  return value;
+};
+
+export const deviceExist = async (value) => {
+  let deviceExist = await Devices.findOneDocument({ _id: value });
+  if (!deviceExist) throw new Error("This device does not exist");
   return value;
 };

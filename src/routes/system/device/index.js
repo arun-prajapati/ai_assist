@@ -24,8 +24,26 @@ routes
 
 routes
   .route(PATH.DEVICEID)
-  .get(DeviceCtrl.getSingleDevice)
-  .delete(DeviceCtrl.removeDevice)
-  .patch(DeviceCtrl.updateDevice);
+  .get(
+    [
+      DeviceValidate(SYSTEM_CONSTANTS.GET_SINGLE_DEVICE),
+      ErrorMiddleware.ExpressValidatorError,
+    ],
+    DeviceCtrl.getSingleDevice
+  )
+  .delete(
+    [
+      DeviceValidate(SYSTEM_CONSTANTS.REMOVE_SINGLE_DEVICE),
+      ErrorMiddleware.ExpressValidatorError,
+    ],
+    DeviceCtrl.removeDevice
+  )
+  .patch(
+    [
+      DeviceValidate(SYSTEM_CONSTANTS.UPDATE_SINGLE_DEVICE),
+      ErrorMiddleware.ExpressValidatorError,
+    ],
+    DeviceCtrl.updateDevice
+  );
 
 export default routes;
