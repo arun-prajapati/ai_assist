@@ -15,7 +15,7 @@ export const validate = (method) => {
           .not()
           .isEmpty()
           .custom(verifyValveMacAddress),
-        body("thresold", "Please enter thresold value").not().isEmpty(),
+        body("threshold", "Please enter thresold value").not().isEmpty(),
       ];
       break;
     }
