@@ -2,7 +2,7 @@ import moment from "moment-timezone";
 import { logger, level } from "../../config/logger/logger";
 import Devices from "../../models/device.model";
 import { mqttClient } from "../../config/mqtt/mqtt";
-import { getHAXValue } from "../../helpers/utility";
+import { getHAXValue, getDecimalValue } from "../../helpers/utility";
 
 const START_DELIMETER = "AAAA";
 const END_DELIMETER = "5555";
@@ -112,7 +112,10 @@ export const PUMP_STATUS = async (macId, payload) => {
           {
             pmac: macId,
           },
-          { pumpCurrentstate: false }
+          {
+            pumpCurrentstate: false,
+            pumpLastUpdated: moment().format(),
+          }
         );
       } else if (state === "01") {
         // pump ON
@@ -120,7 +123,10 @@ export const PUMP_STATUS = async (macId, payload) => {
           {
             pmac: macId,
           },
-          { pumpCurrentstate: true }
+          {
+            pumpCurrentstate: true,
+            pumpLastUpdated: moment().format(),
+          }
         );
       }
     }
@@ -134,10 +140,11 @@ const getStatusOfDeviceFA04 = (payload) => {
   return state;
 };
 
-//todo add thresold date if payload update
 export const VALVE_STATUS = async (macId, payload) => {
   try {
-    let state = getStatusOfDeviceFA05(payload);
+    let { state, threshold } = getStatusAndThresholdOfDeviceFA05(payload);
+    //! convert threshold hax in to decimal
+    threshold = getDecimalValue(threshold);
     let deviceExist = await Devices.isExist({ vmac: macId });
     if (deviceExist) {
       if (state === "00") {
@@ -146,7 +153,11 @@ export const VALVE_STATUS = async (macId, payload) => {
           {
             vmac: macId,
           },
-          { valveCurrentstate: false }
+          {
+            valveCurrentstate: false,
+            threshold,
+            valveLastUpdated: moment().format(),
+          }
         );
       } else if (state === "01") {
         // valve ON
@@ -154,7 +165,11 @@ export const VALVE_STATUS = async (macId, payload) => {
           {
             vmac: macId,
           },
-          { valveCurrentstate: true }
+          {
+            valveCurrentstate: true,
+            threshold,
+            valveLastUpdated: moment().format(),
+          }
         );
       }
     }
@@ -163,7 +178,9 @@ export const VALVE_STATUS = async (macId, payload) => {
   }
 };
 
-const getStatusOfDeviceFA05 = (payload) => {
+const getStatusAndThresholdOfDeviceFA05 = (payload) => {
   let state = payload.slice(2, 4);
-  return state;
+  let threshold = payload.slice(4);
+  let data = { state, threshold };
+  return data;
 };

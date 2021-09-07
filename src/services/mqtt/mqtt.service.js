@@ -24,9 +24,11 @@ const extractDataOBJ = (data) => {
 export const handleMQTTData = async (macId, data) => {
   try {
     let { msgId, payload } = extractDataOBJ(data);
-    logger.log(level.info, `data: ${JSON.stringify({ macId, msgId, payload })}`);
+    logger.log(
+      level.info,
+      `data: ${JSON.stringify({ macId, msgId, payload })}`
+    );
 
-    // console.log({ macId, msgId, payload }); //! Remove
     switch (msgId) {
       case MESSAGE.FA01: {
         HR.DEVICE_CONNECTION(macId, msgId, payload);
