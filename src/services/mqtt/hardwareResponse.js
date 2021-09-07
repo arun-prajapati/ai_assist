@@ -3,6 +3,7 @@ import { logger, level } from "../../config/logger/logger";
 import Devices from "../../models/device.model";
 import { mqttClient } from "../../config/mqtt/mqtt";
 import { getHAXValue, getDecimalValue } from "../../helpers/utility";
+import { CONSTANTS as MESSAGE } from "../../constants/messages/messageId";
 
 const START_DELIMETER = "AAAA";
 const END_DELIMETER = "5555";
@@ -183,4 +184,22 @@ const getStatusAndThresholdOfDeviceFA05 = (payload) => {
   let threshold = payload.slice(4);
   let data = { state, threshold };
   return data;
+};
+
+//! When Schedule updated byb api
+export const publishScheduleMSG = (deviceData, startDate, endDate) => {
+  try {
+    let msgId = MESSAGE.FA03;
+    const FA03payload = createFA03payload(msgId, startDate, endDate);
+    let PUMP_MAC = deviceData.pmac;
+    let VALVE_MAC = deviceData.vmac;
+    var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, PUMP_MAC);
+    var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, VALVE_MAC);
+    mqttClient.publish(PUMP_TOPIC, FA03payload);
+    mqttClient.publish(VALVE_TOPIC, FA03payload);
+    return true;
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+  return true;
 };
