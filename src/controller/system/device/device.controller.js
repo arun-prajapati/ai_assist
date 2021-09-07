@@ -10,6 +10,7 @@ import {
 //import * as DeviceSrv from "../../../services/system/device/device.service";
 import { logger, level } from "../../../config/logger/logger";
 import Devices from "../../../models/device.model";
+import { publishScheduleMSG } from "../../../services/mqtt/hardwareResponse";
 export const createDevice = async (req, res, next) => {
   logger.log(level.info, `✔ Controller createDevice()`);
   try {
@@ -68,38 +69,30 @@ export const updateDevice = async (req, res, next) => {
     let {
       name,
       location,
-      pstate,
-      vstate,
       operationMode,
       threshold,
       lineSize,
       pipeSize,
-      typeOfSchedule,
       startDate,
       endDate,
-      pumpCurrentstate,
-      pumpLastUpdated,
-      valveCurrentstate,
-      valveLastUpdated,
     } = req.body;
     let updateDeviceObject = {
       name,
       location,
-      pstate,
-      vstate,
       operationMode,
       threshold,
       lineSize,
       pipeSize,
-      typeOfSchedule,
       startDate,
       endDate,
-      pumpCurrentstate,
-      pumpLastUpdated,
-      valveCurrentstate,
-      valveLastUpdated,
     };
-    Devices.updateData({ _id: req.params.deviceId }, updateDeviceObject);
+    let updateDevice = await Devices.updateData(
+      { _id: req.params.deviceId },
+      updateDeviceObject
+    );
+    if (startDate && endDate) {
+      publishScheduleMSG(updateDevice, startDate, endDate);
+    }
     let dataObject = { message: "Device Updated succesfully" };
     return handleResponse(res, dataObject);
   } catch (e) {

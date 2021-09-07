@@ -5,10 +5,12 @@ import { validate as DeviceValidate } from "../../../validator/device/device.val
 import { CONSTANTS as SYSTEM_CONSTANTS } from "../../../constants/system/system";
 //import { AuthMiddleware } from "../../../middleware/authMiddleware";
 const routes = new Router();
+
 const PATH = {
   ROOT: "/",
   DEVICEID: "/:deviceId",
 };
+
 routes
   .route(PATH.ROOT)
   .post(
@@ -19,6 +21,7 @@ routes
     DeviceCtrl.createDevice
   )
   .get(DeviceCtrl.getDevices);
+
 routes
   .route(PATH.DEVICEID)
   .get(DeviceCtrl.getSingleDevice)
