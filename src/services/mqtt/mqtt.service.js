@@ -24,7 +24,7 @@ export const handleMQTTData = async (macId, data) => {
   let { msgId, payload } = extractDataOBJ(data);
   switch (msgId) {
     case MESSAGE.FA01: {
-      HR.DEVICE_CONNECTION(macId, payload);
+      HR.DEVICE_CONNECTION(macId, msgId, payload);
       break;
     }
   }
