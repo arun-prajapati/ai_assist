@@ -7,7 +7,16 @@ import * as DeviceCtrl from "../../../controller/system/device/device.controller
 const routes = new Router();
 const PATH = {
   ROOT: "/",
+  DEVICEID: "/:deviceId",
 };
-routes.route(PATH.ROOT).post(DeviceCtrl.createDevice);
+routes
+  .route(PATH.ROOT)
+  .post(DeviceCtrl.createDevice)
+  .get(DeviceCtrl.getDevices);
+routes
+  .route(PATH.DEVICEID)
+  .get(DeviceCtrl.getSingleDevice)
+  .delete(DeviceCtrl.removeDevice)
+  .patch(DeviceCtrl.updateDevice);
 
 export default routes;
