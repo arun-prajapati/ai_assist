@@ -1,4 +1,4 @@
-import { body, param } from "express-validator";
+import { body } from "express-validator";
 import { CONSTANTS as SYSTEM_CONSTANTS } from "../../constants/system/system";
 import Devices from "../../models/device.model";
 export const validate = (method) => {
@@ -19,29 +19,18 @@ export const validate = (method) => {
       ];
       break;
     }
-    case SYSTEM_CONSTANTS.GET_SINGLE_DEVICE: {
-      error = [param("deviceId").custom(bmsExist)];
-      break;
-    }
   }
   return error;
 };
+
 export const verifyPumpMacAddress = async (value) => {
   let pumpMacExist = await Devices.findOneDocument({ pmac: value });
   if (pumpMacExist) throw new Error("This pump mac already exist");
   return value;
 };
+
 export const verifyValveMacAddress = async (value) => {
   let valveMacExist = await Devices.findOneDocument({ vmac: value });
   if (valveMacExist) throw new Error("This valve mac already exist");
-  return value;
-};
-export const bmsExist = async (value) => {
-  let bmsExist = await UserSrv.getSingleBmsData({
-    where: {
-      id: value,
-    },
-  });
-  if (!bmsExist) throw new Error("This device is not found.");
   return value;
 };
