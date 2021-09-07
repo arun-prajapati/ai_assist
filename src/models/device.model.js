@@ -10,27 +10,26 @@ const schema = {
     type: String,
     trim: true,
     required: true,
+    unique: true,
   },
   vmac: {
     type: String,
     trim: true,
     required: true,
+    unique: true,
   },
   location: {
-    type: String,
-    trim: true,
-    required: true,
+    type: [Number],
+    default: [0, 0],
   },
   pstate: {
     type: Number,
-    min: 0,
-    max: 2,
+    enum: [0, 1, 2],
     default: 0,
   },
   vstate: {
     type: Number,
-    min: 0,
-    max: 2,
+    enum: [0, 1, 2],
     default: 0,
   },
   operationMode: {
@@ -39,14 +38,16 @@ const schema = {
     default: "manual",
   },
   threshold: {
-    type: String,
-    trim: true,
+    type: Number,
+    default: null,
   },
   lineSize: {
     type: Number,
+    default: null,
   },
   pipeSize: {
     type: Number,
+    default: null,
   },
   typeOfSchedule: {
     type: String,
@@ -54,26 +55,23 @@ const schema = {
   },
   startDate: {
     type: Date,
-    trim: true,
   },
   endDate: {
     type: Date,
-    trim: true,
   },
   pumpCurrentstate: {
     type: Boolean,
+    default: false,
   },
   pumpLastUpdated: {
     type: Date,
-    trim: true,
   },
   valveCurrentstate: {
     type: Boolean,
-    trim: true,
+    default: false,
   },
   valveLastUpdated: {
     type: Date,
-    trim: true,
   },
 };
 
