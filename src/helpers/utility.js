@@ -68,3 +68,15 @@ export const checkLeapYear = (year) => {
   const isLeapYear = year % 100 === 0 ? year % 400 === 0 : year % 4 === 0;
   return isLeapYear;
 };
+
+export const getHAXValue = (value) => {
+  let number = value;
+  let hexStr = number.toString(16).toUpperCase().padStart(8, "0");
+  return hexStr;
+};
+
+export const getDecimalValue = (haxValue) => {
+  // haxValue = '0000001E';
+  let decimalValue = parseInt(haxValue, 16);
+  return decimalValue;
+};

@@ -2,6 +2,7 @@ import { logger, level } from "../../config/logger/logger";
 import Devices from "../../models/device.model";
 import moment from "moment-timezone";
 import { mqttClient } from "../../config/mqtt/mqtt";
+import { getHAXValue } from "../../helpers/utility";
 
 const START_DELIMETER = "AAAA";
 const END_DELIMETER = "5555";
@@ -94,8 +95,6 @@ const updateDeviceStatus = async (recievedMACId, pmac, vmac) => {
   }
 };
 
-const getHAXValue = (value) => {
-  let number = value;
-  let hexStr = number.toString(16).toUpperCase().padStart(8, "0");
-  return hexStr;
-};
+// export const PUMP_STATUS = (macId, msgId, payload) => {
+
+// };
