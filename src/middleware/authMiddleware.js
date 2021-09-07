@@ -3,7 +3,8 @@ import {
   UnauthorizationError,
 } from "../helpers/errors/custom-error";
 import * as JWT from "../helpers/jwt_auth/jwt_auth";
-import { Roles /*Users*/ } from "../models/index";
+//import { Roles /*Users*/ } from "../models/index";
+import Users from "../models/user.model";
 import { CONSTANTS as USER_STATUS } from "../constants/status/userStatus";
 import * as UserSrv from "../services/user/user.service";
 
@@ -34,7 +35,7 @@ export const AuthMiddleware = async (req, res, next) => {
             },
           ],
         };
-
+        await Users.findOneDocument({ _id });
         let userData = await UserSrv.userData(filter);
 
         if (userData && userData.status === USER_STATUS.ACTIVE) {
