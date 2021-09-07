@@ -1,6 +1,6 @@
+import moment from "moment-timezone";
 import { logger, level } from "../../config/logger/logger";
 import Devices from "../../models/device.model";
-import moment from "moment-timezone";
 import { mqttClient } from "../../config/mqtt/mqtt";
 import { getHAXValue } from "../../helpers/utility";
 
@@ -10,44 +10,50 @@ const REPLACE_DELIMETER = "*";
 const CLOUD_TO_ESP_TOPIC = process.env.CLOUD_TO_ESP || "SensieTech/*/c2f";
 
 export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
-  logger.log(level.info, `data : ${payload}${macId}`); //!remove log
-  const recievedMACId = macId;
-  let state = getStatusOfDevice(payload);
-  // device online if state is '01'
-  //! if 01 then only proceed frther otherwise if 00 do nothing
-  if (state === "01") {
-    // await Devices.createData(req.body);
-    //! get doc from DB using that mac if not exist then do nothing
-    let device = await Devices.findOneDocument({
-      $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
-    });
+  try {
+    const recievedMACId = macId;
+    let state = getStatusOfDeviceFA01(payload);
+    // device online if state is '01'
+    //! if 01 then only proceed frther otherwise if 00 do nothing
+    if (state === "01") {
+      // await Devices.createData(req.body);
+      //! get doc from DB using that mac if not exist then do nothing
+      let device = await Devices.findOneDocument({
+        $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+      });
 
-    if (device) {
-      let { pmac, vmac, startDate, endDate, threshold } = device;
-      //! update either pstate or vstate to 1
-      updateDeviceStatus(recievedMACId, pmac, vmac);
+      if (device) {
+        let { pmac, vmac, startDate, endDate, threshold } = device;
+        //! update either pstate or vstate to 1
+        updateDeviceStatus(recievedMACId, pmac, vmac);
 
-      // from macId get pump and valve id
+        // from macId get pump and valve id
 
-      let PUMP_MAC = pmac; //pmac
-      let VALVE_MAC = vmac;
+        let PUMP_MAC = pmac; //pmac
+        let VALVE_MAC = vmac;
 
-      var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, PUMP_MAC);
-      var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(
-        REPLACE_DELIMETER,
-        VALVE_MAC
-      );
+        var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(
+          REPLACE_DELIMETER,
+          PUMP_MAC
+        );
+        var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(
+          REPLACE_DELIMETER,
+          VALVE_MAC
+        );
 
-      const FA02payload = createFA02payload(msgId, pmac, vmac, threshold);
-      const FA03payload = createFA03payload(msgId, startDate, endDate);
+        const FA02payload = createFA02payload(msgId, pmac, vmac, threshold);
+        const FA03payload = createFA03payload(msgId, startDate, endDate);
 
-      //! for pump send FA02,FA03
-      mqttClient.publish(PUMP_TOPIC, FA02payload);
-      mqttClient.publish(PUMP_TOPIC, FA03payload);
-      //! for valve send FA02,FA03
-      mqttClient.publish(VALVE_TOPIC, FA02payload);
-      mqttClient.publish(VALVE_TOPIC, FA03payload);
+        //! for pump send FA02,FA03
+        mqttClient.publish(PUMP_TOPIC, FA02payload);
+        mqttClient.publish(PUMP_TOPIC, FA03payload);
+        //! for valve send FA02,FA03
+        mqttClient.publish(VALVE_TOPIC, FA02payload);
+        mqttClient.publish(VALVE_TOPIC, FA03payload);
+      }
     }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
   }
 };
 
@@ -70,8 +76,8 @@ const createFA03payload = (msgId, start, end) => {
   return FA03payload;
 };
 
-const getStatusOfDevice = (payload) => {
-  let state = payload.slice(2);
+const getStatusOfDeviceFA01 = (payload) => {
+  let state = payload.slice(2, 4);
   return state;
 };
 
@@ -95,6 +101,69 @@ const updateDeviceStatus = async (recievedMACId, pmac, vmac) => {
   }
 };
 
-// export const PUMP_STATUS = (macId, msgId, payload) => {
+export const PUMP_STATUS = async (macId, payload) => {
+  try {
+    let state = getStatusOfDeviceFA04(payload);
+    let deviceExist = await Devices.isExist({ pmac: macId });
+    if (deviceExist) {
+      if (state === "00") {
+        //  pump OFF
+        await Devices.updateData(
+          {
+            pmac: macId,
+          },
+          { pumpCurrentstate: false }
+        );
+      } else if (state === "01") {
+        // pump ON
+        await Devices.updateData(
+          {
+            pmac: macId,
+          },
+          { pumpCurrentstate: true }
+        );
+      }
+    }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
 
-// };
+const getStatusOfDeviceFA04 = (payload) => {
+  let state = payload.slice(2, 4);
+  return state;
+};
+
+//todo add thresold date if payload update
+export const VALVE_STATUS = async (macId, payload) => {
+  try {
+    let state = getStatusOfDeviceFA05(payload);
+    let deviceExist = await Devices.isExist({ vmac: macId });
+    if (deviceExist) {
+      if (state === "00") {
+        //  valve OFF
+        await Devices.updateData(
+          {
+            vmac: macId,
+          },
+          { valveCurrentstate: false }
+        );
+      } else if (state === "01") {
+        // valve ON
+        await Devices.updateData(
+          {
+            vmac: macId,
+          },
+          { valveCurrentstate: true }
+        );
+      }
+    }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
+
+const getStatusOfDeviceFA05 = (payload) => {
+  let state = payload.slice(2, 4);
+  return state;
+};

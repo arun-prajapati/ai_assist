@@ -3,4 +3,5 @@ export const CONSTANTS = {
   FA02: "FA02",
   FA03: "FA03",
   FA04: "FA04",
+  FA05: "FA05",
 };

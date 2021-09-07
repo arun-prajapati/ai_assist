@@ -1,4 +1,5 @@
 import { CONSTANTS as MESSAGE } from "../../constants/messages/messageId";
+import { logger, level } from "../../config/logger/logger";
 import * as HR from "./hardwareResponse";
 
 const START_DELIMETER = "AAAA";
@@ -21,16 +22,28 @@ const extractDataOBJ = (data) => {
 };
 
 export const handleMQTTData = async (macId, data) => {
-  let { msgId, payload } = extractDataOBJ(data);
-  switch (msgId) {
-    case MESSAGE.FA01: {
-      HR.DEVICE_CONNECTION(macId, msgId, payload);
-      break;
+  try {
+    let { msgId, payload } = extractDataOBJ(data);
+    logger.log(level.info, `data: ${JSON.stringify({ macId, msgId, payload })}`);
+
+    // console.log({ macId, msgId, payload }); //! Remove
+    switch (msgId) {
+      case MESSAGE.FA01: {
+        HR.DEVICE_CONNECTION(macId, msgId, payload);
+        break;
+      }
+
+      case MESSAGE.FA04: {
+        HR.PUMP_STATUS(macId, payload);
+        break;
+      }
+
+      case MESSAGE.FA05: {
+        HR.VALVE_STATUS(macId, payload);
+        break;
+      }
     }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
   }
 };
-
-//! split payload using AAAA
-//! take [1] element and extract First 4 character which will give something like this FA01
-//! now we got msgId so for particullar msgId we will create function
-//! this functions will based on msgId extract values from payload
