@@ -58,6 +58,8 @@ const schema = {
   endDate: {
     type: Date,
   },
+  startTime: String,
+  endTime: String,
   pumpCurrentstate: {
     type: Boolean,
     default: false,

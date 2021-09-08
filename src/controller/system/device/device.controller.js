@@ -10,11 +10,21 @@ import {
 //import * as DeviceSrv from "../../../services/system/device/device.service";
 import { logger, level } from "../../../config/logger/logger";
 import Devices from "../../../models/device.model";
-import { publishScheduleMSG } from "../../../services/mqtt/hardwareResponse";
+import {
+  getHHMMSS,
+  publishScheduleMSG,
+} from "../../../services/mqtt/hardwareResponse";
+
 export const createDevice = async (req, res, next) => {
   logger.log(level.info, `✔ Controller createDevice()`);
+  let body = req.body;
   try {
-    await Devices.createData(req.body);
+    if (body.startTime || body.endTime) {
+      body.startTime = body.startTime ? getHHMMSS(body.startTime) : undefined;
+      body.endTime = body.endTime ? getHHMMSS(body.endTime) : undefined;
+    }
+
+    await Devices.createData(body);
     let dataObject = { message: "Device created succesfully" };
     return handleResponse(res, dataObject);
   } catch (e) {
@@ -23,6 +33,7 @@ export const createDevice = async (req, res, next) => {
     return next(new InternalServerError());
   }
 };
+
 export const getDevices = async (req, res, next) => {
   logger.log(level.info, `✔ Controller getDevices()`);
   try {
@@ -39,6 +50,7 @@ export const getDevices = async (req, res, next) => {
     return next(new InternalServerError());
   }
 };
+
 export const getSingleDevice = async (req, res, next) => {
   logger.log(level.info, `✔ Controller getSingleDevice()`);
   try {
@@ -51,6 +63,7 @@ export const getSingleDevice = async (req, res, next) => {
     return next(new InternalServerError());
   }
 };
+
 export const removeDevice = async (req, res, next) => {
   logger.log(level.info, `✔ Controller removeDevice()`);
   try {
@@ -63,6 +76,7 @@ export const removeDevice = async (req, res, next) => {
     return next(new InternalServerError());
   }
 };
+
 export const updateDevice = async (req, res, next) => {
   logger.log(level.info, `>> Controller: updateDevice()`);
   try {
@@ -75,6 +89,8 @@ export const updateDevice = async (req, res, next) => {
       pipeSize,
       startDate,
       endDate,
+      startTime,
+      endTime,
     } = req.body;
     let updateDeviceObject = {
       name,
@@ -83,15 +99,27 @@ export const updateDevice = async (req, res, next) => {
       threshold,
       lineSize,
       pipeSize,
-      startDate,
-      endDate,
     };
+
+    let scheduleCondt = startDate || endDate || startTime || endTime;
+
+    if (scheduleCondt) {
+      updateDeviceObject = {
+        ...updateDeviceObject,
+        startDate,
+        endDate,
+        startTime: startTime ? getHHMMSS(startTime) : undefined,
+        endTime: endTime ? getHHMMSS(startTime) : undefined,
+      };
+    }
+
     let updateDevice = await Devices.updateData(
       { _id: req.params.deviceId },
       updateDeviceObject
     );
-    if (startDate && endDate) {
-      publishScheduleMSG(updateDevice, startDate, endDate);
+
+    if (scheduleCondt) {
+      publishScheduleMSG(updateDevice, startDate, endDate, startTime, endTime);
     }
     let dataObject = { message: "Device Updated succesfully" };
     return handleResponse(res, dataObject);

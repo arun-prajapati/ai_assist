@@ -24,7 +24,8 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
       });
 
       if (device) {
-        let { pmac, vmac, startDate, endDate, threshold } = device;
+        let { pmac, vmac, startDate, endDate, threshold, startTime, endTime } =
+          device;
         //! update either pstate or vstate to 1
         updateDeviceStatus(recievedMACId, pmac, vmac);
 
@@ -43,7 +44,13 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
         );
 
         const FA02payload = createFA02payload(msgId, pmac, vmac, threshold);
-        const FA03payload = createFA03payload(msgId, startDate, endDate);
+        const FA03payload = createFA03payload(
+          msgId,
+          startDate,
+          endDate,
+          startTime,
+          endTime
+        );
 
         //! for pump send FA02,FA03
         mqttClient.publish(PUMP_TOPIC, FA02payload);
@@ -66,15 +73,20 @@ const createFA02payload = (msgId, pmac, vmac, threshold) => {
   return FA02payload;
 };
 
-const createFA03payload = (msgId, start, end) => {
+const createFA03payload = (msgId, start, end, startTime, endTime) => {
   // AAAAFA030E24082021270820210206550406505555
   let payloadDataLength = "0E";
   let startDate = moment(start).format("DDMMYYYY");
   let endDate = moment(end).format("DDMMYYYY");
-  let startTime = moment(start).tz("Asia/Calcutta").format("HHmmss");
-  let endTime = moment(end).tz("Asia/Calcutta").format("HHmmss");
+  startTime = getHHMMSS(startTime);
+  endTime = getHHMMSS(endTime);
   let FA03payload = `${START_DELIMETER}${msgId}${payloadDataLength}${startDate}${endDate}${startTime}${endTime}${END_DELIMETER}`;
   return FA03payload;
+};
+
+export const getHHMMSS = (timeData) => {
+  const formatTime = timeData.split(":").join("");
+  return formatTime;
 };
 
 const getStatusOfDeviceFA01 = (payload) => {
@@ -125,7 +137,7 @@ export const PUMP_STATUS = async (macId, payload) => {
             pmac: macId,
           },
           {
-            pstate:1, //! this will make sure that when pump is on our pump controller is also online
+            pstate: 1, //! this will make sure that when pump is on our pump controller is also online
             pumpCurrentstate: true,
             pumpLastUpdated: moment().format(),
           }
@@ -169,7 +181,7 @@ export const VALVE_STATUS = async (macId, payload) => {
             vmac: macId,
           },
           {
-            vstate:1, //! this will make sure that when valve is on our valve controller is also online
+            vstate: 1, //! this will make sure that when valve is on our valve controller is also online
             valveCurrentstate: true,
             totaliser_current_value,
             valveLastUpdated: moment().format(),
@@ -190,10 +202,22 @@ const getStatusAndThresholdOfDeviceFA05 = (payload) => {
 };
 
 //! When Schedule updated byb api
-export const publishScheduleMSG = (deviceData, startDate, endDate) => {
+export const publishScheduleMSG = (
+  deviceData,
+  startDate,
+  endDate,
+  startTime,
+  endTime
+) => {
   try {
     let msgId = MESSAGE.FA03;
-    const FA03payload = createFA03payload(msgId, startDate, endDate);
+    const FA03payload = createFA03payload(
+      msgId,
+      startDate,
+      endDate,
+      startTime,
+      endTime
+    );
     let PUMP_MAC = deviceData.pmac;
     let VALVE_MAC = deviceData.vmac;
     var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, PUMP_MAC);
