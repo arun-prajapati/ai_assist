@@ -1,6 +1,8 @@
 import app from "./app";
 import "./config/database/mongodb";
 import "./mqtt/pubSub";
+import './cron-jobs';
+
 import { logger, level } from "./config/logger/logger";
 
 const PORT = process.env.PORT || 3000;

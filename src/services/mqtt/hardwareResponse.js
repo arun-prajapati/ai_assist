@@ -125,6 +125,7 @@ export const PUMP_STATUS = async (macId, payload) => {
             pmac: macId,
           },
           {
+            pstate:1, //! this will make sure that when pump is on our pump controller is also online
             pumpCurrentstate: true,
             pumpLastUpdated: moment().format(),
           }
@@ -143,7 +144,8 @@ const getStatusOfDeviceFA04 = (payload) => {
 
 export const VALVE_STATUS = async (macId, payload) => {
   try {
-    let { state, totaliser_current_value } = getStatusAndThresholdOfDeviceFA05(payload);
+    let { state, totaliser_current_value } =
+      getStatusAndThresholdOfDeviceFA05(payload);
     //! convert threshold hax in to decimal
     totaliser_current_value = getDecimalValue(totaliser_current_value);
     let deviceExist = await Devices.isExist({ vmac: macId });
@@ -167,6 +169,7 @@ export const VALVE_STATUS = async (macId, payload) => {
             vmac: macId,
           },
           {
+            vstate:1, //! this will make sure that when valve is on our valve controller is also online
             valveCurrentstate: true,
             totaliser_current_value,
             valveLastUpdated: moment().format(),
