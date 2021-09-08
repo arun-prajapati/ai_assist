@@ -109,7 +109,7 @@ export const updateDevice = async (req, res, next) => {
         startDate,
         endDate,
         startTime: startTime ? getHHMMSS(startTime) : undefined,
-        endTime: endTime ? getHHMMSS(startTime) : undefined,
+        endTime: endTime ? getHHMMSS(endTime) : undefined,
       };
     }
 
