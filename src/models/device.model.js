@@ -72,6 +72,10 @@ const schema = {
   valveLastUpdated: {
     type: Date,
   },
+  totaliser_current_value: {
+    type: Number,
+    default: 0,
+  },
 };
 
 let schemaOption = {
