@@ -33,7 +33,7 @@ export const deviceCount = async (req, res, next) => {
       parseInt(deviceCountObject["Online"]) +
       parseInt(deviceCountObject["Offline"]);
     let dataObject = {
-      message: "Device Updated succesfully",
+      message: "Device count fetched succesfully",
       data: deviceCountObject,
     };
     return handleResponse(res, dataObject);

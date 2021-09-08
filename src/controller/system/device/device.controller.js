@@ -7,9 +7,10 @@ import {
   handleResponse,
   //databaseparser,
 } from "../../../helpers/utility";
-//import * as DeviceSrv from "../../../services/system/device/device.service";
+import * as DeviceSrv from "../../../services/device/device.service";
 import { logger, level } from "../../../config/logger/logger";
 import Devices from "../../../models/device.model";
+import deviceHistory from "../../../models/deviceHistory.model";
 import {
   getHHMMSS,
   publishScheduleMSG,
@@ -23,8 +24,8 @@ export const createDevice = async (req, res, next) => {
       body.startTime = body.startTime ? getHHMMSS(body.startTime) : undefined;
       body.endTime = body.endTime ? getHHMMSS(body.endTime) : undefined;
     }
-
     await Devices.createData(body);
+    await DeviceSrv.addDeviceHistoryData(body);
     let dataObject = { message: "Device created succesfully" };
     return handleResponse(res, dataObject);
   } catch (e) {
@@ -113,11 +114,11 @@ export const updateDevice = async (req, res, next) => {
       };
     }
 
-    let updateDevice = await Devices.updateData(
+    let updateDeviceData = await Devices.updateData(
       { _id: req.params.deviceId },
       updateDeviceObject
     );
-
+    await DeviceSrv.addDeviceHistoryData(updateDeviceData);
     if (scheduleCondt) {
       publishScheduleMSG(updateDevice, startDate, endDate, startTime, endTime);
     }

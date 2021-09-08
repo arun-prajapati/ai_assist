@@ -4,7 +4,8 @@ import Devices from "../../models/device.model";
 import { mqttClient } from "../../config/mqtt/mqtt";
 import { getHAXValue, getDecimalValue } from "../../helpers/utility";
 import { CONSTANTS as MESSAGE } from "../../constants/messages/messageId";
-
+import deviceHistory from "../../models/deviceHistory.model";
+import * as DeviceSrv from "../../services/device/device.service";
 const START_DELIMETER = "AAAA";
 const END_DELIMETER = "5555";
 const REPLACE_DELIMETER = "*";
@@ -97,20 +98,22 @@ const getStatusOfDeviceFA01 = (payload) => {
 const updateDeviceStatus = async (recievedMACId, pmac, vmac) => {
   if (recievedMACId === pmac) {
     // update pstate
-    await Devices.updateData(
+    let updateDeviceData = await Devices.updateData(
       {
         pmac,
       },
       { pstate: 1 }
     );
+    await DeviceSrv.addDeviceHistoryData(updateDeviceData);
   } else if (recievedMACId === vmac) {
     // update vstate
-    await Devices.updateData(
+    let updateDeviceData = await Devices.updateData(
       {
         vmac,
       },
       { vstate: 1 }
     );
+    await DeviceSrv.addDeviceHistoryData(updateDeviceData);
   }
 };
 
@@ -121,7 +124,7 @@ export const PUMP_STATUS = async (macId, payload) => {
     if (deviceExist) {
       if (state === "00") {
         //  pump OFF
-        await Devices.updateData(
+        let updateDeviceData = await Devices.updateData(
           {
             pmac: macId,
           },
@@ -130,9 +133,10 @@ export const PUMP_STATUS = async (macId, payload) => {
             pumpLastUpdated: moment().format(),
           }
         );
+        await DeviceSrv.addDeviceHistoryData(updateDeviceData);
       } else if (state === "01") {
         // pump ON
-        await Devices.updateData(
+        let updateDeviceData = await Devices.updateData(
           {
             pmac: macId,
           },
@@ -142,6 +146,7 @@ export const PUMP_STATUS = async (macId, payload) => {
             pumpLastUpdated: moment().format(),
           }
         );
+        await DeviceSrv.addDeviceHistoryData(updateDeviceData);
       }
     }
   } catch (error) {
@@ -164,7 +169,7 @@ export const VALVE_STATUS = async (macId, payload) => {
     if (deviceExist) {
       if (state === "00") {
         //  valve OFF
-        await Devices.updateData(
+        let updateDeviceData = await Devices.updateData(
           {
             vmac: macId,
           },
@@ -174,9 +179,10 @@ export const VALVE_STATUS = async (macId, payload) => {
             valveLastUpdated: moment().format(),
           }
         );
+        await DeviceSrv.addDeviceHistoryData(updateDeviceData);
       } else if (state === "01") {
         // valve ON
-        await Devices.updateData(
+        let updateDeviceData = await Devices.updateData(
           {
             vmac: macId,
           },
@@ -187,6 +193,7 @@ export const VALVE_STATUS = async (macId, payload) => {
             valveLastUpdated: moment().format(),
           }
         );
+        await DeviceSrv.addDeviceHistoryData(updateDeviceData);
       }
     }
   } catch (error) {

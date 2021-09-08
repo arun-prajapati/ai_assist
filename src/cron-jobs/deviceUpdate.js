@@ -2,9 +2,10 @@ import { scheduleJob } from "node-schedule";
 import { logger, level } from "../config/logger/logger";
 import moment from "moment";
 import Devices from "../models/device.model";
-
+import deviceHistory from "../models/deviceHistory.model";
+import * as DeviceSrv from "../services/device/device.service";
 const JOB_TIME = "* * * * *";
-const MIN = 15 // this minute ago data should be update
+const MIN = 15; // this minute ago data should be update
 
 scheduleJob(JOB_TIME, async (fireDate) => {
   logger.log(
@@ -51,12 +52,13 @@ const updateValveState = async (idealValves) => {
 
   for (const valveDoc of idealValves) {
     if (!valveDoc.valveCurrentstate) {
-      await Devices.updateData(
+      let updateDeviceData = await Devices.updateData(
         {
           vmac: valveDoc.vmac,
         },
         { vstate: 2 }
       );
+      await DeviceSrv.addDeviceHistoryData(updateDeviceData);
     }
   }
   logger.log(level.info, `>> ${idealValves.length} valve state updated`);
@@ -67,12 +69,13 @@ const updatePumpState = async (idealPumps) => {
 
   for (const pumpDoc of idealPumps) {
     if (!pumpDoc.pumpCurrentstate) {
-      await Devices.updateData(
+      let updateDeviceData = await Devices.updateData(
         {
           pmac: pumpDoc.pmac,
         },
         { pstate: 2 }
       );
+      await DeviceSrv.addDeviceHistoryData(updateDeviceData);
     }
   }
   logger.log(level.info, `>> ${idealPumps.length} pump state updated`);
