@@ -43,9 +43,9 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
           VALVE_MAC
         );
 
-        const FA02payload = createFA02payload(msgId, pmac, vmac, threshold);
+        const FA02payload = createFA02payload(MESSAGE.FA02, pmac, vmac, threshold);
         const FA03payload = createFA03payload(
-          msgId,
+          MESSAGE.FA03,
           startDate,
           endDate,
           startTime,
