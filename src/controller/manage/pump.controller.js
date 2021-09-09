@@ -15,7 +15,7 @@ export const operatePump = async (req, res, next) => {
   logger.log(level.info, `>> Controller: operatePump()`);
   try {
     let { pmac, operation, min } = req.body;
-    min = getMINPadvalue(min);
+    if (min) min = getMINPadvalue(min);
 
     if (operation === true || operation === "true") operation = true;
     if (operation === false || operation === "false") operation = false;
