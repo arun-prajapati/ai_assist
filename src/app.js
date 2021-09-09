@@ -21,7 +21,6 @@ app.use(PATH.API, ApiRoutes);
 app.all("*", (_req, _res) => {
   throw new NotFoundError();
 });
-
 app.use((err, req, res, _next) => {
   handleError(err, res);
 });
