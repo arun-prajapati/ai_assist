@@ -43,7 +43,12 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
           VALVE_MAC
         );
 
-        const FA02payload = createFA02payload(MESSAGE.FA02, pmac, vmac, threshold);
+        const FA02payload = createFA02payload(
+          MESSAGE.FA02,
+          pmac,
+          vmac,
+          threshold
+        );
         const FA03payload = createFA03payload(
           MESSAGE.FA03,
           startDate,
@@ -76,8 +81,13 @@ const createFA02payload = (msgId, pmac, vmac, threshold) => {
 const createFA03payload = (msgId, start, end, startTime, endTime) => {
   // AAAAFA030E24082021270820210206550406505555
   let payloadDataLength = "1C";
-  let startDate = moment(start).format("DDMMYYYY");
-  let endDate = moment(end).format("DDMMYYYY");
+  // let startDate = moment(start).format("DDMMYYYY");
+  // let endDate = moment(end).format("DDMMYYYY");
+  let startDate = moment.tz(start, "Asia/calcutta").format("DDMMYYYY");
+  let endDate = moment.tz(end, "Asia/calcutta").format("DDMMYYYY");
+
+  // moment.tz('2021-09-16T18:30:00.000Z', "Asia/calcutta").format('DDMMYYYY')
+
   startTime = getHHMMSS(startTime);
   endTime = getHHMMSS(endTime);
   let FA03payload = `${START_DELIMETER}${msgId}${payloadDataLength}${startDate}${endDate}${startTime}${endTime}${END_DELIMETER}`;
@@ -232,11 +242,13 @@ export const publishScheduleMSG = (
   return true;
 };
 
-export const publishPumpOperation = async (pmac, operation, min) => {
+export const publishPumpOperation = async (pmac,vmac, operation, min) => {
   pmac = filterMac(pmac);
   const FA08payload = createFA08payload(operation, min);
   var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, pmac);
+  var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, vmac);
   mqttClient.publish(PUMP_TOPIC, FA08payload);
+  mqttClient.publish(VALVE_TOPIC, FA08payload);
   return true;
 };
 

@@ -19,7 +19,13 @@ export const operatePump = async (req, res, next) => {
 
     if (operation === true || operation === "true") operation = true;
     if (operation === false || operation === "false") operation = false;
-    await publishPumpOperation(pmac, operation, min);
+
+    let deviceDoc = await Devices.findOneDocument({
+      pmac,
+    });
+
+    let { vmac } = deviceDoc;
+    await publishPumpOperation(pmac,vmac, operation, min);
     let updateFields = {};
     if (operation || operation === "true") {
       updateFields = {
