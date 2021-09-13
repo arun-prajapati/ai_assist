@@ -66,6 +66,7 @@ const schema = {
   },
   pumpLastUpdated: {
     type: Date,
+    default: Date.now,
   },
   valveCurrentstate: {
     type: Boolean,
@@ -73,6 +74,7 @@ const schema = {
   },
   valveLastUpdated: {
     type: Date,
+    default: Date.now,
   },
   totaliser_current_value: {
     type: Number,

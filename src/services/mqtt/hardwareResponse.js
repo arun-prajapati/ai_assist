@@ -2,7 +2,7 @@ import moment from "moment-timezone";
 import { logger, level } from "../../config/logger/logger";
 import Devices from "../../models/device.model";
 import { mqttClient } from "../../config/mqtt/mqtt";
-import { getHAXValue, getDecimalValue } from "../../helpers/utility";
+import { getHAXValue, getDecimalValue, filterMac } from "../../helpers/utility";
 import { CONSTANTS as MESSAGE } from "../../constants/messages/messageId";
 
 const START_DELIMETER = "AAAA";
@@ -43,9 +43,14 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
           VALVE_MAC
         );
 
-        const FA02payload = createFA02payload(msgId, pmac, vmac, threshold);
+        const FA02payload = createFA02payload(
+          MESSAGE.FA02,
+          pmac,
+          vmac,
+          threshold
+        );
         const FA03payload = createFA03payload(
-          msgId,
+          MESSAGE.FA03,
           startDate,
           endDate,
           startTime,
@@ -67,7 +72,7 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
 
 const createFA02payload = (msgId, pmac, vmac, threshold) => {
   threshold = getHAXValue(threshold);
-  let payloadDataLength = "10";
+  let payloadDataLength = "20";
   // AAAAFA02107C9EBD473CEC7C9EBD45C804000315B85555
   let FA02payload = `${START_DELIMETER}${msgId}${payloadDataLength}${pmac}${vmac}${threshold}${END_DELIMETER}`;
   return FA02payload;
@@ -75,9 +80,14 @@ const createFA02payload = (msgId, pmac, vmac, threshold) => {
 
 const createFA03payload = (msgId, start, end, startTime, endTime) => {
   // AAAAFA030E24082021270820210206550406505555
-  let payloadDataLength = "0E";
-  let startDate = moment(start).format("DDMMYYYY");
-  let endDate = moment(end).format("DDMMYYYY");
+  let payloadDataLength = "1C";
+  // let startDate = moment(start).format("DDMMYYYY");
+  // let endDate = moment(end).format("DDMMYYYY");
+  let startDate = moment.tz(start, "Asia/calcutta").format("DDMMYYYY");
+  let endDate = moment.tz(end, "Asia/calcutta").format("DDMMYYYY");
+
+  // moment.tz('2021-09-16T18:30:00.000Z', "Asia/calcutta").format('DDMMYYYY')
+
   startTime = getHHMMSS(startTime);
   endTime = getHHMMSS(endTime);
   let FA03payload = `${START_DELIMETER}${msgId}${payloadDataLength}${startDate}${endDate}${startTime}${endTime}${END_DELIMETER}`;
@@ -222,6 +232,7 @@ export const publishScheduleMSG = (
     let VALVE_MAC = deviceData.vmac;
     var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, PUMP_MAC);
     var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, VALVE_MAC);
+    console.log(PUMP_TOPIC, VALVE_TOPIC);
     mqttClient.publish(PUMP_TOPIC, FA03payload);
     mqttClient.publish(VALVE_TOPIC, FA03payload);
     return true;
@@ -229,4 +240,28 @@ export const publishScheduleMSG = (
     logger.log(level.info, "❌ Something went wrong!");
   }
   return true;
+};
+
+export const publishPumpOperation = async (pmac,vmac, operation, min) => {
+  pmac = filterMac(pmac);
+  const FA08payload = createFA08payload(operation, min);
+  var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, pmac);
+  var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, vmac);
+  mqttClient.publish(PUMP_TOPIC, FA08payload);
+  mqttClient.publish(VALVE_TOPIC, FA08payload);
+  return true;
+};
+
+// AAAA FA08 06 01 0212 5555
+// AAAA FA08 06 00 0000 5555
+
+const createFA08payload = (operation, min) => {
+  let msgId = MESSAGE.FA08;
+  let payloadDataLength = "06";
+  let isOn = operation;
+  min = isOn ? min : "0000";
+  operation = operation ? "01" : "00";
+  console.log(operation, min);
+  let FA02payload = `${START_DELIMETER}${msgId}${payloadDataLength}${operation}${min}${END_DELIMETER}`;
+  return FA02payload;
 };
