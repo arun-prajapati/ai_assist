@@ -20,20 +20,34 @@ export const deviceCount = async (req, res, next) => {
           Devicecount: { $sum: 1 },
         },
       },
-      { $sort: { count: -1 } },
     ];
     let deviceCountData = await Devices.aggregate(filter);
-    let values = ["Unconfigured", "Online", "Offline"];
     let deviceCountObject = { Unconfigured: 0, Online: 0, Offline: 0 };
-    deviceCountData.forEach((e) => {
-      deviceCountObject[values[e._id.pstate]] = e.Devicecount;
-    });
+    for (let i = 0; i < deviceCountData.length; i++) {
+      if (
+        deviceCountData[i]["_id"]["pstate"] === 0 ||
+        deviceCountData[i]["_id"]["vstate"] === 0
+      ) {
+        deviceCountObject.Unconfigured++;
+      } else if (
+        deviceCountData[i]["_id"]["pstate"] === 1 &&
+        deviceCountData[i]["_id"]["vstate"] === 1
+      ) {
+        deviceCountObject.Online++;
+      } else if (
+        deviceCountData[i]["_id"]["pstate"] === 2 ||
+        deviceCountData[i]["_id"]["vstate"] === 2
+      ) {
+        deviceCountObject.Offline++;
+      }
+    }
+    console.log(deviceCountObject);
     deviceCountObject["Total"] =
       parseInt(deviceCountObject["Unconfigured"]) +
       parseInt(deviceCountObject["Online"]) +
       parseInt(deviceCountObject["Offline"]);
     let dataObject = {
-      message: "Device Updated succesfully",
+      message: "Device count fetched succesfully",
       data: deviceCountObject,
     };
     return handleResponse(res, dataObject);
