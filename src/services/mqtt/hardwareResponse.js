@@ -72,10 +72,10 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
         console.log(">>pumptopic", PUMP_TOPIC);
         //! for pump send FA02,FA03
         mqttClient.publish(PUMP_TOPIC, FA03payload);
-       // mqttClient.publish(PUMP_TOPIC, FA04payload);
+        mqttClient.publish(PUMP_TOPIC, FA04payload);
         //! for valve send FA02,FA03
-        // mqttClient.publish(VALVE_TOPIC, FA03payload);
-        // mqttClient.publish(VALVE_TOPIC, FA04payload);
+        mqttClient.publish(VALVE_TOPIC, FA03payload);
+        mqttClient.publish(VALVE_TOPIC, FA04payload);
       }
     }
   } catch (error) {
