@@ -279,14 +279,15 @@ export const publishScheduleMSG = (
 
 export const publishPumpOperation = async (pmac, vmac, operation, min) => {
   pmac = filterMac(pmac);
-  const FA08payload = createFA08payload(operation, min);
   const FA07payload = createFA07payload(operation);
+  const FA08payload = createFA08payload(operation, min);
   var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, pmac);
   var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, vmac);
-  mqttClient.publish(PUMP_TOPIC, FA08payload);
-  mqttClient.publish(VALVE_TOPIC, FA08payload);
   mqttClient.publish(PUMP_TOPIC, FA07payload);
   mqttClient.publish(VALVE_TOPIC, FA07payload);
+  mqttClient.publish(PUMP_TOPIC, FA08payload);
+  mqttClient.publish(VALVE_TOPIC, FA08payload);
+
   return true;
 };
 
