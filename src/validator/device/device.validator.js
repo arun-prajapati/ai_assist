@@ -31,8 +31,22 @@ export const validate = (method) => {
       error = [param("deviceId").custom(deviceExist)];
       break;
     }
+    case SYSTEM_CONSTANTS.OPERATE_PUMP: {
+      error = [
+        body("pmac", "Pump Mac is required").custom(pumpExist),
+        body('operation', 'Valid operation is required').isBoolean()
+      ];
+      break;
+    }
   }
   return error;
+};
+
+// pmac, operation, min
+export const pumpExist = async (value) => {
+  let pumpMacExist = await Devices.isExist({ pmac: value });
+  if (!pumpMacExist) throw new Error("This pump is not exist");
+  return value;
 };
 
 export const verifyPumpMacAddress = async (value) => {

@@ -2,7 +2,7 @@ import moment from "moment-timezone";
 import { logger, level } from "../../config/logger/logger";
 import Devices from "../../models/device.model";
 import { mqttClient } from "../../config/mqtt/mqtt";
-import { getHAXValue, getDecimalValue } from "../../helpers/utility";
+import { getHAXValue, getDecimalValue, filterMac } from "../../helpers/utility";
 import { CONSTANTS as MESSAGE } from "../../constants/messages/messageId";
 import deviceHistory from "../../models/deviceHistory.model";
 import * as DeviceSrv from "../../services/device/device.service";
@@ -25,8 +25,16 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
       });
 
       if (device) {
-        let { pmac, vmac, startDate, endDate, threshold, startTime, endTime } =
-          device;
+        let {
+          pmac,
+          vmac,
+          startDate,
+          endDate,
+          threshold,
+          startTime,
+          endTime,
+          payloadInterval,
+        } = device;
         //! update either pstate or vstate to 1
         updateDeviceStatus(recievedMACId, pmac, vmac);
 
@@ -44,9 +52,15 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
           VALVE_MAC
         );
 
-        const FA02payload = createFA02payload(msgId, pmac, vmac, threshold);
+        const FA02payload = createFA02payload(
+          MESSAGE.FA02,
+          pmac,
+          vmac,
+          threshold,
+          payloadInterval
+        );
         const FA03payload = createFA03payload(
-          msgId,
+          MESSAGE.FA03,
           startDate,
           endDate,
           startTime,
@@ -66,19 +80,25 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
   }
 };
 
-const createFA02payload = (msgId, pmac, vmac, threshold) => {
+const createFA02payload = (msgId, pmac, vmac, threshold, payloadInterval) => {
   threshold = getHAXValue(threshold);
-  let payloadDataLength = "10";
+  payloadInterval = getHAXValue(payloadInterval);
+  let payloadDataLength = "22";
   // AAAAFA02107C9EBD473CEC7C9EBD45C804000315B85555
-  let FA02payload = `${START_DELIMETER}${msgId}${payloadDataLength}${pmac}${vmac}${threshold}${END_DELIMETER}`;
+  let FA02payload = `${START_DELIMETER}${msgId}${payloadDataLength}${pmac}${vmac}${threshold}${payloadInterval}${END_DELIMETER}`;
   return FA02payload;
 };
 
 const createFA03payload = (msgId, start, end, startTime, endTime) => {
   // AAAAFA030E24082021270820210206550406505555
-  let payloadDataLength = "0E";
-  let startDate = moment(start).format("DDMMYYYY");
-  let endDate = moment(end).format("DDMMYYYY");
+  let payloadDataLength = "1C";
+  // let startDate = moment(start).format("DDMMYYYY");
+  // let endDate = moment(end).format("DDMMYYYY");
+  let startDate = moment.tz(start, "Asia/calcutta").format("DDMMYYYY");
+  let endDate = moment.tz(end, "Asia/calcutta").format("DDMMYYYY");
+
+  // moment.tz('2021-09-16T18:30:00.000Z', "Asia/calcutta").format('DDMMYYYY')
+
   startTime = getHHMMSS(startTime);
   endTime = getHHMMSS(endTime);
   let FA03payload = `${START_DELIMETER}${msgId}${payloadDataLength}${startDate}${endDate}${startTime}${endTime}${END_DELIMETER}`;
@@ -229,6 +249,7 @@ export const publishScheduleMSG = (
     let VALVE_MAC = deviceData.vmac;
     var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, PUMP_MAC);
     var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, VALVE_MAC);
+    console.log(PUMP_TOPIC, VALVE_TOPIC);
     mqttClient.publish(PUMP_TOPIC, FA03payload);
     mqttClient.publish(VALVE_TOPIC, FA03payload);
     return true;
@@ -236,4 +257,38 @@ export const publishScheduleMSG = (
     logger.log(level.info, "❌ Something went wrong!");
   }
   return true;
+};
+
+export const publishPumpOperation = async (pmac, vmac, operation, min) => {
+  pmac = filterMac(pmac);
+  const FA08payload = createFA08payload(operation, min);
+  const FA09payload = createFA09payload(operation);
+  var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, pmac);
+  var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, vmac);
+  mqttClient.publish(PUMP_TOPIC, FA08payload);
+  mqttClient.publish(VALVE_TOPIC, FA08payload);
+  mqttClient.publish(PUMP_TOPIC, FA09payload);
+  mqttClient.publish(VALVE_TOPIC, FA09payload);
+  return true;
+};
+
+// AAAA FA08 06 01 0212 5555
+// AAAA FA08 06 00 0000 5555
+
+const createFA08payload = (operation, min) => {
+  let msgId = MESSAGE.FA08;
+  let payloadDataLength = "06";
+  let isOn = operation;
+  min = isOn ? min : "0000";
+  operation = operation ? "01" : "00";
+  console.log(operation, min);
+  let FA02payload = `${START_DELIMETER}${msgId}${payloadDataLength}${operation}${min}${END_DELIMETER}`;
+  return FA02payload;
+};
+const createFA09payload = (operation) => {
+  let msgId = MESSAGE.FA09;
+  let payloadDataLength = "02";
+  operation = operation ? "01" : "00";
+  let FA09payload = `${START_DELIMETER}${msgId}${payloadDataLength}${operation}${END_DELIMETER}`;
+  return FA09payload;
 };

@@ -48,6 +48,14 @@ const schema = {
     type: Number,
     default: null,
   },
+  flowDetail: {
+    type: Number,
+    default: null,
+  },
+  payloadInterval: {
+    type: String,
+    default: null,
+  },
   typeOfSchedule: {
     type: String,
     enum: ["d", "w", "m", "y"],
@@ -66,6 +74,7 @@ const schema = {
   },
   pumpLastUpdated: {
     type: Date,
+    default: Date.now,
   },
   valveCurrentstate: {
     type: Boolean,
@@ -73,6 +82,7 @@ const schema = {
   },
   valveLastUpdated: {
     type: Date,
+    default: Date.now,
   },
   totaliser_current_value: {
     type: Number,

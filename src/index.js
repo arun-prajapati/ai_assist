@@ -5,7 +5,7 @@ import "./cron-jobs";
 
 import { logger, level } from "./config/logger/logger";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, async (err) => {
   if (err) {
