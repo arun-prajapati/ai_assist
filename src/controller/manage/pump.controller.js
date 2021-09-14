@@ -25,18 +25,20 @@ export const operatePump = async (req, res, next) => {
     });
 
     let { vmac } = deviceDoc;
-    await publishPumpOperation(pmac,vmac, operation, min);
+    await publishPumpOperation(pmac, vmac, operation, min);
     let updateFields = {};
     if (operation || operation === "true") {
       updateFields = {
         pstate: 1,
         pumpCurrentstate: true,
         pumpLastUpdated: moment().format(),
+        operationMode: "manual",
       };
     } else {
       updateFields = {
         pumpCurrentstate: false,
         pumpLastUpdated: moment().format(),
+        operationMode: "auto",
       };
     }
 

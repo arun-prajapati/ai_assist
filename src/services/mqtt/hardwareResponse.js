@@ -242,13 +242,16 @@ export const publishScheduleMSG = (
   return true;
 };
 
-export const publishPumpOperation = async (pmac,vmac, operation, min) => {
+export const publishPumpOperation = async (pmac, vmac, operation, min) => {
   pmac = filterMac(pmac);
   const FA08payload = createFA08payload(operation, min);
+  const FA09payload = createFA09payload(operation);
   var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, pmac);
   var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, vmac);
   mqttClient.publish(PUMP_TOPIC, FA08payload);
   mqttClient.publish(VALVE_TOPIC, FA08payload);
+  mqttClient.publish(PUMP_TOPIC, FA09payload);
+  mqttClient.publish(VALVE_TOPIC, FA09payload);
   return true;
 };
 
@@ -264,4 +267,11 @@ const createFA08payload = (operation, min) => {
   console.log(operation, min);
   let FA02payload = `${START_DELIMETER}${msgId}${payloadDataLength}${operation}${min}${END_DELIMETER}`;
   return FA02payload;
+};
+const createFA09payload = (operation) => {
+  let msgId = MESSAGE.FA09;
+  let payloadDataLength = "02";
+  operation = operation ? "01" : "00";
+  let FA09payload = `${START_DELIMETER}${msgId}${payloadDataLength}${operation}${END_DELIMETER}`;
+  return FA09payload;
 };

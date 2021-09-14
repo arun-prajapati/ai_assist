@@ -48,6 +48,14 @@ const schema = {
     type: Number,
     default: null,
   },
+  flowDetail: {
+    type: Number,
+    default: null,
+  },
+  payloadInterval: {
+    type: String,
+    default: null,
+  },
   typeOfSchedule: {
     type: String,
     enum: ["d", "w", "m", "y"],
