@@ -78,8 +78,8 @@ const schema = {
     default: "m3/s",
   },
   payloadInterval: {
-    type: String,
-    default: "0A",
+    type: Number,
+    default: 0,
   },
   typeOfSchedule: {
     type: String,
