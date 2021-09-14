@@ -60,24 +60,22 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
           threshold,
           payloadInterval
         );
+        //pmac:B8F0098F81B0
+        //vmac:083AF22BD318
         const FA04payload = createFA04payload(
-          MESSAGE.FA03,
+          MESSAGE.FA04,
           startDate,
           endDate,
           startTime,
           endTime
         );
-
+        console.log(">>pumptopic", PUMP_TOPIC);
         //! for pump send FA02,FA03
         mqttClient.publish(PUMP_TOPIC, FA03payload);
-        console.log(">>>FA03");
-        mqttClient.publish(PUMP_TOPIC, FA04payload);
-        console.log(">>>FA04");
+       // mqttClient.publish(PUMP_TOPIC, FA04payload);
         //! for valve send FA02,FA03
-        mqttClient.publish(VALVE_TOPIC, FA03payload);
-        console.log(">>>FA03");
-        mqttClient.publish(VALVE_TOPIC, FA04payload);
-        console.log(">>>FA04");
+        // mqttClient.publish(VALVE_TOPIC, FA03payload);
+        // mqttClient.publish(VALVE_TOPIC, FA04payload);
       }
     }
   } catch (error) {
@@ -257,8 +255,8 @@ export const publishScheduleMSG = (
   endTime
 ) => {
   try {
-    let msgId = MESSAGE.FA03;
-    const FA03payload = createFA03payload(
+    let msgId = MESSAGE.FA04;
+    const FA04payload = createFA04payload(
       msgId,
       startDate,
       endDate,
@@ -270,8 +268,8 @@ export const publishScheduleMSG = (
     var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, PUMP_MAC);
     var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, VALVE_MAC);
     console.log(PUMP_TOPIC, VALVE_TOPIC);
-    mqttClient.publish(PUMP_TOPIC, FA03payload);
-    mqttClient.publish(VALVE_TOPIC, FA03payload);
+    mqttClient.publish(PUMP_TOPIC, FA04payload);
+    mqttClient.publish(VALVE_TOPIC, FA04payload);
     return true;
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
