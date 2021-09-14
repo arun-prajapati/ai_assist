@@ -6,6 +6,7 @@ import { getHAXValue, getDecimalValue, filterMac } from "../../helpers/utility";
 import { CONSTANTS as MESSAGE } from "../../constants/messages/messageId";
 import deviceHistory from "../../models/deviceHistory.model";
 import * as DeviceSrv from "../../services/device/device.service";
+import { flowUnit } from "../../constants/flowUnit";
 const START_DELIMETER = "AAAA";
 const END_DELIMETER = "5555";
 const REPLACE_DELIMETER = "*";
@@ -52,14 +53,14 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
           VALVE_MAC
         );
 
-        const FA02payload = createFA02payload(
-          MESSAGE.FA02,
+        const FA03payload = createFA03payload(
+          MESSAGE.FA03,
           pmac,
           vmac,
           threshold,
           payloadInterval
         );
-        const FA03payload = createFA03payload(
+        const FA04payload = createFA04payload(
           MESSAGE.FA03,
           startDate,
           endDate,
@@ -68,11 +69,11 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
         );
 
         //! for pump send FA02,FA03
-        mqttClient.publish(PUMP_TOPIC, FA02payload);
         mqttClient.publish(PUMP_TOPIC, FA03payload);
+        mqttClient.publish(PUMP_TOPIC, FA04payload);
         //! for valve send FA02,FA03
-        mqttClient.publish(VALVE_TOPIC, FA02payload);
         mqttClient.publish(VALVE_TOPIC, FA03payload);
+        mqttClient.publish(VALVE_TOPIC, FA04payload);
       }
     }
   } catch (error) {
@@ -80,16 +81,16 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
   }
 };
 
-const createFA02payload = (msgId, pmac, vmac, threshold, payloadInterval) => {
+const createFA03payload = (msgId, pmac, vmac, threshold, payloadInterval) => {
   threshold = getHAXValue(threshold);
   payloadInterval = getHAXValue(payloadInterval);
   let payloadDataLength = "22";
   // AAAAFA02107C9EBD473CEC7C9EBD45C804000315B85555
-  let FA02payload = `${START_DELIMETER}${msgId}${payloadDataLength}${pmac}${vmac}${threshold}${payloadInterval}${END_DELIMETER}`;
-  return FA02payload;
+  let FA03payload = `${START_DELIMETER}${msgId}${payloadDataLength}${pmac}${vmac}${threshold}${payloadInterval}${END_DELIMETER}`;
+  return FA03payload;
 };
 
-const createFA03payload = (msgId, start, end, startTime, endTime) => {
+const createFA04payload = (msgId, start, end, startTime, endTime) => {
   // AAAAFA030E24082021270820210206550406505555
   let payloadDataLength = "1C";
   // let startDate = moment(start).format("DDMMYYYY");
@@ -101,8 +102,8 @@ const createFA03payload = (msgId, start, end, startTime, endTime) => {
 
   startTime = getHHMMSS(startTime);
   endTime = getHHMMSS(endTime);
-  let FA03payload = `${START_DELIMETER}${msgId}${payloadDataLength}${startDate}${endDate}${startTime}${endTime}${END_DELIMETER}`;
-  return FA03payload;
+  let FA04payload = `${START_DELIMETER}${msgId}${payloadDataLength}${startDate}${endDate}${startTime}${endTime}${END_DELIMETER}`;
+  return FA04payload;
 };
 
 export const getHHMMSS = (timeData) => {
@@ -139,7 +140,7 @@ const updateDeviceStatus = async (recievedMACId, pmac, vmac) => {
 
 export const PUMP_STATUS = async (macId, payload) => {
   try {
-    let state = getStatusOfDeviceFA04(payload);
+    let state = getStatusOfDeviceFA05(payload);
     let deviceExist = await Devices.isExist({ pmac: macId });
     if (deviceExist) {
       if (state === "00") {
@@ -174,15 +175,15 @@ export const PUMP_STATUS = async (macId, payload) => {
   }
 };
 
-const getStatusOfDeviceFA04 = (payload) => {
+const getStatusOfDeviceFA05 = (payload) => {
   let state = payload.slice(2, 4);
   return state;
 };
 
 export const VALVE_STATUS = async (macId, payload) => {
   try {
-    let { state, totaliser_current_value } =
-      getStatusAndThresholdOfDeviceFA05(payload);
+    let { state, totaliser_current_value, flowValue, flowunits } =
+      getStatusAndThresholdOfDeviceFA06(payload);
     //! convert threshold hax in to decimal
     totaliser_current_value = getDecimalValue(totaliser_current_value);
     let deviceExist = await Devices.isExist({ vmac: macId });
@@ -197,6 +198,8 @@ export const VALVE_STATUS = async (macId, payload) => {
             valveCurrentstate: false,
             totaliser_current_value,
             valveLastUpdated: moment().format(),
+            flowValue: flowValue,
+            flowUnit: flowunits,
           }
         );
         await DeviceSrv.addDeviceHistoryData(updateDeviceData);
@@ -211,6 +214,8 @@ export const VALVE_STATUS = async (macId, payload) => {
             valveCurrentstate: true,
             totaliser_current_value,
             valveLastUpdated: moment().format(),
+            flowValue: flowValue,
+            flowUnit: flowunits,
           }
         );
         await DeviceSrv.addDeviceHistoryData(updateDeviceData);
@@ -221,10 +226,19 @@ export const VALVE_STATUS = async (macId, payload) => {
   }
 };
 
-const getStatusAndThresholdOfDeviceFA05 = (payload) => {
+//AAAAFA06 0E00000315B85003 5555
+const getStatusAndThresholdOfDeviceFA06 = (payload) => {
   let state = payload.slice(2, 4);
   let totaliser_current_value = payload.slice(4);
-  let data = { state, totaliser_current_value };
+  let flowValue = payload.slice(12, 14);
+  let flowUnits = payload.slice(14, 16);
+  console.log(">>>", flowValue, flowUnits, flowUnit[Number(flowUnits)]);
+  let data = {
+    state,
+    totaliser_current_value,
+    flowValue,
+    flowunits: flowUnit[Number(flowUnits)],
+  };
   return data;
 };
 
@@ -262,13 +276,13 @@ export const publishScheduleMSG = (
 export const publishPumpOperation = async (pmac, vmac, operation, min) => {
   pmac = filterMac(pmac);
   const FA08payload = createFA08payload(operation, min);
-  const FA09payload = createFA09payload(operation);
+  const FA07payload = createFA07payload(operation);
   var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, pmac);
   var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, vmac);
   mqttClient.publish(PUMP_TOPIC, FA08payload);
   mqttClient.publish(VALVE_TOPIC, FA08payload);
-  mqttClient.publish(PUMP_TOPIC, FA09payload);
-  mqttClient.publish(VALVE_TOPIC, FA09payload);
+  mqttClient.publish(PUMP_TOPIC, FA07payload);
+  mqttClient.publish(VALVE_TOPIC, FA07payload);
   return true;
 };
 
@@ -282,13 +296,13 @@ const createFA08payload = (operation, min) => {
   min = isOn ? min : "0000";
   operation = operation ? "01" : "00";
   console.log(operation, min);
-  let FA02payload = `${START_DELIMETER}${msgId}${payloadDataLength}${operation}${min}${END_DELIMETER}`;
-  return FA02payload;
+  let FA08payload = `${START_DELIMETER}${msgId}${payloadDataLength}${operation}${min}${END_DELIMETER}`;
+  return FA08payload;
 };
-const createFA09payload = (operation) => {
+const createFA07payload = (operation) => {
   let msgId = MESSAGE.FA09;
   let payloadDataLength = "02";
   operation = operation ? "01" : "00";
-  let FA09payload = `${START_DELIMETER}${msgId}${payloadDataLength}${operation}${END_DELIMETER}`;
-  return FA09payload;
+  let FA07payload = `${START_DELIMETER}${msgId}${payloadDataLength}${operation}${END_DELIMETER}`;
+  return FA07payload;
 };

@@ -92,6 +92,7 @@ export const updateDevice = async (req, res, next) => {
       endDate,
       startTime,
       endTime,
+      payloadInterval,
     } = req.body;
     let updateDeviceObject = {
       name,
@@ -100,6 +101,7 @@ export const updateDevice = async (req, res, next) => {
       threshold,
       lineSize,
       pipeSize,
+      payloadInterval,
     };
 
     let scheduleCondt = startDate || endDate || startTime || endTime;

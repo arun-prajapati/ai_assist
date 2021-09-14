@@ -18,6 +18,7 @@ mqttClient.on("connect", function () {
 mqttClient.on("message", async function (topic, message) {
   let mqttData = message.toString(); // this is in string
   // mqttData = JSON.parse(mqttData); // this will parse above string and return object
+
   let macId = getMacId(topic);
   if (macId && macId.length === 12) {
     await handleMQTTData(macId, mqttData); // handle message data

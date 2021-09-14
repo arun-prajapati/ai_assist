@@ -35,12 +35,12 @@ export const handleMQTTData = async (macId, data) => {
         break;
       }
 
-      case MESSAGE.FA04: {
+      case MESSAGE.FA05: {
         HR.PUMP_STATUS(macId, payload);
         break;
       }
 
-      case MESSAGE.FA05: {
+      case MESSAGE.FA06: {
         HR.VALVE_STATUS(macId, payload);
         break;
       }
