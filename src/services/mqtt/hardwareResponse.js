@@ -24,8 +24,16 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
       });
 
       if (device) {
-        let { pmac, vmac, startDate, endDate, threshold, startTime, endTime } =
-          device;
+        let {
+          pmac,
+          vmac,
+          startDate,
+          endDate,
+          threshold,
+          startTime,
+          endTime,
+          payloadInterval,
+        } = device;
         //! update either pstate or vstate to 1
         updateDeviceStatus(recievedMACId, pmac, vmac);
 
@@ -47,7 +55,8 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
           MESSAGE.FA02,
           pmac,
           vmac,
-          threshold
+          threshold,
+          payloadInterval
         );
         const FA03payload = createFA03payload(
           MESSAGE.FA03,
@@ -70,11 +79,12 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
   }
 };
 
-const createFA02payload = (msgId, pmac, vmac, threshold) => {
+const createFA02payload = (msgId, pmac, vmac, threshold, payloadInterval) => {
   threshold = getHAXValue(threshold);
-  let payloadDataLength = "20";
+  payloadInterval = getHAXValue(payloadInterval);
+  let payloadDataLength = "22";
   // AAAAFA02107C9EBD473CEC7C9EBD45C804000315B85555
-  let FA02payload = `${START_DELIMETER}${msgId}${payloadDataLength}${pmac}${vmac}${threshold}${END_DELIMETER}`;
+  let FA02payload = `${START_DELIMETER}${msgId}${payloadDataLength}${pmac}${vmac}${threshold}${payloadInterval}${END_DELIMETER}`;
   return FA02payload;
 };
 
