@@ -79,7 +79,7 @@ const schema = {
   },
   payloadInterval: {
     type: String,
-    default: null,
+    default: "0A",
   },
   typeOfSchedule: {
     type: String,

@@ -69,17 +69,16 @@ export const checkLeapYear = (year) => {
   return isLeapYear;
 };
 
-export const getHAXValue = (value) => {
+export const getHAXValue = (no, value) => {
   let number = value;
-  let hexStr = number.toString(16).toUpperCase().padStart(8, "0");
+  let hexStr = number.toString(16).toUpperCase().padStart(no, "0");
   return hexStr;
 };
 
 export const getMINPadvalue = (value) => {
-  let hexStr = value.padStart(4,'0');
+  let hexStr = value.padStart(4, "0");
   return hexStr;
 };
-
 
 export const getDecimalValue = (haxValue) => {
   // haxValue = '0000001E';

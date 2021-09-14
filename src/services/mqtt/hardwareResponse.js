@@ -70,10 +70,14 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
 
         //! for pump send FA02,FA03
         mqttClient.publish(PUMP_TOPIC, FA03payload);
+        console.log(">>>FA03");
         mqttClient.publish(PUMP_TOPIC, FA04payload);
+        console.log(">>>FA04");
         //! for valve send FA02,FA03
         mqttClient.publish(VALVE_TOPIC, FA03payload);
+        console.log(">>>FA03");
         mqttClient.publish(VALVE_TOPIC, FA04payload);
+        console.log(">>>FA04");
       }
     }
   } catch (error) {
@@ -82,10 +86,12 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
 };
 
 const createFA03payload = (msgId, pmac, vmac, threshold, payloadInterval) => {
-  threshold = getHAXValue(threshold);
-  payloadInterval = getHAXValue(payloadInterval);
+  threshold = getHAXValue(8, threshold);
+  console.log(">>before", payloadInterval);
+  payloadInterval = getHAXValue(2, payloadInterval);
   let payloadDataLength = "22";
   // AAAAFA02107C9EBD473CEC7C9EBD45C804000315B85555
+  console.log(">>", payloadInterval);
   let FA03payload = `${START_DELIMETER}${msgId}${payloadDataLength}${pmac}${vmac}${threshold}${payloadInterval}${END_DELIMETER}`;
   return FA03payload;
 };
@@ -300,7 +306,7 @@ const createFA08payload = (operation, min) => {
   return FA08payload;
 };
 const createFA07payload = (operation) => {
-  let msgId = MESSAGE.FA09;
+  let msgId = MESSAGE.FA07;
   let payloadDataLength = "02";
   operation = operation ? "01" : "00";
   let FA07payload = `${START_DELIMETER}${msgId}${payloadDataLength}${operation}${END_DELIMETER}`;
