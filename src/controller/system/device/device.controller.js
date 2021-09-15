@@ -75,12 +75,13 @@ export const getSingleDevice = async (req, res, next) => {
     let totaliserValue = 0,
       tankValue = 0,
       estimatedTimeValue = 0;
-    if (
-      historyData &&
-      historyData.length > 0 &&
-      deviceData.totaliser_current_value &&
-      deviceData.flowValue
-    ) {
+    console.log("historydatalength", historyData.length);
+    console.log(
+      "deviceData.totaliser_current_value",
+      deviceData.totaliser_current_value
+    );
+    console.log("  deviceData.flowValue", deviceData.flowValue);
+    if (historyData && historyData.length > 0) {
       totaliserValue =
         historyData[0].totaliser_current_value -
         deviceData.totaliser_current_value;
