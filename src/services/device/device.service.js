@@ -5,7 +5,7 @@ export const addDeviceHistoryData = async (deviceData) => {
   logger.log(level.info, "Services: addDeviceHistoryData");
   deviceData = JSON.parse(JSON.stringify(deviceData));
   console.log(">>before", deviceData);
-  deviceData.date = moment().tz("Asia/calcutta").format("DD/MM/YYYY HH:mm:ss");
+  deviceData.date = moment().tz("Asia/calcutta").format();
   deviceData.time = moment
     .tz(moment().format(), "Asia/calcutta")
     .format("hh:mm:ss");
