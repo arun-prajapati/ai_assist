@@ -50,7 +50,7 @@ const schema = {
   },
   flowValue: {
     type: Number,
-    default: null,
+    default: 10,
   },
   flowUnit: {
     type: String,
@@ -79,7 +79,7 @@ const schema = {
   },
   payloadInterval: {
     type: Number,
-    default: 0,
+    default: 10,
   },
   typeOfSchedule: {
     type: String,
