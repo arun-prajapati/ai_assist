@@ -166,10 +166,10 @@ export const updateDevice = async (req, res, next) => {
       threshold,
       lineSize,
       pipeSize,
-      payloadInterval,
     };
 
-    let scheduleCondt = startDate || endDate || startTime || endTime;
+    let scheduleCondt =
+      startDate || endDate || startTime || endTime || payloadInterval;
 
     if (scheduleCondt) {
       updateDeviceObject = {
@@ -178,6 +178,7 @@ export const updateDevice = async (req, res, next) => {
         endDate,
         startTime: startTime ? getHHMMSS(startTime) : undefined,
         endTime: endTime ? getHHMMSS(endTime) : undefined,
+        payloadInterval,
       };
     }
 
@@ -187,7 +188,7 @@ export const updateDevice = async (req, res, next) => {
     );
     await DeviceSrv.addDeviceHistoryData(updateDeviceData);
     if (scheduleCondt) {
-      // publishScheduleMSG(updateDevice, startDate, endDate, startTime, endTime);
+      publishScheduleMSG(updateDevice, startDate, endDate, startTime, endTime);
     }
     let dataObject = { message: "Device Updated succesfully" };
     return handleResponse(res, dataObject);
