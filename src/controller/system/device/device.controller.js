@@ -92,7 +92,7 @@ export const getSingleDevice = async (req, res, next) => {
       tankValue,
       estimatedTimeValue,
       totaliserValue,
-      name:deviceData.name,
+      name: deviceData.name,
       pmac: deviceData.pmac,
       vmac: deviceData.vmac,
       pstate: deviceData.pstate,
@@ -108,10 +108,10 @@ export const getSingleDevice = async (req, res, next) => {
       pumpLastUpdated: deviceData.pumpLastUpdated,
       valveCurrentstate: deviceData.valveCurrentstate,
       valveLastUpdated: deviceData.valveLastUpdated,
-      startDate:deviceData.startDate,
-      endDate:deviceData.endDate,
-      startTime:deviceData.startTime,
-      endTime:deviceData.endTime
+      startDate: deviceData.startDate,
+      endDate: deviceData.endDate,
+      startTime: deviceData.startTime,
+      endTime: deviceData.endTime,
     };
     console.log("deviceData", deviceData);
     console.log("deviceHistoryData", historyData);
@@ -171,8 +171,8 @@ export const updateDevice = async (req, res, next) => {
     if (scheduleCondt) {
       updateDeviceObject = {
         ...updateDeviceObject,
-        startDate: moment().tz(startDate, "Asia/calcutta").format(),
-        endDate: moment().tz(endDate, "Asia/calcutta").format(),
+        startDate,
+        endDate,
         startTime: startTime ? getHHMMSS(startTime) : undefined,
         endTime: endTime ? getHHMMSS(endTime) : undefined,
       };

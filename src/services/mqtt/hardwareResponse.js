@@ -155,7 +155,7 @@ export const PUMP_STATUS = async (macId, payload) => {
           },
           {
             pumpCurrentstate: false,
-            pumpLastUpdated: moment().tz("Asia/calcutta").format(),
+            pumpLastUpdated: moment().format(),
           }
         );
         await DeviceSrv.addDeviceHistoryData(updateDeviceData);
@@ -168,7 +168,7 @@ export const PUMP_STATUS = async (macId, payload) => {
           {
             pstate: 1, //! this will make sure that when pump is on our pump controller is also online
             pumpCurrentstate: true,
-            pumpLastUpdated: moment().tz("Asia/calcutta").format(),
+            pumpLastUpdated: moment().format(),
           }
         );
         await DeviceSrv.addDeviceHistoryData(updateDeviceData);
@@ -203,7 +203,7 @@ export const VALVE_STATUS = async (macId, payload) => {
           {
             valveCurrentstate: false,
             totaliser_current_value,
-            valveLastUpdated: moment().tz("Asia/calcutta").format(),
+            valveLastUpdated: moment().format(),
             flowValue: flowValue,
             flowUnit: flowunits,
           }
@@ -219,7 +219,7 @@ export const VALVE_STATUS = async (macId, payload) => {
             vstate: 1, //! this will make sure that when valve is on our valve controller is also online
             valveCurrentstate: true,
             totaliser_current_value,
-            valveLastUpdated: moment().tz("Asia/calcutta").format(),
+            valveLastUpdated: moment().format(),
             flowValue: flowValue,
             flowUnit: flowunits,
           }
@@ -234,7 +234,7 @@ export const VALVE_STATUS = async (macId, payload) => {
 
 //AAAAFA06 0E00000315B85003 5555
 const getStatusAndThresholdOfDeviceFA06 = (payload) => {
-  console.log(">>>payload",payload)
+  console.log(">>>payload")
   let state = payload.slice(2, 4);
   let totaliser_current_value = payload.slice(4, 12);
   let flowValue = payload.slice(12, 14);

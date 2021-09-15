@@ -31,13 +31,13 @@ export const operatePump = async (req, res, next) => {
       updateFields = {
         pstate: 1,
         pumpCurrentstate: true,
-        pumpLastUpdated: moment().tz("Asia/calcutta").format(),
+        pumpLastUpdated: moment().format(),
         operationMode: "manual",
       };
     } else {
       updateFields = {
         pumpCurrentstate: false,
-        pumpLastUpdated: moment().tz("Asia/calcutta").format(),
+        pumpLastUpdated: moment().format(),
         operationMode: "auto",
       };
     }
