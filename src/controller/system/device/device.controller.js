@@ -67,8 +67,8 @@ export const getSingleDevice = async (req, res, next) => {
       {
         deviceId: deviceData._id,
         date: {
-          $gte: new Date(new Date(dates).setHours(0, 0, 0)),
-          $lte: new Date(new Date(dates).setHours(23, 59, 59)),
+          $gte: moment(dates).tz("Asia/calcutta").format("DD/MM/YYYY HH:mm:ss"),
+          $lte: moment(dates).tz("Asia/calcutta").format("DD/MM/YYYY HH:mm:ss"),
         },
       },
       { createdAt: 0 },
