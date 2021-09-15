@@ -79,7 +79,7 @@ export const getSingleDevice = async (req, res, next) => {
     let estimatedTimeValue =
       (deviceData.threshold - totaliserValue) / deviceData.flowValue;
     let deviceDataObject = {
-      tankValue,
+      tankValue  ,
       estimatedTimeValue,
       totaliserValue,
       pmac: deviceData.pmac,
@@ -97,7 +97,7 @@ export const getSingleDevice = async (req, res, next) => {
       pumpLastUpdated: deviceData.pumpLastUpdated,
       valveCurrentstate: deviceData.valveCurrentstate,
       valveLastUpdated: deviceData.valveLastUpdated,
-      totaliser_current_value: deviceData.totaliser_current_value,
+
     };
     console.log("deviceData", deviceData);
     console.log("deviceHistoryData", historyData);
