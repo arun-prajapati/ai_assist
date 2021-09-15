@@ -9,7 +9,7 @@ const PATH = {
   DEVICE_HISTORY: "/history",
   PUMP: "/pump",
 };
-routes.route(PATH.DEVICE_HISTORY).get(DeviceHistoryCtrl.getDeviceHistoryData);
+routes.route(PATH.DEVICE_HISTORY).post(DeviceHistoryCtrl.getDeviceHistoryData);
 
 routes.use(PATH.PUMP, PumpRoutes);
 
