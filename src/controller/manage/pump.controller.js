@@ -7,7 +7,7 @@ import { getMINPadvalue, handleResponse } from "../../helpers/utility";
 import { logger, level } from "../../config/logger/logger";
 import { publishPumpOperation } from "../../services/mqtt/hardwareResponse";
 import Devices from "../../models/device.model";
-
+import * as DeviceSrv from "../../services/device/device.service";
 // import { publishPumpOperation } from "../../services/mqtt/hardwareResponse";
 
 //! add validation for checking existance of pump
@@ -31,24 +31,24 @@ export const operatePump = async (req, res, next) => {
       updateFields = {
         pstate: 1,
         pumpCurrentstate: true,
-        pumpLastUpdated: moment().format(),
+        pumpLastUpdated: moment().tz("Asia/calcutta").format(),
         operationMode: "manual",
       };
     } else {
       updateFields = {
         pumpCurrentstate: false,
-        pumpLastUpdated: moment().format(),
+        pumpLastUpdated: moment().tz("Asia/calcutta").format(),
         operationMode: "auto",
       };
     }
 
-    await Devices.updateData(
+    let updateDeviceData = await Devices.updateData(
       {
         pmac,
       },
       updateFields
     );
-
+    await DeviceSrv.addDeviceHistoryData(updateDeviceData);
     let message = operation ? "Pump is started" : "Pump is stopped";
     let dataObject = { message };
     return handleResponse(res, dataObject);

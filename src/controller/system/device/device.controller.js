@@ -2,6 +2,7 @@ import {
   BadRequestError,
   InternalServerError,
 } from "../../../helpers/errors/custom-error";
+import moment from "moment";
 import {
   //createResponse,
   handleResponse,
@@ -24,8 +25,8 @@ export const createDevice = async (req, res, next) => {
       body.startTime = body.startTime ? getHHMMSS(body.startTime) : undefined;
       body.endTime = body.endTime ? getHHMMSS(body.endTime) : undefined;
     }
-    await Devices.createData(body);
-    await DeviceSrv.addDeviceHistoryData(body);
+    let deviceData = await Devices.createData(body);
+    await DeviceSrv.addDeviceHistoryData(deviceData);
     let dataObject = { message: "Device created succesfully" };
     return handleResponse(res, dataObject);
   } catch (e) {
@@ -109,8 +110,8 @@ export const updateDevice = async (req, res, next) => {
     if (scheduleCondt) {
       updateDeviceObject = {
         ...updateDeviceObject,
-        startDate,
-        endDate,
+        startDate: moment().tz(startDate, "Asia/calcutta").format(),
+        endDate: moment().tz(endDate, "Asia/calcutta").format(),
         startTime: startTime ? getHHMMSS(startTime) : undefined,
         endTime: endTime ? getHHMMSS(endTime) : undefined,
       };
@@ -122,7 +123,7 @@ export const updateDevice = async (req, res, next) => {
     );
     await DeviceSrv.addDeviceHistoryData(updateDeviceData);
     if (scheduleCondt) {
-     // publishScheduleMSG(updateDevice, startDate, endDate, startTime, endTime);
+      // publishScheduleMSG(updateDevice, startDate, endDate, startTime, endTime);
     }
     let dataObject = { message: "Device Updated succesfully" };
     return handleResponse(res, dataObject);

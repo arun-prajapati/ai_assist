@@ -1,8 +1,14 @@
 import { Schema, model } from "mongoose";
+const mongoose = require("mongoose");
 import SchemaModel from "../..../../config/database/mongoDBOperation";
 const schema = {
   name: {
     type: String,
+    trim: true,
+  },
+  deviceId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Device",
     trim: true,
   },
   pmac: {
@@ -43,24 +49,54 @@ const schema = {
     type: Number,
     default: null,
   },
+  flowValue: {
+    type: Number,
+    default: 13,
+  },
+  flowUnit: {
+    type: String,
+    enum: [
+      "m3/s",
+      "m3/m",
+      "m3/h",
+      "Lt/s",
+      "Lt/m",
+      "Lt/h",
+      "h1/s",
+      "hL/m",
+      "hL/h",
+      "dL/s",
+      "dL/m",
+      "BGPS",
+      "BGPM",
+      "MGD",
+      "MLD",
+      "CFS",
+      "UGPS",
+      "UGPM",
+      "UGPH",
+    ],
+    default: "m3/s",
+  },
+  payloadInterval: {
+    type: Number,
+    default: 0,
+  },
   typeOfSchedule: {
     type: String,
     enum: ["d", "w", "m", "y"],
   },
-  startDate: {
+  date: {
     type: Date,
   },
-  endDate: {
-    type: Date,
-  },
-  startTime: String,
-  endTime: String,
+  time: String,
   pumpCurrentstate: {
     type: Boolean,
     default: false,
   },
   pumpLastUpdated: {
     type: Date,
+    default: Date.now,
   },
   valveCurrentstate: {
     type: Boolean,
@@ -68,6 +104,7 @@ const schema = {
   },
   valveLastUpdated: {
     type: Date,
+    default: Date.now,
   },
   totaliser_current_value: {
     type: Number,

@@ -155,7 +155,7 @@ export const PUMP_STATUS = async (macId, payload) => {
           },
           {
             pumpCurrentstate: false,
-            pumpLastUpdated: moment().format(),
+            pumpLastUpdated: moment().tz("Asia/calcutta").format(),
           }
         );
         await DeviceSrv.addDeviceHistoryData(updateDeviceData);
@@ -168,7 +168,7 @@ export const PUMP_STATUS = async (macId, payload) => {
           {
             pstate: 1, //! this will make sure that when pump is on our pump controller is also online
             pumpCurrentstate: true,
-            pumpLastUpdated: moment().format(),
+            pumpLastUpdated: moment().tz("Asia/calcutta").format(),
           }
         );
         await DeviceSrv.addDeviceHistoryData(updateDeviceData);
@@ -201,7 +201,7 @@ export const VALVE_STATUS = async (macId, payload) => {
           {
             valveCurrentstate: false,
             totaliser_current_value,
-            valveLastUpdated: moment().format(),
+            valveLastUpdated: moment().tz("Asia/calcutta").format(),
             flowValue: flowValue,
             flowUnit: flowunits,
           }
@@ -217,7 +217,7 @@ export const VALVE_STATUS = async (macId, payload) => {
             vstate: 1, //! this will make sure that when valve is on our valve controller is also online
             valveCurrentstate: true,
             totaliser_current_value,
-            valveLastUpdated: moment().format(),
+            valveLastUpdated: moment().tz("Asia/calcutta").format(),
             flowValue: flowValue,
             flowUnit: flowunits,
           }
