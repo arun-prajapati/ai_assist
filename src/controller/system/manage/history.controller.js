@@ -10,6 +10,7 @@ import {
 import { logger, level } from "../../../config/logger/logger";
 import deviceHisroty from "../../../models/deviceHistory.model";
 import deviceHistory from "../../../models/deviceHistory.model";
+import moment from "moment";
 export const getDeviceHistoryData = async (req, res, next) => {
   logger.log(level.info, `>> Controller: getDeviceHistoryData()`);
   try {
@@ -17,8 +18,13 @@ export const getDeviceHistoryData = async (req, res, next) => {
     let historyData = await deviceHistory.findData({
       deviceId: req.query.deviceId,
       date: {
-        $gte: new Date(new Date(req.body.startDate).setHours(0, 0, 0)),
-        $lte: new Date(new Date(req.body.endDate).setHours(23, 59, 59)),
+        //moment.tz(start, "Asia/calcutta").format("DDMMYYYY")
+        $gte: new Date(
+          new Date(req.body.startDate).setHours(0, 0, 0)
+        ).toLocaleString("en-US", { timeZone: "Asia/calcutta" }),
+        $lte: new Date(
+          new Date(req.body.endDate).setHours(23, 59, 59)
+        ).toLocaleString("en-US", { timeZone: "Asia/calcutta" }),
       },
     });
     let dataObject = {
