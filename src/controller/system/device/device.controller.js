@@ -72,14 +72,24 @@ export const getSingleDevice = async (req, res, next) => {
       { createdAt: 0 },
       { sort: { date: -1 }, limit: 1 }
     );
-    let totaliserValue =
-      historyData[0].totaliser_current_value -
-      deviceData.totaliser_current_value;
-    let tankValue = (deviceData.threshold / totaliserValue) * 100;
-    let estimatedTimeValue =
-      (deviceData.threshold - totaliserValue) / deviceData.flowValue;
+    let totaliserValue = 0,
+      tankValue = 0,
+      estimatedTimeValue = 0;
+    if (
+      historyData &&
+      historyData.length > 0 &&
+      deviceData.totaliser_current_value &&
+      deviceData.flowValue
+    ) {
+      totaliserValue =
+        historyData[0].totaliser_current_value -
+        deviceData.totaliser_current_value;
+      tankValue = (deviceData.threshold / totaliserValue) * 100;
+      estimatedTimeValue =
+        (deviceData.threshold - totaliserValue) / deviceData.flowValue;
+    }
     let deviceDataObject = {
-      tankValue  ,
+      tankValue,
       estimatedTimeValue,
       totaliserValue,
       pmac: deviceData.pmac,
@@ -97,7 +107,6 @@ export const getSingleDevice = async (req, res, next) => {
       pumpLastUpdated: deviceData.pumpLastUpdated,
       valveCurrentstate: deviceData.valveCurrentstate,
       valveLastUpdated: deviceData.valveLastUpdated,
-
     };
     console.log("deviceData", deviceData);
     console.log("deviceHistoryData", historyData);
