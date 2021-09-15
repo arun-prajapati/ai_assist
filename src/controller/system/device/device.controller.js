@@ -59,10 +59,51 @@ export const getSingleDevice = async (req, res, next) => {
     let deviceData = await Devices.findOneDocument({
       _id: req.params.deviceId,
     });
+    var dates = new Date(moment().tz("Asia/calcutta").format());
+    dates.setDate(dates.getDate() - 1);
+    let historyData = await deviceHistory.findData(
+      {
+        deviceId: deviceData._id,
+        date: {
+          $gte: new Date(new Date(dates).setHours(0, 0, 0)),
+          $lte: new Date(new Date(dates).setHours(23, 59, 59)),
+        },
+      },
+      { createdAt: 0 },
+      { sort: { date: -1 }, limit: 1 }
+    );
+    let totaliserValue =
+      historyData[0].totaliser_current_value -
+      deviceData.totaliser_current_value;
+    let tankValue = (deviceData.threshold / totaliserValue) * 100;
+    let estimatedTimeValue =
+      (deviceData.threshold - totaliserValue) / deviceData.flowValue;
+    let deviceDataObject = {
+      tankValue,
+      estimatedTimeValue,
+      totaliserValue,
+      pmac: deviceData.pmac,
+      vmac: deviceData.vmac,
+      pstate: deviceData.pstate,
+      vstate: deviceData.vstate,
+      operationMode: deviceData.operationMode,
+      threshold: deviceData.threshold,
+      lineSize: deviceData.lineSize,
+      pipeSize: deviceData.pipeSize,
+      flowValue: deviceData.pipeSize,
+      flowUnit: deviceData.flowUnit,
+      payloadInterval: deviceData.payloadInterval,
+      pumpCurrentstate: deviceData.pumpCurrentstate,
+      pumpLastUpdated: deviceData.pumpLastUpdated,
+      valveCurrentstate: deviceData.valveCurrentstate,
+      valveLastUpdated: deviceData.valveLastUpdated,
+      totaliser_current_value: deviceData.totaliser_current_value,
+    };
     console.log("deviceData", deviceData);
+    console.log("deviceHistoryData", historyData);
     let dataObject = {
       message: "Device fetched succesfully",
-      data: deviceData,
+      data: deviceDataObject,
     };
     return handleResponse(res, dataObject);
   } catch (e) {
