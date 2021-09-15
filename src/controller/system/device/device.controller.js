@@ -56,8 +56,14 @@ export const getDevices = async (req, res, next) => {
 export const getSingleDevice = async (req, res, next) => {
   logger.log(level.info, `✔ Controller getSingleDevice()`);
   try {
-    let bmsData = await Devices.findOneDocument({ _id: req.params.deviceId });
-    let dataObject = { message: "Device fetched succesfully", data: bmsData };
+    let deviceData = await Devices.findOneDocument({
+      _id: req.params.deviceId,
+    });
+    console.log("deviceData", deviceData);
+    let dataObject = {
+      message: "Device fetched succesfully",
+      data: deviceData,
+    };
     return handleResponse(res, dataObject);
   } catch (e) {
     if (e && e.message) return next(new BadRequestError(e.message));

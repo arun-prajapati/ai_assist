@@ -188,8 +188,10 @@ export const VALVE_STATUS = async (macId, payload) => {
   try {
     let { state, totaliser_current_value, flowValue, flowunits } =
       getStatusAndThresholdOfDeviceFA06(payload);
+    console.log("befire", totaliser_current_value);
     //! convert threshold hax in to decimal
     totaliser_current_value = getDecimalValue(totaliser_current_value);
+    console.log("decimal value", totaliser_current_value);
     let deviceExist = await Devices.isExist({ vmac: macId });
     if (deviceExist) {
       if (state === "00") {
@@ -232,11 +234,19 @@ export const VALVE_STATUS = async (macId, payload) => {
 
 //AAAAFA06 0E00000315B85003 5555
 const getStatusAndThresholdOfDeviceFA06 = (payload) => {
+  console.log(">>>payload",payload)
   let state = payload.slice(2, 4);
-  let totaliser_current_value = payload.slice(4);
+  let totaliser_current_value = payload.slice(4, 12);
   let flowValue = payload.slice(12, 14);
   let flowUnits = payload.slice(14, 16);
-  console.log(">>>", flowValue, flowUnits, flowUnit[Number(flowUnits)]);
+  console.log(
+    ">>>",
+    state,
+    totaliser_current_value,
+    flowValue,
+    flowUnits
+    //flowUnit[Number(flowUnits)]
+  );
   let data = {
     state,
     totaliser_current_value,
