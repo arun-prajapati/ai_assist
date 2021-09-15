@@ -92,6 +92,7 @@ export const getSingleDevice = async (req, res, next) => {
       tankValue,
       estimatedTimeValue,
       totaliserValue,
+      name:deviceData.name,
       pmac: deviceData.pmac,
       vmac: deviceData.vmac,
       pstate: deviceData.pstate,
@@ -107,6 +108,10 @@ export const getSingleDevice = async (req, res, next) => {
       pumpLastUpdated: deviceData.pumpLastUpdated,
       valveCurrentstate: deviceData.valveCurrentstate,
       valveLastUpdated: deviceData.valveLastUpdated,
+      startDate:deviceData.startDate,
+      endDate:deviceData.endDate,
+      startTime:deviceData.startTime,
+      endTime:deviceData.endTime
     };
     console.log("deviceData", deviceData);
     console.log("deviceHistoryData", historyData);
