@@ -16,6 +16,7 @@ import {
   getHHMMSS,
   publishScheduleMSG,
 } from "../../../services/mqtt/hardwareResponse";
+const mongoose = require("mongoose");
 
 export const createDevice = async (req, res, next) => {
   logger.log(level.info, `✔ Controller createDevice()`);
@@ -61,9 +62,10 @@ export const getSingleDevice = async (req, res, next) => {
     });
     var dates = new Date(moment().tz("Asia/calcutta").format());
     dates.setDate(dates.getDate() - 1);
+
     let historyData = await deviceHistory.findData(
       {
-        deviceId: deviceData._id,
+        deviceId: mongoose.Types.ObjectId(deviceData._id),
         date: {
           $gte: new Date(new Date(dates).setHours(0, 0, 0)),
           $lte: new Date(new Date(dates).setHours(23, 59, 59)),
