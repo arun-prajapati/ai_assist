@@ -101,7 +101,7 @@ export const getSingleDevice = async (req, res, next) => {
       threshold: deviceData.threshold,
       lineSize: deviceData.lineSize,
       pipeSize: deviceData.pipeSize,
-      flowValue: deviceData.pipeSize,
+      flowValue: deviceData.flowValue,
       flowUnit: deviceData.flowUnit,
       payloadInterval: deviceData.payloadInterval,
       pumpCurrentstate: deviceData.pumpCurrentstate,
