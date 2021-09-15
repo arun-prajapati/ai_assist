@@ -59,10 +59,10 @@ export const getSingleDevice = async (req, res, next) => {
     let deviceData = await Devices.findOneDocument({
       _id: req.params.deviceId,
     });
-    var dates = new Date(
-      moment().tz("Asia/calcutta").format("DD/MM/YYYY HH:mm:ss")
-    );
-    dates.setDate(dates.getDate() - 1);
+    var dates = moment(new Date())
+      .tz("Asia/calcutta")
+      .format("DD/MM/YYYY HH:mm:ss");
+    //dates.setDate(dates.getDate() - 1);
     let historyData = await deviceHistory.findData(
       {
         deviceId: deviceData._id,
