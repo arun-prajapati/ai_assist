@@ -102,6 +102,8 @@ export const getSingleDevice = async (req, res, next) => {
         estimatedTimeValue = tankCapacity / Flow;
         console.log("estimatedTimeValue", estimatedTimeValue);
         console.log("FLOW", Flow);
+      } else {
+        tankValue = 0;
       }
     }
     console.log("historydata", historyData);
