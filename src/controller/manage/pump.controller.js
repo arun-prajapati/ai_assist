@@ -55,13 +55,13 @@ export const operatePump = async (req, res, next) => {
           pstate: 1,
           pumpCurrentstate: true,
           pumpLastUpdated: moment().format(),
-          operationMode: "manual",
+          //operationMode: "manual",
         };
       } else {
         updateFields = {
           pumpCurrentstate: false,
           pumpLastUpdated: moment().format(),
-          operationMode: "auto",
+          //operationMode: "auto",
         };
       }
       console.log(">>>>", operation);
