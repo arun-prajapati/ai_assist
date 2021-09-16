@@ -75,7 +75,7 @@ export const getSingleDevice = async (req, res, next) => {
       { createdAt: 0 },
       { sort: { date: -1 }, limit: 1 }
     );
-    let totaliserValue = 0,
+    let totaliserValue = deviceData.totaliser_current_value,
       tankCapacity = 0,
       tankValue = 0,
       estimatedTimeValue = 0;
