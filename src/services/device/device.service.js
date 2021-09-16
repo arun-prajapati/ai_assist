@@ -4,7 +4,6 @@ import { logger, level } from "../../config/logger/logger";
 export const addDeviceHistoryData = async (deviceData) => {
   logger.log(level.info, "Services: addDeviceHistoryData");
   deviceData = JSON.parse(JSON.stringify(deviceData));
-  console.log(">>before", deviceData);
   deviceData.date = new Date().toLocaleString("en-US", {
     timeZone: "Asia/calcutta",
   });
@@ -13,6 +12,6 @@ export const addDeviceHistoryData = async (deviceData) => {
     .format("hh:mm:ss");
   deviceData.deviceId = deviceData._id;
   delete deviceData._id;
-  console.log(">>after", deviceData);
+  console.log(">>afterdate modified", deviceData);
   await deviceHistory.createData(deviceData);
 };
