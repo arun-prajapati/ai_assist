@@ -129,7 +129,7 @@ const updateDeviceStatus = async (recievedMACId, pmac, vmac) => {
       },
       { pstate: 1 }
     );
-   // await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+    // await DeviceSrv.addDeviceHistoryData(updateDeviceData);
   } else if (recievedMACId === vmac) {
     // update vstate
     let updateDeviceData = await Devices.updateData(
@@ -192,6 +192,7 @@ export const VALVE_STATUS = async (macId, payload) => {
     totaliser_current_value = getDecimalValue(totaliser_current_value);
     flowValue = getDecimalValue(flowValue);
     let deviceExist = await Devices.isExist({ vmac: macId });
+    let deviceHistoryExist = await deviceHistory.isExist({ vmac: macId });
     if (deviceExist) {
       if (state === "00") {
         //  valve OFF
@@ -207,6 +208,21 @@ export const VALVE_STATUS = async (macId, payload) => {
             flowUnit: flowunits,
           }
         );
+        if (!deviceHistoryExist) {
+          updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
+          var dates = new Date(moment().tz("Asia/calcutta").format());
+          dates.setDate(dates.getDate() - 1);
+          updateDeviceData.date = new Date(new Date(dates)).toLocaleString(
+            "en-US",
+            { timeZone: "Asia/calcutta" }
+          );
+          updateDeviceData.time = moment
+            .tz(moment().format(), "Asia/calcutta")
+            .format("hh:mm:ss");
+          updateDeviceData.deviceId = updateDeviceData._id;
+          delete updateDeviceData._id;
+          await deviceHistory.createData(updateDeviceData);
+        }
         await DeviceSrv.addDeviceHistoryData(updateDeviceData);
       } else if (state === "01") {
         // valve ON
@@ -223,6 +239,21 @@ export const VALVE_STATUS = async (macId, payload) => {
             flowUnit: flowunits,
           }
         );
+        if (!deviceHistoryExist) {
+          updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
+          dates = new Date(moment().tz("Asia/calcutta").format());
+          dates.setDate(dates.getDate() - 1);
+          updateDeviceData.date = new Date(new Date(dates)).toLocaleString(
+            "en-US",
+            { timeZone: "Asia/calcutta" }
+          );
+          updateDeviceData.time = moment
+            .tz(moment().format(), "Asia/calcutta")
+            .format("hh:mm:ss");
+          updateDeviceData.deviceId = updateDeviceData._id;
+          delete updateDeviceData._id;
+          await deviceHistory.createData(updateDeviceData);
+        }
         await DeviceSrv.addDeviceHistoryData(updateDeviceData);
       }
     }
