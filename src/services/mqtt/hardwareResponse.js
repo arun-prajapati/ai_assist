@@ -212,6 +212,7 @@ export const VALVE_STATUS = async (macId, payload) => {
           updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
           var dates = new Date(moment().tz("Asia/calcutta").format());
           dates.setDate(dates.getDate() - 1);
+          console.log(">>dates", dates);
           updateDeviceData.date = new Date(new Date(dates)).toLocaleString(
             "en-US",
             { timeZone: "Asia/calcutta" }
@@ -244,6 +245,7 @@ export const VALVE_STATUS = async (macId, payload) => {
           updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
           dates = new Date(moment().tz("Asia/calcutta").format());
           dates.setDate(dates.getDate() - 1);
+          console.log(">>dates", dates);
           updateDeviceData.date = new Date(new Date(dates)).toLocaleString(
             "en-US",
             { timeZone: "Asia/calcutta" }
