@@ -97,7 +97,7 @@ export const getSingleDevice = async (req, res, next) => {
       tankValue = Number(totaliserValue * 100.0) / Number(deviceData.threshold);
       tankCapacity = Number(deviceData.threshold) - Number(totaliserValue);
       console.log("tankCapacity", tankCapacity);
-      if (tankCapacity > 0) {
+      if (tankCapacity && tankCapacity > 0) {
         //deviceData.flowValue
         estimatedTimeValue = tankCapacity / Flow;
         console.log("estimatedTimeValue", estimatedTimeValue);
