@@ -7,6 +7,7 @@ import {
   //createResponse,
   handleResponse,
   //databaseparser,
+  flowCoversion,
 } from "../../../helpers/utility";
 import * as DeviceSrv from "../../../services/device/device.service";
 import { logger, level } from "../../../config/logger/logger";
@@ -75,21 +76,28 @@ export const getSingleDevice = async (req, res, next) => {
       { sort: { date: -1 }, limit: 1 }
     );
     let totaliserValue = 0,
+      tankCapacity = 0,
       tankValue = 0,
       estimatedTimeValue = 0;
     console.log("historydatalength", historyData.length);
+    console.log("deviceData.threshold", deviceData.threshold);
     if (historyData && historyData.length > 0) {
+      flowCoversion(deviceData.flowValue, deviceData.flowUnit);
       totaliserValue =
         deviceData.totaliser_current_value -
         historyData[0].totaliser_current_value;
-      tankValue = (totaliserValue * 100.0) / deviceData.threshold;
-      estimatedTimeValue =
-        (deviceData.threshold - totaliserValue) / deviceData.flowValue;
+      console.log("totaliserValue", totaliserValue);
+      tankValue = Number(totaliserValue * 100.0) / Number(deviceData.threshold);
+      tankCapacity = Number(deviceData.threshold) - Number(totaliserValue);
+      console.log("tankCapacity", tankCapacity);
+      if (tankCapacity > 0) {
+        //deviceData.flowValue
+        estimatedTimeValue = tankCapacity / 2.5;
+        console.log("estimatedTimeValue", estimatedTimeValue);
+      }
     }
-    console.log("totaliserValue", totaliserValue);
-    console.log("tankValue", tankValue);
-    console.log("estimatedTimeValue", estimatedTimeValue);
     let deviceDataObject = {
+      tankCapacity,
       tankValue,
       estimatedTimeValue,
       totaliserValue,
@@ -114,8 +122,6 @@ export const getSingleDevice = async (req, res, next) => {
       startTime: deviceData.startTime,
       endTime: deviceData.endTime,
     };
-    console.log("deviceData", deviceData);
-    console.log("deviceHistoryData", historyData);
     let dataObject = {
       message: "Device fetched succesfully",
       data: deviceDataObject,

@@ -90,3 +90,7 @@ export const filterMac = (macId) => {
   let MAC = macId.split(":").join("");
   return MAC;
 };
+
+export const flowCoversion = (flowValue, flowUnit) => {
+  console.log(">>", flowValue, flowUnit);
+};
