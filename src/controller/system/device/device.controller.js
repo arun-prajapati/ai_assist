@@ -68,8 +68,14 @@ export const getSingleDevice = async (req, res, next) => {
       {
         deviceId: mongoose.Types.ObjectId(deviceData._id),
         date: {
-          $gte: new Date(new Date(dates).setHours(0, 0, 0)),
-          $lte: new Date(new Date(dates).setHours(23, 59, 59)),
+          $gte: new Date(new Date(dates).setHours(0, 0, 0)).toLocaleString(
+            "en-US",
+            { timeZone: "Asia/calcutta" }
+          ),
+          $lte: new Date(new Date(dates).setHours(23, 59, 59)).toLocaleString(
+            "en-US",
+            { timeZone: "Asia/calcutta" }
+          ),
         },
       },
       { createdAt: 0 },
@@ -80,7 +86,8 @@ export const getSingleDevice = async (req, res, next) => {
       tankValue = 0,
       estimatedTimeValue = 0;
     console.log("historydatalength", historyData.length);
-    console.log("deviceData.threshold", deviceData.threshold);
+    console.log("histroydata", historyData);
+    //console.log("deviceData.threshold", deviceData.threshold);
     if (historyData && historyData.length > 1) {
       let Flow = flowCoversion(deviceData.flowValue, deviceData.flowUnit);
       totaliserValue =
