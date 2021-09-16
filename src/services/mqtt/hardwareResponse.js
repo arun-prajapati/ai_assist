@@ -129,7 +129,7 @@ const updateDeviceStatus = async (recievedMACId, pmac, vmac) => {
       },
       { pstate: 1 }
     );
-    await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+   // await DeviceSrv.addDeviceHistoryData(updateDeviceData);
   } else if (recievedMACId === vmac) {
     // update vstate
     let updateDeviceData = await Devices.updateData(
@@ -138,7 +138,7 @@ const updateDeviceStatus = async (recievedMACId, pmac, vmac) => {
       },
       { vstate: 1 }
     );
-    await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+    //await DeviceSrv.addDeviceHistoryData(updateDeviceData);
   }
 };
 
@@ -158,7 +158,7 @@ export const PUMP_STATUS = async (macId, payload) => {
             pumpLastUpdated: moment().format(),
           }
         );
-        await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+        //await DeviceSrv.addDeviceHistoryData(updateDeviceData);
       } else if (state === "01") {
         // pump ON
         let updateDeviceData = await Devices.updateData(
@@ -171,7 +171,7 @@ export const PUMP_STATUS = async (macId, payload) => {
             pumpLastUpdated: moment().format(),
           }
         );
-        await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+        //await DeviceSrv.addDeviceHistoryData(updateDeviceData);
       }
     }
   } catch (error) {

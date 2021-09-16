@@ -28,7 +28,7 @@ export const createDevice = async (req, res, next) => {
       body.endTime = body.endTime ? getHHMMSS(body.endTime) : undefined;
     }
     let deviceData = await Devices.createData(body);
-    await DeviceSrv.addDeviceHistoryData(deviceData);
+    //await DeviceSrv.addDeviceHistoryData(deviceData);
     let dataObject = { message: "Device created succesfully" };
     return handleResponse(res, dataObject);
   } catch (e) {
@@ -199,7 +199,7 @@ export const updateDevice = async (req, res, next) => {
       { _id: req.params.deviceId },
       updateDeviceObject
     );
-    await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+    //await DeviceSrv.addDeviceHistoryData(updateDeviceData);
     if (scheduleCondt) {
       publishScheduleMSG(updateDevice, startDate, endDate, startTime, endTime);
     }

@@ -58,7 +58,7 @@ const updateValveState = async (idealValves) => {
         },
         { vstate: 2 }
       );
-      await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+     // await DeviceSrv.addDeviceHistoryData(updateDeviceData);
     }
   }
   logger.log(level.info, `>> ${idealValves.length} valve state updated`);
@@ -75,7 +75,7 @@ const updatePumpState = async (idealPumps) => {
         },
         { pstate: 2 }
       );
-      await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+     // await DeviceSrv.addDeviceHistoryData(updateDeviceData);
     }
   }
   logger.log(level.info, `>> ${idealPumps.length} pump state updated`);

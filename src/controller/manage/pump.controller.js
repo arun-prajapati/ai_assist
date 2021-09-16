@@ -73,7 +73,7 @@ export const operatePump = async (req, res, next) => {
       },
       updateFields
     );
-    await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+   // await DeviceSrv.addDeviceHistoryData(updateDeviceData);
 
     let dataObject = { message };
     return handleResponse(res, dataObject);
