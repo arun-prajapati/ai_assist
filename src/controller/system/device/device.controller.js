@@ -73,7 +73,7 @@ export const getSingleDevice = async (req, res, next) => {
         },
       },
       { createdAt: 0 },
-      { sort: { date: -1 }, limit: 2 }
+      { sort: { date: -1 }, limit: 1 }
     );
     let totaliserValue = 0,
       tankCapacity = 0,
@@ -85,7 +85,7 @@ export const getSingleDevice = async (req, res, next) => {
       let Flow = flowCoversion(deviceData.flowValue, deviceData.flowUnit);
       totaliserValue =
         deviceData.totaliser_current_value -
-        historyData[1].totaliser_current_value;
+        historyData[0].totaliser_current_value;
       console.log("totaliserValue", totaliserValue);
       tankValue = Number(totaliserValue * 100.0) / Number(deviceData.threshold);
       tankCapacity = Number(deviceData.threshold) - Number(totaliserValue);
