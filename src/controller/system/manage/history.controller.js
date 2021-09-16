@@ -19,12 +19,8 @@ export const getDeviceHistoryData = async (req, res, next) => {
       deviceId: req.query.deviceId,
       date: {
         //moment.tz(start, "Asia/calcutta").format("DDMMYYYY")
-        $gte: new Date(
-          new Date(req.body.startDate).setHours(0, 0, 0)
-        ).toLocaleString("en-US", { timeZone: "Asia/calcutta" }),
-        $lte: new Date(
-          new Date(req.body.endDate).setHours(23, 59, 59)
-        ).toLocaleString("en-US", { timeZone: "Asia/calcutta" }),
+        $gte: new Date(new Date(req.body.startDate).setHours(0, 0, 0)), //.toLocaleString("en-US", { timeZone: "Asia/calcutta" }),
+        $lte: new Date(new Date(req.body.endDate).setHours(23, 59, 59)), //.toLocaleString("en-US", { timeZone: "Asia/calcutta" }),
       },
     });
     let dataObject = {
