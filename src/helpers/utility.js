@@ -93,4 +93,44 @@ export const filterMac = (macId) => {
 
 export const flowCoversion = (flowValue, flowUnit) => {
   console.log(">>", flowValue, flowUnit);
+  let Flow = 0;
+  switch (flowUnit) {
+    case "m3/s": {
+      Flow = flowValue / 6000;
+      break;
+    }
+    case "m3/m": {
+      Flow = flowValue / 1000;
+      break;
+    }
+    case "m3/h": {
+      Flow = flowValue / 16.67;
+      break;
+    }
+    case "Lt/s": {
+      Flow = flowValue / 60;
+      break;
+    }
+    case "Lt/h": {
+      Flow = flowValue / 0.01667;
+      break;
+    }
+    case "hL/m": {
+      Flow = flowValue / 100;
+      break;
+    }
+    case "hL/h": {
+      Flow = flowValue / 1.666666667;
+      break;
+    }
+    case "dL/s": {
+      Flow = flowValue / 6;
+      break;
+    }
+    case "dL/m": {
+      Flow = flowValue / 0.1;
+      break;
+    }
+  }
+  return Flow;
 };

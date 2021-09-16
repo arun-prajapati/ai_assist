@@ -82,7 +82,7 @@ export const getSingleDevice = async (req, res, next) => {
     console.log("historydatalength", historyData.length);
     console.log("deviceData.threshold", deviceData.threshold);
     if (historyData && historyData.length > 0) {
-      flowCoversion(deviceData.flowValue, deviceData.flowUnit);
+      let Flow = flowCoversion(deviceData.flowValue, deviceData.flowUnit);
       totaliserValue =
         deviceData.totaliser_current_value -
         historyData[0].totaliser_current_value;
@@ -92,10 +92,12 @@ export const getSingleDevice = async (req, res, next) => {
       console.log("tankCapacity", tankCapacity);
       if (tankCapacity > 0) {
         //deviceData.flowValue
-        estimatedTimeValue = tankCapacity / 2.5;
+        estimatedTimeValue = tankCapacity / Flow;
         console.log("estimatedTimeValue", estimatedTimeValue);
+        console.log("FLOW", Flow);
       }
     }
+    console.log("historydata", historyData);
     let deviceDataObject = {
       tankCapacity,
       tankValue,
