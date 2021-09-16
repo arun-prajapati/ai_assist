@@ -222,6 +222,7 @@ export const VALVE_STATUS = async (macId, payload) => {
           updateDeviceData.deviceId = updateDeviceData._id;
           delete updateDeviceData._id;
           await deviceHistory.createData(updateDeviceData);
+          return true;
         }
         await DeviceSrv.addDeviceHistoryData(updateDeviceData);
       } else if (state === "01") {
@@ -253,6 +254,7 @@ export const VALVE_STATUS = async (macId, payload) => {
           updateDeviceData.deviceId = updateDeviceData._id;
           delete updateDeviceData._id;
           await deviceHistory.createData(updateDeviceData);
+          return true;
         }
         await DeviceSrv.addDeviceHistoryData(updateDeviceData);
       }
