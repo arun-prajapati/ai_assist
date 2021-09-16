@@ -20,7 +20,28 @@ export const operatePump = async (req, res, next) => {
     let { pmac, operation, min, operationMode } = req.body;
     let updateFields = {};
     let message;
-    if (operation && pmac && min && operationMode) {
+    if (operationMode && pmac) {
+      let deviceDoc = await Devices.findOneDocument({
+        pmac,
+      });
+      let { vmac } = deviceDoc;
+      await publishPumpOperationType(pmac, vmac, operationMode);
+      if (operationMode === "auto") {
+        updateFields = {
+          pumpLastUpdated: moment().format(),
+          operationMode: "auto",
+        };
+      } else {
+        updateFields = {
+          pumpLastUpdated: moment().format(),
+          operationMode: "manual",
+        };
+      }
+      message =
+        operationMode === "auto"
+          ? "Pump is set to auto mode"
+          : "Pump is set to manual mode";
+    } else {
       if (min) min = getMINPadvalue(min);
       if (operation === true || operation === "true") operation = true;
       if (operation === false || operation === "false") operation = false;
@@ -43,28 +64,8 @@ export const operatePump = async (req, res, next) => {
           operationMode: "auto",
         };
       }
+      console.log(">>>>", operation);
       message = operation ? "Pump is started" : "Pump is stopped";
-    } else if (operationMode && pmac) {
-      let deviceDoc = await Devices.findOneDocument({
-        pmac,
-      });
-      let { vmac } = deviceDoc;
-      await publishPumpOperationType(pmac, vmac, operationMode);
-      if (operationMode === "auto") {
-        updateFields = {
-          pumpLastUpdated: moment().format(),
-          operationMode: "auto",
-        };
-      } else {
-        updateFields = {
-          pumpLastUpdated: moment().format(),
-          operationMode: "manual",
-        };
-      }
-      message =
-        operationMode === "auto"
-          ? "Pump is set to auto mode"
-          : "Pump is set to manual mode";
     }
     let updateDeviceData = await Devices.updateData(
       {
