@@ -301,6 +301,16 @@ export const publishPumpOperation = async (pmac, vmac, operation, min) => {
 
   return true;
 };
+export const publishPumpOperationType = async (pmac, vmac, operation) => {
+  pmac = filterMac(pmac);
+  operation = operation === "manual" ? true : false;
+  const FA07payload = createFA07payload(operation);
+  var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, pmac);
+  var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, vmac);
+  mqttClient.publish(PUMP_TOPIC, FA07payload);
+  mqttClient.publish(VALVE_TOPIC, FA07payload);
+  return true;
+};
 
 // AAAA FA08 06 01 0212 5555
 // AAAA FA08 06 00 0000 5555

@@ -34,7 +34,7 @@ export const validate = (method) => {
     case SYSTEM_CONSTANTS.OPERATE_PUMP: {
       error = [
         body("pmac", "Pump Mac is required").custom(pumpExist),
-        body('operation', 'Valid operation is required').isBoolean()
+        body("operation", "Valid operation is required").optional().isBoolean(),
       ];
       break;
     }

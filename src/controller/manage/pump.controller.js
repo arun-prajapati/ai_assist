@@ -5,7 +5,10 @@ import {
 } from "../../helpers/errors/custom-error";
 import { getMINPadvalue, handleResponse } from "../../helpers/utility";
 import { logger, level } from "../../config/logger/logger";
-import { publishPumpOperation } from "../../services/mqtt/hardwareResponse";
+import {
+  publishPumpOperation,
+  publishPumpOperationType,
+} from "../../services/mqtt/hardwareResponse";
 import Devices from "../../models/device.model";
 import * as DeviceSrv from "../../services/device/device.service";
 // import { publishPumpOperation } from "../../services/mqtt/hardwareResponse";
@@ -14,34 +17,55 @@ import * as DeviceSrv from "../../services/device/device.service";
 export const operatePump = async (req, res, next) => {
   logger.log(level.info, `>> Controller: operatePump()`);
   try {
-    let { pmac, operation, min } = req.body;
-    if (min) min = getMINPadvalue(min);
-
-    if (operation === true || operation === "true") operation = true;
-    if (operation === false || operation === "false") operation = false;
-
-    let deviceDoc = await Devices.findOneDocument({
-      pmac,
-    });
-
-    let { vmac } = deviceDoc;
-    await publishPumpOperation(pmac, vmac, operation, min);
+    let { pmac, operation, min, operationMode } = req.body;
     let updateFields = {};
-    if (operation || operation === "true") {
-      updateFields = {
-        pstate: 1,
-        pumpCurrentstate: true,
-        pumpLastUpdated: moment().format(),
-        operationMode: "manual",
-      };
-    } else {
-      updateFields = {
-        pumpCurrentstate: false,
-        pumpLastUpdated: moment().format(),
-        operationMode: "auto",
-      };
+    let message;
+    if (operation && pmac && min && operationMode) {
+      if (min) min = getMINPadvalue(min);
+      if (operation === true || operation === "true") operation = true;
+      if (operation === false || operation === "false") operation = false;
+      let deviceDoc = await Devices.findOneDocument({
+        pmac,
+      });
+      let { vmac } = deviceDoc;
+      await publishPumpOperation(pmac, vmac, operation, min);
+      if (operation || operation === "true") {
+        updateFields = {
+          pstate: 1,
+          pumpCurrentstate: true,
+          pumpLastUpdated: moment().format(),
+          operationMode: "manual",
+        };
+      } else {
+        updateFields = {
+          pumpCurrentstate: false,
+          pumpLastUpdated: moment().format(),
+          operationMode: "auto",
+        };
+      }
+      message = operation ? "Pump is started" : "Pump is stopped";
+    } else if (operationMode && pmac) {
+      let deviceDoc = await Devices.findOneDocument({
+        pmac,
+      });
+      let { vmac } = deviceDoc;
+      await publishPumpOperationType(pmac, vmac, operationMode);
+      if (operationMode === "auto") {
+        updateFields = {
+          pumpLastUpdated: moment().format(),
+          operationMode: "auto",
+        };
+      } else {
+        updateFields = {
+          pumpLastUpdated: moment().format(),
+          operationMode: "manual",
+        };
+      }
+      message =
+        operationMode === "auto"
+          ? "Pump is set to auto mode"
+          : "Pump is set to manual mode";
     }
-
     let updateDeviceData = await Devices.updateData(
       {
         pmac,
@@ -49,7 +73,7 @@ export const operatePump = async (req, res, next) => {
       updateFields
     );
     await DeviceSrv.addDeviceHistoryData(updateDeviceData);
-    let message = operation ? "Pump is started" : "Pump is stopped";
+
     let dataObject = { message };
     return handleResponse(res, dataObject);
   } catch (e) {
