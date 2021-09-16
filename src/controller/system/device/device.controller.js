@@ -103,7 +103,7 @@ export const getSingleDevice = async (req, res, next) => {
         console.log("estimatedTimeValue", estimatedTimeValue);
         console.log("FLOW", Flow);
       } else {
-        tankValue = 0;
+        tankValue = 100;
       }
     }
     console.log("historydata", historyData);
