@@ -76,6 +76,7 @@ export const getHAXValue = (no, value) => {
 };
 
 export const getMINPadvalue = (value) => {
+  value = value.toString();
   let hexStr = value.padStart(4, "0");
   return hexStr;
 };

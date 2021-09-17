@@ -348,7 +348,7 @@ const createFA08payload = (operation, min) => {
   let isOn = operation;
   min = isOn ? min : "0000";
   operation = operation ? "01" : "00";
-  console.log(operation, min);
+  console.log(">>>opertaion minutes FA08)", operation, min);
   let FA08payload = `${START_DELIMETER}${msgId}${payloadDataLength}${operation}${min}${END_DELIMETER}`;
   return FA08payload;
 };
