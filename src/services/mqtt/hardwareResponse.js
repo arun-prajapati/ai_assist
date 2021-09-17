@@ -213,10 +213,9 @@ export const VALVE_STATUS = async (macId, payload) => {
           var dates = new Date(moment().tz("Asia/calcutta").format());
           dates.setDate(dates.getDate() - 1);
           console.log(">>dates", dates);
-          updateDeviceData.date = new Date(new Date(dates)).toLocaleString(
-            "en-US",
-            { timeZone: "Asia/calcutta" }
-          );
+          updateDeviceData.date = new Date(
+            new Date(dates).setHours(0, 0, 0)
+          ).toLocaleString("en-US", { timeZone: "Asia/calcutta" });
           updateDeviceData.time = moment
             .tz(moment().format(), "Asia/calcutta")
             .format("hh:mm:ss");
@@ -246,10 +245,9 @@ export const VALVE_STATUS = async (macId, payload) => {
           dates = new Date(moment().tz("Asia/calcutta").format());
           dates.setDate(dates.getDate() - 1);
           console.log(">>dates", dates);
-          updateDeviceData.date = new Date(new Date(dates)).toLocaleString(
-            "en-US",
-            { timeZone: "Asia/calcutta" }
-          );
+          updateDeviceData.date = new Date(
+            new Date(dates).setHours(0, 0, 0)
+          ).toLocaleString("en-US", { timeZone: "Asia/calcutta" });
           updateDeviceData.time = moment
             .tz(moment().format(), "Asia/calcutta")
             .format("hh:mm:ss");
