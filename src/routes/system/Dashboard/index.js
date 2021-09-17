@@ -8,7 +8,9 @@ const routes = new Router();
 const PATH = {
   ROOT: "/",
   DEVICECOUNTS: "/deviceCount",
+  STATS: "/stats",
 };
 routes.route(PATH.DEVICECOUNTS).get(DashboardCtrl.deviceCount);
+routes.route(PATH.STATS).get(DashboardCtrl.graphData);
 
 export default routes;
