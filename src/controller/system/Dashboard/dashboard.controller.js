@@ -40,23 +40,28 @@ export const deviceCount = async (req, res, next) => {
       },
     ];
     let deviceCountData = await Devices.aggregate(filter);
+    console.log(">>1st", deviceCountData);
+    console.log(">>length", deviceCountData.length);
+    //console.log(">>2nd", deviceCountData[1]["_id"]["pstate"]);
     let deviceCountObject = { Unconfigured: 0, Online: 0, Offline: 0 };
     for (let i = 0; i < deviceCountData.length; i++) {
+      // console.log(">>Data", deviceCountData[i]["_id"]["pstate"]);
+      //console.log(">>DeviceCOunt", deviceCountData[i]["Devicecount"]);
       if (
         deviceCountData[i]["_id"]["pstate"] === 0 ||
         deviceCountData[i]["_id"]["vstate"] === 0
       ) {
-        deviceCountObject.Unconfigured++;
+        deviceCountObject.Unconfigured = deviceCountData[i]["Devicecount"];
       } else if (
         deviceCountData[i]["_id"]["pstate"] === 1 &&
         deviceCountData[i]["_id"]["vstate"] === 1
       ) {
-        deviceCountObject.Online++;
+        deviceCountObject.Online = deviceCountData[i]["Devicecount"];
       } else if (
         deviceCountData[i]["_id"]["pstate"] === 2 ||
         deviceCountData[i]["_id"]["vstate"] === 2
       ) {
-        deviceCountObject.Offline++;
+        deviceCountObject.Offline = deviceCountData[i]["Devicecount"];
       }
     }
     console.log(deviceCountObject);
