@@ -15,6 +15,7 @@ import Devices from "../../../models/device.model";
 import deviceHistory from "../../../models/deviceHistory.model";
 import {
   getHHMMSS,
+  publishConfigurationMSG,
   publishScheduleMSG,
 } from "../../../services/mqtt/hardwareResponse";
 const mongoose = require("mongoose");
@@ -178,13 +179,12 @@ export const updateDevice = async (req, res, next) => {
       name,
       location,
       operationMode,
-      threshold,
       lineSize,
       pipeSize,
     };
 
-    let scheduleCondt =
-      startDate || endDate || startTime || endTime || payloadInterval;
+    let scheduleCondt = startDate || endDate || startTime || endTime;
+    let configurationCondt = threshold || payloadInterval;
 
     if (scheduleCondt) {
       updateDeviceObject = {
@@ -193,10 +193,15 @@ export const updateDevice = async (req, res, next) => {
         endDate,
         startTime: startTime ? getHHMMSS(startTime) : undefined,
         endTime: endTime ? getHHMMSS(endTime) : undefined,
+      };
+    }
+    if (configurationCondt) {
+      updateDeviceObject = {
+        ...updateDeviceObject,
+        threshold,
         payloadInterval,
       };
     }
-
     let updateDeviceData = await Devices.updateData(
       { _id: req.params.deviceId },
       updateDeviceObject
@@ -204,6 +209,10 @@ export const updateDevice = async (req, res, next) => {
     //await DeviceSrv.addDeviceHistoryData(updateDeviceData);
     if (scheduleCondt) {
       publishScheduleMSG(updateDevice, startDate, endDate, startTime, endTime);
+    }
+    if (configurationCondt) {
+      console.log("inside");
+      publishConfigurationMSG(req.params.deviceId);
     }
     let dataObject = { message: "Device Updated succesfully" };
     return handleResponse(res, dataObject);

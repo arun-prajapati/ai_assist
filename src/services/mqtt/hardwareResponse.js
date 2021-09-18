@@ -82,7 +82,8 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
     logger.log(level.info, "❌ Something went wrong!");
   }
 };
-
+//AAAAFA032210521C93F774C4DD576E4220
+//000000160A5555
 const createFA03payload = (msgId, pmac, vmac, threshold, payloadInterval) => {
   threshold = getHAXValue(8, threshold);
   console.log(">>before", payloadInterval);
@@ -314,7 +315,29 @@ export const publishScheduleMSG = (
   }
   return true;
 };
-
+export const publishConfigurationMSG = async (deviceId) => {
+  try {
+    let deviceData = await Devices.findOneDocument({ _id: deviceId });
+    console.log("deviceData", deviceData);
+    let msgId = MESSAGE.FA03;
+    const FA03payload = createFA03payload(
+      msgId,
+      deviceData.pmac,
+      deviceData.vmac,
+      deviceData.threshold,
+      deviceData.payloadInterval
+    );
+    let PUMP_MAC = deviceData.pmac;
+    let VALVE_MAC = deviceData.vmac;
+    var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, PUMP_MAC);
+    var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, VALVE_MAC);
+    console.log(">>>", FA03payload);
+    mqttClient.publish(PUMP_TOPIC, FA03payload);
+    mqttClient.publish(VALVE_TOPIC, FA03payload);
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
 export const publishPumpOperation = async (pmac, vmac, operation, min) => {
   pmac = filterMac(pmac);
   //const FA07payload = createFA07payload(operation);
