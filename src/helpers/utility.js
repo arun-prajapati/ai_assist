@@ -108,6 +108,10 @@ export const flowCoversion = (flowValue, flowUnit) => {
       Flow = flowValue * 16.67;
       break;
     }
+    case "Lt/m": {
+      Flow = flowValue;
+      break;
+    }
     case "Lt/s": {
       Flow = flowValue * 60;
       break;
