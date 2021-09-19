@@ -51,17 +51,23 @@ export const deviceCount = async (req, res, next) => {
         deviceCountData[i]["_id"]["pstate"] === 0 ||
         deviceCountData[i]["_id"]["vstate"] === 0
       ) {
-        deviceCountObject.Unconfigured = deviceCountData[i]["Devicecount"];
+        deviceCountObject.Unconfigured =
+          Number(deviceCountObject.Unconfigured) +
+          Number(deviceCountData[i]["Devicecount"]);
       } else if (
         deviceCountData[i]["_id"]["pstate"] === 1 &&
         deviceCountData[i]["_id"]["vstate"] === 1
       ) {
-        deviceCountObject.Online = deviceCountData[i]["Devicecount"];
+        deviceCountObject.Online =
+          Number(deviceCountObject.Online) +
+          Number(deviceCountData[i]["Devicecount"]);
       } else if (
         deviceCountData[i]["_id"]["pstate"] === 2 ||
         deviceCountData[i]["_id"]["vstate"] === 2
       ) {
-        deviceCountObject.Offline = deviceCountData[i]["Devicecount"];
+        deviceCountObject.Offline =
+          Number(deviceCountObject.Offline) +
+          Number(deviceCountData[i]["Devicecount"]);
       }
     }
     console.log(deviceCountObject);
