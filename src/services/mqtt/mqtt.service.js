@@ -34,7 +34,10 @@ export const handleMQTTData = async (macId, data) => {
         HR.DEVICE_CONNECTION(macId, msgId, payload);
         break;
       }
-
+      case MESSAGE.FA02: {
+        HR.firmwareVersions(macId, payload);
+        break;
+      }
       case MESSAGE.FA05: {
         HR.PUMP_STATUS(macId, payload);
         break;

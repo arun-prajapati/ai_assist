@@ -77,6 +77,14 @@ const schema = {
     ],
     default: "m3/s",
   },
+  pumpVersion: {
+    type: String,
+    default: "0.0.0",
+  },
+  valveVersion: {
+    type: String,
+    default: "0.0.0",
+  },
   payloadInterval: {
     type: Number,
     default: 10,

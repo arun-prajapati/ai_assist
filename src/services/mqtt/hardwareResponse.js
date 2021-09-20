@@ -82,6 +82,24 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
     logger.log(level.info, "❌ Something went wrong!");
   }
 };
+export const firmwareVersions = async (macId, payload) => {
+  try {
+    const recievedMACId = macId;
+
+    let firmwareVersion = getFirmwareVersionOfDeviceFA02(payload);
+    console.log(">>===", recievedMACId, payload, firmwareVersion);
+    let device = await Devices.findOneDocument({
+      $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+    });
+    if (device) {
+      let { pmac, vmac } = device;
+      //! update either pump version orvalve version
+      updateDeviceFirmwareVersion(recievedMACId, pmac, vmac, firmwareVersion);
+    }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
 //AAAAFA032210521C93F774C4DD576E4220
 //000000160A5555
 const createFA03payload = (msgId, pmac, vmac, threshold, payloadInterval) => {
@@ -120,7 +138,10 @@ const getStatusOfDeviceFA01 = (payload) => {
   let state = payload.slice(2, 4);
   return state;
 };
-
+const getFirmwareVersionOfDeviceFA02 = (payload) => {
+  let version = payload.slice(2);
+  return version;
+};
 const updateDeviceStatus = async (recievedMACId, pmac, vmac) => {
   if (recievedMACId === pmac) {
     // update pstate
@@ -140,6 +161,30 @@ const updateDeviceStatus = async (recievedMACId, pmac, vmac) => {
       { vstate: 1 }
     );
     //await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+  }
+};
+const updateDeviceFirmwareVersion = async (
+  recievedMACId,
+  pmac,
+  vmac,
+  firmwareVersion
+) => {
+  if (recievedMACId === pmac) {
+    // update pump version
+    await Devices.updateData(
+      {
+        pmac,
+      },
+      { pumpVersion: firmwareVersion }
+    );
+  } else if (recievedMACId === vmac) {
+    // update valve version
+    await Devices.updateData(
+      {
+        vmac,
+      },
+      { valveVersion: firmwareVersion }
+    );
   }
 };
 
@@ -192,7 +237,7 @@ export const VALVE_STATUS = async (macId, payload) => {
     //! convert threshold hax in to decimal
     totaliser_current_value = getDecimalValue(totaliser_current_value);
     flowValue = getDecimalValue(flowValue);
-    let deviceExist = await Devices.isExist({ vmac: macId });//findOne
+    let deviceExist = await Devices.isExist({ vmac: macId }); //findOne
     let deviceHistoryExist = await deviceHistory.isExist({ vmac: macId });
     if (deviceExist) {
       if (state === "00") {
@@ -210,7 +255,7 @@ export const VALVE_STATUS = async (macId, payload) => {
           }
         );
         if (!deviceHistoryExist) {
-         // updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
+          // updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
           var dates = new Date(moment().tz("Asia/calcutta").format());
           dates.setDate(dates.getDate() - 1);
           console.log(">>dates", dates);
