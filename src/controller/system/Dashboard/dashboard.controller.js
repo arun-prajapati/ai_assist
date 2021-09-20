@@ -28,6 +28,20 @@ const defaultBatteryProperty = (period) => {
   };
   return data;
 };
+const defaultBatteryPropertyOfWeek = (period) => {
+  console.log(period);
+  let demoDate = new Date(
+    moment(period).tz("Asia/calcutta").format("YYYY-MM-DD")
+  );
+  let data = {
+    _id: demoDate.getDate(),
+    date: new Date(
+      moment(period).tz("Asia/calcutta").format("YYYY-MM-DD")
+    ).toISOString(),
+    totaliser_current_value: 0,
+  };
+  return data;
+};
 export const deviceCount = async (req, res, next) => {
   logger.log(level.info, `✔ Controller deviceCount()`);
   try {
@@ -151,13 +165,14 @@ export const graphData = async (req, res, next) => {
         },
         {
           $group: {
+            //new Date(moment("$date_timezone.day").tz("Asia/calcutta").format("YYYY-MM-DD"))
             _id: "$date_timezone.day",
             totaliser: { $push: "$$ROOT" },
           },
         },
         {
           $project: {
-            //date: { $first: "$totaliser.date" },
+            date: { $first: "$totaliser.date" },
             totaliser_current_value: {
               $max: "$totaliser.totaliser_current_value",
             },
@@ -165,12 +180,14 @@ export const graphData = async (req, res, next) => {
         },
         { $sort: { _id: 1 } },
       ];
-      //graphData = await deviceHistory.aggregate(pipeline);
-      generateDefaultPropertiesOfWeek();
-      // graphData = JSON.parse(JSON.stringify(graphData));
-      // let defaultgraphData = generateDefaultPropertiesOfDays(graphData);
-      // let mergeArrayResponse = [...graphData, ...defaultgraphData];
-      // graphData = sortResponsePeriodWise(mergeArrayResponse);
+      graphData = await deviceHistory.aggregate(pipeline);
+      graphData = JSON.parse(JSON.stringify(graphData));
+      generateDefaultPropertiesOfWeek(graphData);
+      let defaultgraphData = generateDefaultPropertiesOfWeek(graphData);
+      console.log("graph Data", graphData);
+      let mergeArrayResponse = [...graphData, ...defaultgraphData];
+      graphData = sortResponsePeriodWise(mergeArrayResponse);
+      console.log("merger array", mergeArrayResponse);
     } else {
       pipeline = [
         {
@@ -271,19 +288,36 @@ const checkLeapYear = (year) => {
   const isLeapYear = year % 100 === 0 ? year % 400 === 0 : year % 4 === 0;
   return isLeapYear;
 };
-const generateDefaultPropertiesOfWeek = (/*data*/) => {
+const generateDefaultPropertiesOfWeek = (data) => {
+  let dates1 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
   let totalDays = [];
-
-  //dates.setDate(dates.getDate() - 7);
-  console.log(">>>>", dates);
-  // for (let i = 0; i < 7; i++) {
-  //   totalDays.push(dates.setDate(dates.getDate() + i));
-  // }
+  dates1.setDate(dates.getDate() + 1);
+  dates1.setDate(dates.getDate() - 8);
+  console.log(">>++", dates1);
+  for (let i = 0; i < 7; i++) {
+    let ansDate = new Date(
+      moment(dates1.setDate(dates1.getDate() + 1))
+        .tz("Asia/calcutta")
+        .format("YYYY-MM-DD")
+    ).toDateString();
+    totalDays.push(ansDate);
+  }
   console.log(">>>totaldays", totalDays);
-  // let dayIncludedInDBResponse = data.map((day) => day.date);
-
-  // // List of days not included in response. it is upto 31st day
-  // let dayNotIncludedInDBResponse = totalDays.filter(
-  //   (x) => !dayIncludedInDBResponse.includes(x)
-  // );
+  //day.date
+  let dayIncludedInDBResponse = data.map((day) =>
+    new Date(
+      moment(day.date).tz("Asia/calcutta").format("YYYY-MM-DD")
+    ).toDateString()
+  );
+  console.log("dayincluded", dayIncludedInDBResponse);
+  // List of days not included in response. it is upto 31st day
+  let dayNotIncludedInDBResponse = totalDays.filter(
+    (x) => !dayIncludedInDBResponse.includes(x)
+  );
+  console.log("notinculded", dayNotIncludedInDBResponse);
+  let generateNotIncludedDayResponse = dayNotIncludedInDBResponse.map((day) => {
+    return defaultBatteryPropertyOfWeek(day);
+  });
+  console.log("generated response", generateNotIncludedDayResponse);
+  return generateNotIncludedDayResponse;
 };
