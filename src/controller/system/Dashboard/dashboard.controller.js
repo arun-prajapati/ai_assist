@@ -157,7 +157,7 @@ export const graphData = async (req, res, next) => {
         },
         {
           $project: {
-            date: { $first: "$totaliser.date" },
+            //date: { $first: "$totaliser.date" },
             totaliser_current_value: {
               $max: "$totaliser.totaliser_current_value",
             },
@@ -166,6 +166,7 @@ export const graphData = async (req, res, next) => {
         { $sort: { _id: 1 } },
       ];
       graphData = await deviceHistory.aggregate(pipeline);
+      generateDefaultPropertiesOfWeek();
       // graphData = JSON.parse(JSON.stringify(graphData));
       // let defaultgraphData = generateDefaultPropertiesOfDays(graphData);
       // let mergeArrayResponse = [...graphData, ...defaultgraphData];
@@ -270,15 +271,19 @@ const checkLeapYear = (year) => {
   const isLeapYear = year % 100 === 0 ? year % 400 === 0 : year % 4 === 0;
   return isLeapYear;
 };
-const generateDefaultPropertiesOfWeek = (data) => {
-  let totalDays;
-  for (let i = 0; i < 7; i++) {
-    totalDays.push();
-  }
-  let dayIncludedInDBResponse = data.map((day) => day.date);
+const generateDefaultPropertiesOfWeek = (/*data*/) => {
+  let totalDays = [];
 
-  // List of days not included in response. it is upto 31st day
-  let dayNotIncludedInDBResponse = totalDays.filter(
-    (x) => !dayIncludedInDBResponse.includes(x)
-  );
+  //dates.setDate(dates.getDate() - 7);
+  console.log(">>>>", dates);
+  // for (let i = 0; i < 7; i++) {
+  //   totalDays.push(dates.setDate(dates.getDate() + i));
+  // }
+  console.log(">>>totaldays", totalDays);
+  // let dayIncludedInDBResponse = data.map((day) => day.date);
+
+  // // List of days not included in response. it is upto 31st day
+  // let dayNotIncludedInDBResponse = totalDays.filter(
+  //   (x) => !dayIncludedInDBResponse.includes(x)
+  // );
 };
