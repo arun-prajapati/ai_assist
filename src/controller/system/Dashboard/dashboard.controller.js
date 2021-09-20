@@ -129,6 +129,47 @@ export const graphData = async (req, res, next) => {
       let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
       graphData = sortResponsePeriodWise(mergeArrayResponse);
+    } else if (req.query.type === "week") {
+      pipeline = [
+        {
+          $addFields: {
+            date_timezone: {
+              $dateToParts: { date: "$date" },
+            },
+          },
+        },
+        {
+          $match: {
+            deviceId: mongoose.Types.ObjectId(req.query.deviceId),
+            "date_timezone.year": dateData.yy,
+            "date_timezone.month": dateData.mm,
+            "date_timezone.day": {
+              $gte: dates.getDate() - 8,
+              $lte: dates.getDate() - 1,
+            },
+          },
+        },
+        {
+          $group: {
+            _id: "$date_timezone.day",
+            totaliser: { $push: "$$ROOT" },
+          },
+        },
+        {
+          $project: {
+            date: { $first: "$totaliser.date" },
+            totaliser_current_value: {
+              $max: "$totaliser.totaliser_current_value",
+            },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ];
+      graphData = await deviceHistory.aggregate(pipeline);
+      // graphData = JSON.parse(JSON.stringify(graphData));
+      // let defaultgraphData = generateDefaultPropertiesOfDays(graphData);
+      // let mergeArrayResponse = [...graphData, ...defaultgraphData];
+      // graphData = sortResponsePeriodWise(mergeArrayResponse);
     } else {
       pipeline = [
         {
@@ -228,4 +269,16 @@ const generateDefaultPropertiesOfDays = (data) => {
 const checkLeapYear = (year) => {
   const isLeapYear = year % 100 === 0 ? year % 400 === 0 : year % 4 === 0;
   return isLeapYear;
+};
+const generateDefaultPropertiesOfWeek = (data) => {
+  let totalDays;
+  for (let i = 0; i < 7; i++) {
+    totalDays.push();
+  }
+  let dayIncludedInDBResponse = data.map((day) => day.date);
+
+  // List of days not included in response. it is upto 31st day
+  let dayNotIncludedInDBResponse = totalDays.filter(
+    (x) => !dayIncludedInDBResponse.includes(x)
+  );
 };

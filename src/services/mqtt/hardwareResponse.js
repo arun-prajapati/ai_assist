@@ -192,7 +192,7 @@ export const VALVE_STATUS = async (macId, payload) => {
     //! convert threshold hax in to decimal
     totaliser_current_value = getDecimalValue(totaliser_current_value);
     flowValue = getDecimalValue(flowValue);
-    let deviceExist = await Devices.isExist({ vmac: macId });
+    let deviceExist = await Devices.isExist({ vmac: macId });//findOne
     let deviceHistoryExist = await deviceHistory.isExist({ vmac: macId });
     if (deviceExist) {
       if (state === "00") {
@@ -210,7 +210,7 @@ export const VALVE_STATUS = async (macId, payload) => {
           }
         );
         if (!deviceHistoryExist) {
-          updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
+         // updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
           var dates = new Date(moment().tz("Asia/calcutta").format());
           dates.setDate(dates.getDate() - 1);
           console.log(">>dates", dates);
@@ -240,7 +240,7 @@ export const VALVE_STATUS = async (macId, payload) => {
           }
         );
         if (!deviceHistoryExist) {
-          updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
+          //updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
           dates = new Date(moment().tz("Asia/calcutta").format());
           dates.setDate(dates.getDate() - 1);
           console.log(">>dates", dates);

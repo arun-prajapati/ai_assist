@@ -9,12 +9,11 @@ export default class SchemaModel {
   }
 
   async isExist(query, option) {
-    let isExist = false;
-    const adminUser = await this.model.find(query, null, option);
-    if (adminUser.length > 0) {
-      isExist = true;
+    const adminUser = await this.model.countDocuments(query, null, option);
+    if (adminUser) {
+      return true;
     }
-    return isExist;
+    return false;
   }
 
   async findData(query, projection, options) {
@@ -47,11 +46,9 @@ export default class SchemaModel {
       upsert: true,
       opts,
     };
-    const dbOperation = await this.model.findOneAndUpdate(
-      query,
-      updateJson,
-      option
-    );
+    const dbOperation = await this.model
+      .findOneAndUpdate(query, updateJson, option)
+      .lean();
     return dbOperation;
   }
 
