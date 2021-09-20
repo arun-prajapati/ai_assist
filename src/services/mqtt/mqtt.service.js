@@ -41,8 +41,7 @@ export const handleMQTTData = async (macId, data) => {
       }
 
       case MESSAGE.FA06: {
-        setTimeout(() => HR.VALVE_STATUS(macId, payload), 5000);
-
+        HR.VALVE_STATUS(macId, payload);
         break;
       }
     }
