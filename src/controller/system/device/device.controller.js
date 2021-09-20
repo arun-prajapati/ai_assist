@@ -64,7 +64,7 @@ export const getSingleDevice = async (req, res, next) => {
     });
     var dates = new Date(moment().tz("Asia/calcutta").format());
     //dates.setDate(dates.getDate() - 1);
-    dates.setHours(0, 0, 0);
+    //dates.setHours(0, 0, 0);
     console.log(">>===", dates);
     let historyData = await deviceHistory.findData(
       {

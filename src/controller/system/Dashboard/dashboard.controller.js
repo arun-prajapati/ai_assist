@@ -165,7 +165,7 @@ export const graphData = async (req, res, next) => {
         },
         { $sort: { _id: 1 } },
       ];
-      graphData = await deviceHistory.aggregate(pipeline);
+      //graphData = await deviceHistory.aggregate(pipeline);
       generateDefaultPropertiesOfWeek();
       // graphData = JSON.parse(JSON.stringify(graphData));
       // let defaultgraphData = generateDefaultPropertiesOfDays(graphData);
