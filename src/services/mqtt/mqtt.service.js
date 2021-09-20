@@ -40,10 +40,10 @@ export const handleMQTTData = async (macId, data) => {
         break;
       }
 
-      case MESSAGE.FA06: {
-        HR.VALVE_STATUS(macId, payload);
-        break;
-      }
+      // case MESSAGE.FA06: {
+      //   HR.VALVE_STATUS(macId, payload);
+      //   break;
+      // }
     }
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
