@@ -73,7 +73,7 @@ export const getSingleDevice = async (req, res, next) => {
           $gte: new Date(new Date(dates)), //.toLocaleString("en-US", {
           //timeZone: "Asia/calcutta",
           //}),
-          $lte: new Date(new Date(dates)), //.setHours(23, 59, 59)).toLocaleString(
+          $lte: new Date(new Date(dates)).setHours(23, 59, 59), //.toLocaleString(
           // "en-US",
           //{ timeZone: "Asia/calcutta" }
           //),
