@@ -133,6 +133,8 @@ export const getSingleDevice = async (req, res, next) => {
       endDate: deviceData.endDate,
       startTime: deviceData.startTime,
       endTime: deviceData.endTime,
+      pumpVersion: deviceData.pumpVersion,
+      valveVersion: deviceData.valveVersion,
     };
     let dataObject = {
       message: "Device fetched succesfully",
