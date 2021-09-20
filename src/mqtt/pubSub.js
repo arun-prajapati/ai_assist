@@ -12,7 +12,7 @@ const CHANNEL_PREFIX = "SensieTech";
 mqttClient.on("connect", function () {
   logger.log(level.info, "✔ Broker connected successfully");
   // Subscribe hardware topic here
-  mqttClient.subscribe(ESPToCloudTopic);
+  //mqttClient.subscribe(ESPToCloudTopic);
 });
 
 mqttClient.on("message", async function (topic, message) {
