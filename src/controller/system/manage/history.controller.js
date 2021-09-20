@@ -14,10 +14,7 @@ import moment from "moment";
 export const getDeviceHistoryData = async (req, res, next) => {
   logger.log(level.info, `>> Controller: getDeviceHistoryData()`);
   try {
-    console.log(
-      ">>>",
-      new Date(new Date(req.body.startDate).setHours(0, 0, 0))
-    );
+    console.log(">>>", new Date(new Date(req.body.startDate)));
     let historyData = await deviceHistory.findData({
       deviceId: req.query.deviceId,
       date: {
