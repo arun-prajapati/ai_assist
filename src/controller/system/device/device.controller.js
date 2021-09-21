@@ -210,10 +210,17 @@ export const updateDevice = async (req, res, next) => {
     );
     //await DeviceSrv.addDeviceHistoryData(updateDeviceData);
     if (scheduleCondt) {
-      publishScheduleMSG(updateDevice, startDate, endDate, startTime, endTime);
+      console.log("inside Scheduling");
+      publishScheduleMSG(
+        updateDeviceData,
+        startDate,
+        endDate,
+        startTime,
+        endTime
+      );
     }
     if (configurationCondt) {
-      console.log("inside");
+      console.log("inside configuration");
       publishConfigurationMSG(req.params.deviceId);
     }
     let dataObject = { message: "Device Updated succesfully" };
