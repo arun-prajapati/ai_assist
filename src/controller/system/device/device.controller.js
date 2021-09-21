@@ -167,7 +167,7 @@ export const updateDevice = async (req, res, next) => {
     let {
       name,
       location,
-      operationMode,
+     // operationMode,
       threshold,
       lineSize,
       pipeSize,
@@ -180,7 +180,7 @@ export const updateDevice = async (req, res, next) => {
     let updateDeviceObject = {
       name,
       location,
-      operationMode,
+      //operationMode,
       lineSize,
       pipeSize,
     };
