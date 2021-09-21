@@ -35,6 +35,7 @@ const schema = {
   operationMode: {
     type: String,
     enum: ["auto", "manual"],
+    default: "auto",
   },
   threshold: {
     type: Number,

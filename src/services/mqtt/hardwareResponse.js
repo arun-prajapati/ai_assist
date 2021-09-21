@@ -35,6 +35,7 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
           startTime,
           endTime,
           payloadInterval,
+          operationMode,
         } = device;
         //! update either pstate or vstate to 1
         updateDeviceStatus(recievedMACId, pmac, vmac);
@@ -71,6 +72,7 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
         );
         console.log(">>pumptopic", PUMP_TOPIC);
         //! for pump send FA02,FA03
+        publishPumpOperationType(pmac, vmac, operationMode);
         mqttClient.publish(PUMP_TOPIC, FA03payload);
         mqttClient.publish(PUMP_TOPIC, FA04payload);
         //! for valve send FA02,FA03
@@ -252,6 +254,7 @@ export const PUMP_STATUS = async (macId, payload) => {
           startTime,
           endTime,
           payloadInterval,
+          operationMode,
         } = deviceExist;
         let PUMP_MAC = pmac; //pmac
         let VALVE_MAC = vmac;
@@ -279,6 +282,7 @@ export const PUMP_STATUS = async (macId, payload) => {
           startTime,
           endTime
         );
+        publishPumpOperationType(pmac, vmac, operationMode);
         mqttClient.publish(PUMP_TOPIC, FA03payload);
         mqttClient.publish(PUMP_TOPIC, FA04payload);
         //! for valve send FA02,FA03
@@ -333,7 +337,7 @@ export const VALVE_STATUS = async (macId, payload) => {
     let deviceExist = await Devices.findOneDocument({ vmac: macId }); //findOne
     let deviceHistoryExist = await deviceHistory.isExist({ vmac: macId });
     if (deviceExist) {
-      if (deviceExist.pstate !== 1) {
+      if (deviceExist.vstate !== 1) {
         let {
           pmac,
           vmac,
@@ -343,6 +347,7 @@ export const VALVE_STATUS = async (macId, payload) => {
           startTime,
           endTime,
           payloadInterval,
+          operationMode,
         } = deviceExist;
         let PUMP_MAC = pmac; //pmac
         let VALVE_MAC = vmac;
@@ -370,6 +375,7 @@ export const VALVE_STATUS = async (macId, payload) => {
           startTime,
           endTime
         );
+        publishPumpOperationType(pmac, vmac, operationMode);
         mqttClient.publish(PUMP_TOPIC, FA03payload);
         mqttClient.publish(PUMP_TOPIC, FA04payload);
         //! for valve send FA02,FA03
