@@ -420,6 +420,14 @@ const createFA08payload = (operation, min) => {
   let FA08payload = `${START_DELIMETER}${msgId}${payloadDataLength}${operation}${min}${END_DELIMETER}`;
   return FA08payload;
 };
+
+export const createFA09payload = (url) => {
+  let msgId = MESSAGE.FA09;
+  let payloadDataLength = getHAXValue(2, url.length);
+  console.log(">>payloadDATALENGTH", payloadDataLength);
+  let FA09payload = `${START_DELIMETER}${msgId}${payloadDataLength}${url}${END_DELIMETER}`;
+  return FA09payload;
+};
 const createFA07payload = (operation) => {
   let msgId = MESSAGE.FA07;
   let payloadDataLength = "02";
