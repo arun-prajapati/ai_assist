@@ -94,7 +94,7 @@ export const firmwareVersions = async (macId, payload) => {
       $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
     });
     if (device) {
-      if (device.pstate !== 1) {
+      if (device.pstate !== 1 || device.vstate !== 1) {
         let {
           pmac,
           vmac,
@@ -104,6 +104,7 @@ export const firmwareVersions = async (macId, payload) => {
           startTime,
           endTime,
           payloadInterval,
+          operationMode,
         } = device;
         let PUMP_MAC = pmac; //pmac
         let VALVE_MAC = vmac;
@@ -131,6 +132,7 @@ export const firmwareVersions = async (macId, payload) => {
           startTime,
           endTime
         );
+        publishPumpOperationType(pmac, vmac, operationMode);
         mqttClient.publish(PUMP_TOPIC, FA03payload);
         mqttClient.publish(PUMP_TOPIC, FA04payload);
         //! for valve send FA02,FA03
