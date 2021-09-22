@@ -202,7 +202,7 @@ const updateDeviceStatus = async (recievedMACId, pmac, vmac) => {
       {
         pmac,
       },
-      { pstate: 1 }
+      { pstate: 1, pumpLastUpdated: moment().format() }
     );
     // await DeviceSrv.addDeviceHistoryData(updateDeviceData);
   } else if (recievedMACId === vmac) {
@@ -211,7 +211,7 @@ const updateDeviceStatus = async (recievedMACId, pmac, vmac) => {
       {
         vmac,
       },
-      { vstate: 1 }
+      { vstate: 1, valveLastUpdated: moment().format() }
     );
     //await DeviceSrv.addDeviceHistoryData(updateDeviceData);
   }
@@ -228,7 +228,11 @@ const updateDeviceFirmwareVersion = async (
       {
         pmac,
       },
-      { pstate: 1, pumpVersion: firmwareVersion }
+      {
+        pstate: 1,
+        pumpLastUpdated: moment().format(),
+        pumpVersion: firmwareVersion,
+      }
     );
   } else if (recievedMACId === vmac) {
     // update valve version
@@ -236,7 +240,11 @@ const updateDeviceFirmwareVersion = async (
       {
         vmac,
       },
-      { vstate: 1, valveVersion: firmwareVersion }
+      {
+        vstate: 1,
+        valveLastUpdated: moment().format(),
+        valveVersion: firmwareVersion,
+      }
     );
   }
 };
