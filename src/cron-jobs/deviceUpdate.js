@@ -21,14 +21,14 @@ scheduleJob(JOB_TIME, async (fireDate) => {
         vstate: 1,
         valveLastUpdated: {
           // 15 minutes ago (from now)
-          $lte: new Date(moment().format() - 1000 * 60 * MIN), //! make 15 here
+          $lte: new Date(new Date() - 1000 * 60 * MIN), //! make 15 here
         },
       }),
       await Devices.findData({
         pstate: 1,
         pumpLastUpdated: {
           // 15 minutes ago (from now)
-          $lte: new Date(moment().format() - 1000 * 60 * MIN), //! make 15 here
+          $lte: new Date(new Date() - 1000 * 60 * MIN), //! make 15 here
         },
       }),
     ]);
