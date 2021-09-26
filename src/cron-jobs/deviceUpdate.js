@@ -19,18 +19,16 @@ scheduleJob(JOB_TIME, async (fireDate) => {
     let [idealValves, idealPumps] = await Promise.all([
       Devices.findData({
         vstate: 1,
-        // valveCurrentstate: false,
         valveLastUpdated: {
           // 15 minutes ago (from now)
-          $lte: new Date(new Date() - 1000 * 60 * MIN), //! make 15 here
+          $lte: new Date(moment().format() - 1000 * 60 * MIN), //! make 15 here
         },
       }),
       await Devices.findData({
         pstate: 1,
-        //pumpCurrentstate: false,
         pumpLastUpdated: {
           // 15 minutes ago (from now)
-          $lte: new Date(new Date() - 1000 * 60 * MIN), //! make 15 here
+          $lte: new Date(moment().format() - 1000 * 60 * MIN), //! make 15 here
         },
       }),
     ]);
@@ -49,7 +47,7 @@ scheduleJob(JOB_TIME, async (fireDate) => {
 
 const updateValveState = async (idealValves) => {
   // update vstate=0
-
+  console.log("Ideal Valve", idealValves);
   for (const valveDoc of idealValves) {
     if (!valveDoc.valveCurrentstate) {
       let updateDeviceData = await Devices.updateData(
@@ -66,7 +64,7 @@ const updateValveState = async (idealValves) => {
 
 const updatePumpState = async (idealPumps) => {
   // update pstate=0
-
+  console.log("Ideal Pump", idealPumps);
   for (const pumpDoc of idealPumps) {
     if (!pumpDoc.pumpCurrentstate) {
       let updateDeviceData = await Devices.updateData(
