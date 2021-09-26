@@ -49,15 +49,13 @@ const updateValveState = async (idealValves) => {
   // update vstate=0
   console.log("Ideal Valve", idealValves);
   for (const valveDoc of idealValves) {
-    if (!valveDoc.valveCurrentstate) {
-      let updateDeviceData = await Devices.updateData(
-        {
-          vmac: valveDoc.vmac,
-        },
-        { vstate: 2 }
-      );
-      // await DeviceSrv.addDeviceHistoryData(updateDeviceData);
-    }
+    let updateDeviceData = await Devices.updateData(
+      {
+        vmac: valveDoc.vmac,
+      },
+      { vstate: 2 }
+    );
+    // await DeviceSrv.addDeviceHistoryData(updateDeviceData);
   }
   logger.log(level.info, `>> ${idealValves.length} valve state updated`);
 };
@@ -66,15 +64,13 @@ const updatePumpState = async (idealPumps) => {
   // update pstate=0
   console.log("Ideal Pump", idealPumps);
   for (const pumpDoc of idealPumps) {
-    if (!pumpDoc.pumpCurrentstate) {
-      let updateDeviceData = await Devices.updateData(
-        {
-          pmac: pumpDoc.pmac,
-        },
-        { pstate: 2 }
-      );
-      // await DeviceSrv.addDeviceHistoryData(updateDeviceData);
-    }
+    let updateDeviceData = await Devices.updateData(
+      {
+        pmac: pumpDoc.pmac,
+      },
+      { pstate: 2 }
+    );
+    // await DeviceSrv.addDeviceHistoryData(updateDeviceData);
   }
   logger.log(level.info, `>> ${idealPumps.length} pump state updated`);
 };
