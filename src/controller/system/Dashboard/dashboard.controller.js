@@ -181,13 +181,13 @@ export const graphData = async (req, res, next) => {
         { $sort: { _id: 1 } },
       ];
       graphData = await deviceHistory.aggregate(pipeline);
-      for (let i = 0; i < graphData.length; i++) {
-        graphData[i].date = new Date(
-          moment(graphData[i].date)
-            .tz("Asia/calcutta")
-            .format("YYYY-MM-DD:h:m:s")
-        );
-      }
+      // for (let i = 0; i < graphData.length; i++) {
+      //   graphData[i].date = new Date(
+      //     moment(graphData[i].date)
+      //       .tz("Asia/calcutta")
+      //       .format("YYYY-MM-DD:h:m:s")
+      //   );
+      // }
 
       graphData = JSON.parse(JSON.stringify(graphData));
       console.log("graph Data date ", graphData);
