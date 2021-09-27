@@ -183,17 +183,16 @@ export const graphData = async (req, res, next) => {
       graphData = await deviceHistory.aggregate(pipeline);
       for (let i = 0; i < graphData.length; i++) {
         graphData[i].date = new Date(
-          moment(graphData[i].date).tz("Asia/calcutta").format("YYYY-MM-DD")
+          moment(graphData[i].date)
+            .tz("Asis/calcutta")
+            .format("YYYY-MM-DD:h:m:s")
         );
       }
-      console.log(
-        "graph Data",
-        new Date(
-          moment(graphData[0].date).tz("Asia/calcutta").format("YYYY-MM-DD")
-        )
-      );
+
       graphData = JSON.parse(JSON.stringify(graphData));
+      console.log("graph Data date ", graphData);
       let defaultgraphData = generateDefaultPropertiesOfWeek(graphData);
+      console.log(" Default graph Data date ", defaultgraphData);
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
       graphData = sortResponsePeriodWise(mergeArrayResponse);
       console.log("merger array", mergeArrayResponse);
@@ -307,26 +306,30 @@ const generateDefaultPropertiesOfWeek = (data) => {
     let ansDate = new Date(
       moment(dates1.setDate(dates1.getDate() + 1))
         .tz("Asia/calcutta")
-        .format("YYYY-MM-DD:h:m:s")
-    ).toDateString();
+        .format("YYYY-MM-DD")
+    ); //.toDateString();
     totalDays.push(ansDate);
   }
-  console.log(">>>totaldays", totalDays);
-  //day.date
-  let dayIncludedInDBResponse = data.map((day) =>
-    new Date(
-      moment(day.date).tz("Asia/calcutta").format("YYYY-MM-DD")
-    ).toDateString()
+  totalDays = JSON.parse(JSON.stringify(totalDays));
+  let dayIncludedInDBResponse = data.map(
+    (day) => new Date(moment(day.date).format("YYYY-MM-DD:h:m:s"))
   );
-  console.log("dayincluded", dayIncludedInDBResponse);
-  // List of days not included in response. it is upto 31st day
-  let dayNotIncludedInDBResponse = totalDays.filter(
-    (x) => !dayIncludedInDBResponse.includes(x)
+  dayIncludedInDBResponse = JSON.parse(JSON.stringify(dayIncludedInDBResponse));
+  dayIncludedInDBResponse = dayIncludedInDBResponse.map(
+    (day) => day.split("T")[0]
   );
+  totalDays = totalDays.map((day) => day.split("T")[0]);
+  console.log(" After dayincluded", dayIncludedInDBResponse);
+  console.log("After  daynotincluded", totalDays);
+  let dayNotIncludedInDBResponse = totalDays.filter((x) => {
+    console.log(dayIncludedInDBResponse.includes(x));
+    return !dayIncludedInDBResponse.includes(x);
+  });
+
   console.log("notinculded", dayNotIncludedInDBResponse);
   let generateNotIncludedDayResponse = dayNotIncludedInDBResponse.map((day) => {
     return defaultBatteryPropertyOfWeek(day);
   });
-  console.log("generated response", generateNotIncludedDayResponse);
+  // console.log("generated response", generateNotIncludedDayResponse);
   return generateNotIncludedDayResponse;
 };
