@@ -184,7 +184,7 @@ export const graphData = async (req, res, next) => {
       for (let i = 0; i < graphData.length; i++) {
         graphData[i].date = new Date(
           moment(graphData[i].date)
-            .tz("Asis/calcutta")
+            .tz("Asia/calcutta")
             .format("YYYY-MM-DD:h:m:s")
         );
       }
