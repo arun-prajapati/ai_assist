@@ -158,7 +158,7 @@ export const graphData = async (req, res, next) => {
             "date_timezone.year": dateData.yy,
             "date_timezone.month": dateData.mm,
             "date_timezone.day": {
-              $gte: dates.getDate() - 8,
+              $gte: dates.getDate() - 7,
               $lte: dates.getDate() - 1,
             },
           },
