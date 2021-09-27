@@ -303,7 +303,7 @@ const generateDefaultPropertiesOfWeek = (data) => {
   console.log("origin timezone Date", dates1);
   let totalDays = [];
   //dates1.setDate(dates.getDate() + 2);
-  dates1.setDate(dates.getDate() - 7);
+  dates1.setDate(dates.getDate() - 8);
   console.log(">>++", dates1);
   for (let i = 0; i < 7; i++) {
     let ansDate = new Date(
