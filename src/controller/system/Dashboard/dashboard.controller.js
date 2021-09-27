@@ -300,7 +300,7 @@ const generateDefaultPropertiesOfWeek = (data) => {
   let dates1 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
   let totalDays = [];
   //dates1.setDate(dates.getDate() + 2);
-  dates1.setDate(dates.getDate() - 7);
+  dates1.setDate(dates.getDate() - 8);
   console.log(">>++", dates1);
   for (let i = 0; i < 7; i++) {
     let ansDate = new Date(
