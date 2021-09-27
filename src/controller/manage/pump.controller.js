@@ -55,12 +55,14 @@ export const operatePump = async (req, res, next) => {
           pstate: 1,
           pumpCurrentstate: true,
           pumpLastUpdated: moment().format(),
+          pumpDuration: min.toString(),
           //operationMode: "manual",
         };
       } else {
         updateFields = {
           pumpCurrentstate: false,
           pumpLastUpdated: moment().format(),
+          pumpDuration: "0000",
           //operationMode: "auto",
         };
       }
@@ -73,7 +75,7 @@ export const operatePump = async (req, res, next) => {
       },
       updateFields
     );
-   // await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+    // await DeviceSrv.addDeviceHistoryData(updateDeviceData);
 
     let dataObject = { message };
     return handleResponse(res, dataObject);

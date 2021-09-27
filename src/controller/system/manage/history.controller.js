@@ -69,11 +69,28 @@ export const firmwareVersion = async (req, res, next) => {
         console.log("pmac");
         PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, pmac);
         mqttClient.publish(PUMP_TOPIC, FA09payload);
+        await Devices.updateData(
+          {
+            pmac: pmac,
+          },
+          {
+            url: url,
+          }
+        );
       } else if (vmac) {
         console.log("vmac");
         VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, vmac);
         mqttClient.publish(VALVE_TOPIC, FA09payload);
+        await Devices.updateData(
+          {
+            vmac: vmac,
+          },
+          {
+            url: url,
+          }
+        );
       }
+
       let dataObject = {
         message: "OTA version sent successfully",
       };

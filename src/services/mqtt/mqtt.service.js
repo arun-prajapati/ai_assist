@@ -34,8 +34,17 @@ export const handleMQTTData = async (macId, data) => {
         HR.DEVICE_CONNECTION(macId, msgId, payload);
         break;
       }
+
       case MESSAGE.FA02: {
         HR.firmwareVersions(macId, payload);
+        break;
+      }
+      case MESSAGE.FA03: {
+        HR.handle_FA03_Response(macId, msgId, payload);
+        break;
+      }
+      case MESSAGE.FA04: {
+        HR.handle_FA04_Response(macId, msgId, payload);
         break;
       }
       case MESSAGE.FA05: {
@@ -45,6 +54,18 @@ export const handleMQTTData = async (macId, data) => {
 
       case MESSAGE.FA06: {
         HR.VALVE_STATUS(macId, payload);
+        break;
+      }
+      case MESSAGE.FA07: {
+        HR.handle_FA07_Response(macId, msgId, payload);
+        break;
+      }
+      case MESSAGE.FA08: {
+        HR.handle_FA08_Response(macId, msgId, payload);
+        break;
+      }
+      case MESSAGE.FA09: {
+        HR.handle_FA09_Response(macId, msgId, payload);
         break;
       }
     }

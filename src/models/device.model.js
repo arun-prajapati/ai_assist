@@ -122,6 +122,13 @@ const schema = {
     type: Number,
     default: 0,
   },
+  pumpDuration: {
+    type: String,
+    default: "0000",
+  },
+  url: {
+    type: String,
+  },
 };
 
 let schemaOption = {

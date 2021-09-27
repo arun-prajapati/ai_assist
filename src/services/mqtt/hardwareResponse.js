@@ -588,3 +588,158 @@ const createFA07payload = (operation) => {
   let FA07payload = `${START_DELIMETER}${msgId}${payloadDataLength}${operation}${END_DELIMETER}`;
   return FA07payload;
 };
+export const handle_FA03_Response = async (macId, msgId, payload) => {
+  try {
+    const recievedMACId = macId;
+    let state = payload.slice(2, 4);
+    console.log("state", state);
+    //! get doc from DB using that mac if not exist then do nothing
+    if (state !== "00") {
+      let device = await Devices.findOneDocument({
+        $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+      });
+
+      if (device) {
+        let { pmac, vmac, threshold, payloadInterval } = device;
+
+        // from macId get pump and valve id
+        let PUMP_MAC = pmac; //pmac
+        let VALVE_MAC = vmac;
+        var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(
+          REPLACE_DELIMETER,
+          PUMP_MAC
+        );
+        var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(
+          REPLACE_DELIMETER,
+          VALVE_MAC
+        );
+        const FA03payload = createFA03payload(
+          MESSAGE.FA03,
+          pmac,
+          vmac,
+          threshold,
+          payloadInterval
+        );
+        //pmac:B8F0098F81B0
+        //vmac:083AF22BD318
+        mqttClient.publish(PUMP_TOPIC, FA03payload);
+        mqttClient.publish(VALVE_TOPIC, FA03payload);
+      }
+    }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
+
+export const handle_FA04_Response = async (macId, msgId, payload) => {
+  try {
+    const recievedMACId = macId;
+    let state = payload.slice(2, 4);
+    console.log("state", state);
+    //! get doc from DB using that mac if not exist then do nothing
+    if (state !== "00") {
+      let device = await Devices.findOneDocument({
+        $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+      });
+
+      if (device) {
+        let { pmac, vmac, startDate, endDate, startTime, endTime } = device;
+
+        // from macId get pump and valve id
+        let PUMP_MAC = pmac; //pmac
+        let VALVE_MAC = vmac;
+        var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(
+          REPLACE_DELIMETER,
+          PUMP_MAC
+        );
+        var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(
+          REPLACE_DELIMETER,
+          VALVE_MAC
+        );
+        const FA04payload = createFA04payload(
+          MESSAGE.FA04,
+          startDate,
+          endDate,
+          startTime,
+          endTime
+        );
+        //pmac:B8F0098F81B0
+        //vmac:083AF22BD318
+        mqttClient.publish(PUMP_TOPIC, FA04payload);
+        mqttClient.publish(VALVE_TOPIC, FA04payload);
+      }
+    }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
+
+export const handle_FA07_Response = async (macId, msgId, payload) => {
+  try {
+    const recievedMACId = macId;
+    let state = payload.slice(2, 4);
+    console.log("state", state);
+    //! get doc from DB using that mac if not exist then do nothing
+    if (state !== "00") {
+      console.log("inside ");
+      let device = await Devices.findOneDocument({
+        $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+      });
+      if (device) {
+        let { pmac, vmac, operationMode } = device;
+        publishPumpOperationType(pmac, vmac, operationMode);
+      }
+    }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
+
+export const handle_FA08_Response = async (macId, msgId, payload) => {
+  try {
+    const recievedMACId = macId;
+    let state = payload.slice(2, 4);
+    console.log("state", state);
+    //! get doc from DB using that mac if not exist then do nothing
+    if (state !== "00") {
+      console.log("inside ");
+      let device = await Devices.findOneDocument({
+        $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+      });
+      if (device) {
+        let { pmac, vmac, pumpCurrentstate, pumpDuration } = device;
+        publishPumpOperation(pmac, vmac, pumpCurrentstate, pumpDuration);
+      }
+    }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
+
+export const handle_FA09_Response = async (macId, msgId, payload) => {
+  try {
+    const recievedMACId = macId;
+    let state = payload.slice(2, 4);
+    console.log("state", state);
+    //! get doc from DB using that mac if not exist then do nothing
+    if (state !== "00") {
+      console.log("inside ");
+      let device = await Devices.findOneDocument({
+        $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+      });
+      if (device) {
+        let { pmac, vmac, url } = device;
+        let FA09payload = createFA09payload(url);
+        if (recievedMACId === pmac) {
+          let PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, pmac);
+          mqttClient.publish(PUMP_TOPIC, FA09payload);
+        } else if (recievedMACId === vmac) {
+          let VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, vmac);
+          mqttClient.publish(VALVE_TOPIC, FA09payload);
+        }
+      }
+    }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
