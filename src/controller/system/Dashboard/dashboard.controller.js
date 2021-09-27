@@ -180,6 +180,8 @@ export const graphData = async (req, res, next) => {
         },
         { $sort: { _id: 1 } },
       ];
+      console.log(">>after subsr", dates.getDate() - 1);
+      console.log(">>after subsr", dates.getDate() - 7);
       graphData = await deviceHistory.aggregate(pipeline);
       // for (let i = 0; i < graphData.length; i++) {
       //   graphData[i].date = new Date(
