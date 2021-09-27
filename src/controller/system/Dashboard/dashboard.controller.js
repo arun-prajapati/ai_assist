@@ -181,10 +181,19 @@ export const graphData = async (req, res, next) => {
         { $sort: { _id: 1 } },
       ];
       graphData = await deviceHistory.aggregate(pipeline);
+      for (let i = 0; i < graphData.length; i++) {
+        graphData[i].date = new Date(
+          moment(graphData[i].date).tz("Asia/calcutta").format("YYYY-MM-DD")
+        );
+      }
+      console.log(
+        "graph Data",
+        new Date(
+          moment(graphData[0].date).tz("Asia/calcutta").format("YYYY-MM-DD")
+        )
+      );
       graphData = JSON.parse(JSON.stringify(graphData));
-      generateDefaultPropertiesOfWeek(graphData);
       let defaultgraphData = generateDefaultPropertiesOfWeek(graphData);
-      console.log("graph Data", graphData);
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
       graphData = sortResponsePeriodWise(mergeArrayResponse);
       console.log("merger array", mergeArrayResponse);
@@ -298,7 +307,7 @@ const generateDefaultPropertiesOfWeek = (data) => {
     let ansDate = new Date(
       moment(dates1.setDate(dates1.getDate() + 1))
         .tz("Asia/calcutta")
-        .format("YYYY-MM-DD")
+        .format("YYYY-MM-DD:h:m:s")
     ).toDateString();
     totalDays.push(ansDate);
   }
