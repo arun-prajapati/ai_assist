@@ -298,6 +298,7 @@ const checkLeapYear = (year) => {
 };
 const generateDefaultPropertiesOfWeek = (data) => {
   let dates1 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
+  console.log("origin timezone Date", dates1);
   let totalDays = [];
   //dates1.setDate(dates.getDate() + 2);
   dates1.setDate(dates.getDate() - 7);
