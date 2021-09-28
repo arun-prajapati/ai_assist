@@ -62,7 +62,7 @@ export const getSingleDevice = async (req, res, next) => {
     let deviceData = await Devices.findOneDocument({
       _id: req.params.deviceId,
     });
-    var dates = new Date(moment().tz("Asia/calcutta").format());
+    var dates = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
     dates.setDate(dates.getDate() - 1);
     dates.setHours(0, 0, 0);
     console.log(">>===", dates);
