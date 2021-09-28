@@ -9,9 +9,10 @@ const MAC_ELEMENT_AT = 1;
 const JOIN_BY = "";
 const CHANNEL_PREFIX = "SensieTech";
 
-mqttClient.on("connect", function () {
+mqttClient.on("connect", function (client) {
   logger.log(level.info, "✔ Broker connected successfully");
   // Subscribe hardware topic here
+  console.log(">>client id", client);
   mqttClient.subscribe(ESPToCloudTopic);
 });
 
