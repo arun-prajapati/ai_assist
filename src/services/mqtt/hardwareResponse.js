@@ -544,8 +544,13 @@ export const publishPumpOperation = async (pmac, vmac, operation, min) => {
   var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, vmac);
   //mqttClient.publish(PUMP_TOPIC, FA07payload);
   //mqttClient.publish(VALVE_TOPIC, FA07payload);
-  mqttClient.publish(PUMP_TOPIC, FA08payload);
-  mqttClient.publish(VALVE_TOPIC, FA08payload);
+  var pubCallbackCalled = false;
+  mqttClient.publish(PUMP_TOPIC, FA08payload, { qos: 2 }, (err, result) => {
+    console.log(err);
+    console.log(result);
+    pubCallbackCalled = true;
+  });
+  mqttClient.publish(VALVE_TOPIC, FA08payload, { qos: 2 });
 
   return true;
 };
