@@ -70,7 +70,7 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
           startTime,
           endTime
         );
-        console.log(">>pumptopic", PUMP_TOPIC);
+        console.log(">>FA04Payload", FA04payload);
         //! for pump send FA02,FA03
         publishPumpOperationType(pmac, vmac, operationMode);
         mqttClient.publish(PUMP_TOPIC, FA03payload);
@@ -168,17 +168,22 @@ export const createFA03payload = (
 
 export const createFA04payload = (msgId, start, end, startTime, endTime) => {
   // AAAAFA030E24082021270820210206550406505555
+  let FA04payload;
   let payloadDataLength = "1C";
-  // let startDate = moment(start).format("DDMMYYYY");
-  // let endDate = moment(end).format("DDMMYYYY");
-  let startDate = moment.tz(start, "Asia/calcutta").format("DDMMYYYY");
-  let endDate = moment.tz(end, "Asia/calcutta").format("DDMMYYYY");
-
-  // moment.tz('2021-09-16T18:30:00.000Z', "Asia/calcutta").format('DDMMYYYY')
-
-  startTime = getHHMMSS(startTime);
-  endTime = getHHMMSS(endTime);
-  let FA04payload = `${START_DELIMETER}${msgId}${payloadDataLength}${startDate}${endDate}${startTime}${endTime}${END_DELIMETER}`;
+  if (!start && !end && startTime === "" && endTime === "") {
+    console.log("Inside");
+    FA04payload = `${START_DELIMETER}${msgId}${payloadDataLength}0000000000000000000000000000${END_DELIMETER}`;
+  } else {
+    // let startDate = moment(start).format("DDMMYYYY");
+    // let endDate = moment(end).format("DDMMYYYY");
+    let startDate = moment.tz(start, "Asia/calcutta").format("DDMMYYYY");
+    let endDate = moment.tz(end, "Asia/calcutta").format("DDMMYYYY");
+    // moment.tz('2021-09-16T18:30:00.000Z', "Asia/calcutta").format('DDMMYYYY')
+    startTime = getHHMMSS(startTime);
+    endTime = getHHMMSS(endTime);
+    FA04payload = `${START_DELIMETER}${msgId}${payloadDataLength}${startDate}${endDate}${startTime}${endTime}${END_DELIMETER}`;
+  }
+  console.log(" FUnction FA04Payload", FA04payload);
   return FA04payload;
 };
 
