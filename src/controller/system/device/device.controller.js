@@ -95,7 +95,9 @@ export const getSingleDevice = async (req, res, next) => {
         deviceData.totaliser_current_value -
         historyData[0].totaliser_current_value;
       console.log("totaliserValue", totaliserValue);
-      tankValue = Number(totaliserValue * 100.0) / Number(deviceData.threshold);
+      tankValue = Math.round(
+        Number(totaliserValue * 100.0) / Number(deviceData.threshold)
+      );
       tankCapacity = Number(deviceData.threshold) - Number(totaliserValue);
       console.log("tankCapacity", tankCapacity);
       if (tankCapacity > 0) {
