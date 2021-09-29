@@ -169,18 +169,18 @@ export const graphData = async (req, res, next) => {
           { $sort: { _id: 1 } },
         ];
         graphData = await deviceHistory.aggregate(pipeline);
-        graphData = JSON.parse(JSON.stringify(graphData));
-        console.log("Graph Data", graphData);
-        let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
-        let mergeArrayResponse = [...graphData, ...defaultgraphData];
-        graphData = sortResponsePeriodWise(mergeArrayResponse);
+        // graphData = JSON.parse(JSON.stringify(graphData));
+        // let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
+        // let mergeArrayResponse = [...graphData, ...defaultgraphData];
+        // graphData = sortResponsePeriodWise(mergeArrayResponse);
       } else {
         graphData = [];
       }
-      // graphData = JSON.parse(JSON.stringify(graphData));
-      // let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
-      // let mergeArrayResponse = [...graphData, ...defaultgraphData];
-      // graphData = sortResponsePeriodWise(mergeArrayResponse);
+      graphData = JSON.parse(JSON.stringify(graphData));
+      console.log("Graph Data", graphData);
+      let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
+      let mergeArrayResponse = [...graphData, ...defaultgraphData];
+      graphData = sortResponsePeriodWise(mergeArrayResponse);
     } else if (req.query.type === "week") {
       pipeline = [
         {
