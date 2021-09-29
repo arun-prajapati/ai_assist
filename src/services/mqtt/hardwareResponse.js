@@ -370,11 +370,12 @@ export const VALVE_STATUS = async (macId, payload) => {
     );
     console.log("History Record", historyData);
     let totaliserValue = totaliser_current_value;
+    totaliser_current_value = getDecimalValue(totaliserValue);
     if (historyData && historyData.length > 0) {
       totaliserValue =
         totaliser_current_value - historyData[0].totaliser_current_value;
     }
-    totaliser_current_value = getDecimalValue(totaliserValue);
+    //totaliser_current_value = getDecimalValue(totaliserValue);
     flowValue = getDecimalValue(flowValue);
     let deviceExist = await Devices.findOneDocument({ vmac: macId }); //findOne
     let deviceHistoryExist = await deviceHistory.isExist({ vmac: macId });
