@@ -348,34 +348,7 @@ export const VALVE_STATUS = async (macId, payload) => {
     let { state, totaliser_current_value, flowValue, flowunits } =
       getStatusAndThresholdOfDeviceFA06(payload);
     //! convert threshold hax in to decimal
-    var dates1 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
-    dates1.setDate(dates1.getDate() - 1);
-    console.log(">>===", dates1);
-    let historyData = await deviceHistory.findData(
-      {
-        //
-        $or: [{ pmac: macId }, { vmac: macId }],
-        date: {
-          $gte: new Date(new Date(dates1)), //.toLocaleString("en-US", {
-          //timeZone: "Asia/calcutta",
-          //}),
-          $lte: new Date(new Date(dates1)).setHours(23, 59, 59), //.toLocaleString(
-          // "en-US",
-          //{ timeZone: "Asia/calcutta" }
-          //),
-        },
-      },
-      { createdAt: 0 },
-      { sort: { date: -1 }, limit: 2 }
-    );
-    console.log("History Record", historyData);
-    let totaliserValue = totaliser_current_value;
-    totaliser_current_value = getDecimalValue(totaliserValue);
-    if (historyData && historyData.length > 0) {
-      totaliserValue =
-        totaliser_current_value - historyData[0].totaliser_current_value;
-    }
-    //totaliser_current_value = getDecimalValue(totaliserValue);
+    totaliser_current_value = getDecimalValue(totaliser_current_value);
     flowValue = getDecimalValue(flowValue);
     let deviceExist = await Devices.findOneDocument({ vmac: macId }); //findOne
     let deviceHistoryExist = await deviceHistory.isExist({ vmac: macId });
