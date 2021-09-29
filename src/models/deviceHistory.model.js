@@ -88,6 +88,9 @@ const schema = {
   },
   date: {
     type: Date,
+    // default: new Date().toLocaleString("en-US", {
+    //   timeZone: "Asia/calcutta",
+    // }),
   },
   time: String,
   pumpCurrentstate: {
