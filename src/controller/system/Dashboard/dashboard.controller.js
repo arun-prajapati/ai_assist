@@ -151,20 +151,16 @@ export const graphData = async (req, res, next) => {
               _id: "$date_timezone.hour",
               totaliser: { $push: "$$ROOT" },
             },
-          },
-          {
-            $unwind: {
-              path: "$totaliser",
-              // includeArrayIndex: 'string',
-              preserveNullAndEmptyArrays: true,
-            },
-          },
+          }, //totaliserValue: {
+          //   $subtract: [
+          //     "$totaliser.totaliser_current_value",
+          //     historyData[0].totaliser_current_value,
+          //   ],
           {
             $project: {
-              "totaliser.date": true,
-              totaliserValue: {
+              totaliser_current_value: {
                 $subtract: [
-                  "$totaliser.totaliser_current_value",
+                  { $last: "$totaliser.totaliser_current_value" },
                   historyData[0].totaliser_current_value,
                 ],
               },
@@ -175,6 +171,9 @@ export const graphData = async (req, res, next) => {
         graphData = await deviceHistory.aggregate(pipeline);
         graphData = JSON.parse(JSON.stringify(graphData));
         console.log("Graph Data", graphData);
+        let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
+        let mergeArrayResponse = [...graphData, ...defaultgraphData];
+        graphData = sortResponsePeriodWise(mergeArrayResponse);
       } else {
         graphData = [];
       }
