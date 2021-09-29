@@ -107,42 +107,81 @@ export const graphData = async (req, res, next) => {
   try {
     let pipeline;
     if (req.query.type === "day") {
-      pipeline = [
+      var dates = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
+      dates.setDate(dates.getDate() - 1);
+      //dates.setHours(0, 0, 0);
+      console.log(">>===", dates);
+      let historyData = await deviceHistory.findData(
         {
-          $addFields: {
-            date_timezone: {
-              $dateToParts: { date: "$date" },
+          deviceId: mongoose.Types.ObjectId(req.query.deviceId),
+          date: {
+            $gte: new Date(new Date(dates)), //.toLocaleString("en-US", {
+            //timeZone: "Asia/calcutta",
+            //}),
+            $lte: new Date(new Date(dates)).setHours(23, 59, 59), //.toLocaleString(
+            // "en-US",
+            //{ timeZone: "Asia/calcutta" }
+            //),
+          },
+        },
+        { createdAt: 0 },
+        { sort: { date: -1 }, limit: 2 }
+      );
+      console.log("historyData", historyData);
+      console.log("historyData", historyData.length);
+      if (historyData && historyData.length > 0) {
+        pipeline = [
+          {
+            $addFields: {
+              date_timezone: {
+                $dateToParts: { date: "$date" },
+              },
             },
           },
-        },
-        {
-          $match: {
-            deviceId: mongoose.Types.ObjectId(req.query.deviceId),
-            "date_timezone.year": dateData.yy,
-            "date_timezone.month": dateData.mm,
-            "date_timezone.day": dateData.dd,
-          },
-        },
-        {
-          $group: {
-            _id: "$date_timezone.hour",
-            totaliser: { $push: "$$ROOT" },
-          },
-        },
-        {
-          $project: {
-            totaliser_current_value: {
-              $max: "$totaliser.totaliser_current_value",
+          {
+            $match: {
+              deviceId: mongoose.Types.ObjectId(req.query.deviceId),
+              "date_timezone.year": dateData.yy,
+              "date_timezone.month": dateData.mm,
+              "date_timezone.day": dateData.dd,
             },
           },
-        },
-        { $sort: { _id: 1 } },
-      ];
-      graphData = await deviceHistory.aggregate(pipeline);
-      graphData = JSON.parse(JSON.stringify(graphData));
-      let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
-      let mergeArrayResponse = [...graphData, ...defaultgraphData];
-      graphData = sortResponsePeriodWise(mergeArrayResponse);
+          {
+            $group: {
+              _id: "$date_timezone.hour",
+              totaliser: { $push: "$$ROOT" },
+            },
+          },
+          {
+            $unwind: {
+              path: "$totaliser",
+              // includeArrayIndex: 'string',
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+          {
+            $project: {
+              "totaliser.date": true,
+              totaliserValue: {
+                $subtract: [
+                  "$totaliser.totaliser_current_value",
+                  historyData[0].totaliser_current_value,
+                ],
+              },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ];
+        graphData = await deviceHistory.aggregate(pipeline);
+        graphData = JSON.parse(JSON.stringify(graphData));
+        console.log("Graph Data", graphData);
+      } else {
+        graphData = [];
+      }
+      // graphData = JSON.parse(JSON.stringify(graphData));
+      // let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
+      // let mergeArrayResponse = [...graphData, ...defaultgraphData];
+      // graphData = sortResponsePeriodWise(mergeArrayResponse);
     } else if (req.query.type === "week") {
       pipeline = [
         {
