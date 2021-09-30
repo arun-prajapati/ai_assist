@@ -107,18 +107,18 @@ export const graphData = async (req, res, next) => {
   try {
     let pipeline;
     if (req.query.type === "day") {
-      var dates = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
-      dates.setDate(dates.getDate() - 1);
+      var dates1 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
+      dates1.setDate(dates1.getDate() - 1);
       //dates.setHours(0, 0, 0);
-      console.log(">>===", dates);
+      console.log(">>===", dates1);
       let historyData = await deviceHistory.findData(
         {
           deviceId: mongoose.Types.ObjectId(req.query.deviceId),
           date: {
-            $gte: new Date(new Date(dates)), //.toLocaleString("en-US", {
+            $gte: new Date(new Date(dates1)), //.toLocaleString("en-US", {
             //timeZone: "Asia/calcutta",
             //}),
-            $lte: new Date(new Date(dates)).setHours(23, 59, 59), //.toLocaleString(
+            $lte: new Date(new Date(dates1)).setHours(23, 59, 59), //.toLocaleString(
             // "en-US",
             //{ timeZone: "Asia/calcutta" }
             //),
