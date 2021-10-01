@@ -149,9 +149,9 @@ export const uploadFirmwareVersion = async (request, res, next) => {
         if (nameExist) {
           return res.status(503).json({
             error: true,
+            statusCode: 503,
             message: "File name must be unique",
           });
-          //return res.status(400).send("File name must be unique");
         } else {
           s3.upload(params, (error, data) => {
             if (error) {
