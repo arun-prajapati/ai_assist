@@ -132,7 +132,44 @@ export const uploadFirmwareVersion = async (request, res, next) => {
       } else {
         console.log("Passed in AWS upload", data);
         let dataObject = {
-          message: "File uploaded succesfully",
+          message: "File uploaded successfully",
+        };
+        return handleResponse(res, dataObject);
+      }
+    });
+  } catch (e) {
+    if (e && e.message) return next(new BadRequestError(e.message));
+    logger.log(level.error, `Error: ${JSON.stringify(e)}`);
+    return next(new InternalServerError());
+  }
+};
+export const listFirmwareVersions = async (request, res, next) => {
+  logger.log(level.info, `>> Controller: listFirmwareVersions()`);
+  try {
+    const s3 = new aws.S3({
+      accessKeyId: process.env.AWS_ID,
+      secretAccessKey: process.env.AWS_SECRET,
+    });
+    const params = {
+      Bucket: process.env.AWS_BUCKET_LIST_NAME,
+      Prefix: process.env.FOLDER_NAME,
+    };
+    console.log("params", params);
+    s3.listObjects(params, function (err, data) {
+      if (err) {
+        throw new Error("File retrieving failed");
+      } else {
+        const { Contents } = data;
+        var demo = [];
+        Contents.forEach((e) => {
+          demo.push(
+            "https://bacancy-system-nptl.s3.ap-south-1.amazonaws.com/" + e.Key
+          );
+        });
+        console.log(demo);
+        let dataObject = {
+          data: demo,
+          message: "Firmware version retrieved successfully",
         };
         return handleResponse(res, dataObject);
       }

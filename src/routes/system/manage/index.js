@@ -19,7 +19,10 @@ const storage = multer.memoryStorage({
 const upload = multer({ storage }).single("file");
 
 routes.route(PATH.DEVICE_HISTORY).post(DeviceHistoryCtrl.getDeviceHistoryData);
-routes.route(PATH.FIRMWARE_VERSION).post(DeviceHistoryCtrl.firmwareVersion);
+routes
+  .route(PATH.FIRMWARE_VERSION)
+  .post(DeviceHistoryCtrl.firmwareVersion)
+  .get(DeviceHistoryCtrl.listFirmwareVersions);
 routes
   .route(PATH.UPLOAD_FIRMWARE)
   .post(upload, DeviceHistoryCtrl.uploadFirmwareVersion);
