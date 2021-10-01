@@ -248,7 +248,7 @@ export const graphData = async (req, res, next) => {
         if (
           graphData[i]["totaliser_current_value"] !== 0 &&
           graphData[i]["totaliser_current_value"] >=
-            graphData[i + 1]["totaliser_current_value"]
+            graphData[i - 1]["totaliser_current_value"]
         ) {
           graphData[i]["totaliser_current_value"] =
             graphData[i]["totaliser_current_value"] -
