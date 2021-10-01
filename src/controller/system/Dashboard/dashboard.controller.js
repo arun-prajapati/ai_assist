@@ -198,6 +198,12 @@ export const graphData = async (req, res, next) => {
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
       graphData = sortResponsePeriodWise(mergeArrayResponse);
     } else if (req.query.type === "week") {
+      var dates2 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
+      dates2.setDate(dates2.getDate());
+      var dates3 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
+      dates3.setDate(dates3.getDate() - 8);
+      console.log("Week Date after -1", dates2);
+      console.log("Week Date after -8", dates3);
       pipeline = [
         {
           $addFields: {
@@ -209,17 +215,14 @@ export const graphData = async (req, res, next) => {
         {
           $match: {
             deviceId: mongoose.Types.ObjectId(req.query.deviceId),
-            "date_timezone.year": dateData.yy,
-            "date_timezone.month": dateData.mm,
-            "date_timezone.day": {
-              $gte: dates.getDate() - 7,
-              $lte: dates.getDate() - 1,
+            date: {
+              $gte: new Date(new Date(dates3)),
+              $lte: new Date(new Date(dates2)), //.setHours(23, 59, 59),
             },
           },
         },
         {
           $group: {
-            //new Date(moment("$date_timezone.day").tz("Asia/calcutta").format("YYYY-MM-DD"))
             _id: "$date_timezone.day",
             totaliser: { $push: "$$ROOT" },
           },
@@ -228,29 +231,26 @@ export const graphData = async (req, res, next) => {
           $project: {
             date: { $first: "$totaliser.date" },
             totaliser_current_value: {
-              $max: "$totaliser.totaliser_current_value",
+              $last: "$totaliser.totaliser_current_value",
             },
           },
         },
         { $sort: { _id: 1 } },
       ];
-      console.log(">>after subsr", dates.getDate() - 1);
-      console.log(">>after subsr", dates.getDate() - 7);
       graphData = await deviceHistory.aggregate(pipeline);
-      // for (let i = 0; i < graphData.length; i++) {
-      //   graphData[i].date = new Date(
-      //     moment(graphData[i].date)
-      //       .tz("Asia/calcutta")
-      //       .format("YYYY-MM-DD:h:m:s")
-      //   );
-      // }
-
-      graphData = JSON.parse(JSON.stringify(graphData));
+      //graphData = JSON.parse(JSON.stringify(graphData));
       console.log("graph Data date ", graphData);
       let defaultgraphData = generateDefaultPropertiesOfWeek(graphData);
       console.log(" Default graph Data date ", defaultgraphData);
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
       graphData = sortResponsePeriodWise(mergeArrayResponse);
+      for (let i = 7; i > 0; i--) {
+        if (graphData[i]["totaliser_current_value"] !== 0) {
+          graphData[i]["totaliser_current_value"] =
+            graphData[i]["totaliser_current_value"] -
+            graphData[i - 1]["totaliser_current_value"];
+        }
+      }
       console.log("merger array", mergeArrayResponse);
     } else {
       pipeline = [
@@ -357,9 +357,9 @@ const generateDefaultPropertiesOfWeek = (data) => {
   console.log("origin timezone Date", dates1);
   let totalDays = [];
   //dates1.setDate(dates.getDate() + 2);
-  dates1.setDate(dates.getDate() - 8);
+  dates1.setDate(dates.getDate() - 9);
   console.log(">>++", dates1);
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i <= 7; i++) {
     let ansDate = new Date(
       moment(dates1.setDate(dates1.getDate() + 1))
         .tz("Asia/calcutta")
