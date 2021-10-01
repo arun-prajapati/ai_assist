@@ -136,7 +136,7 @@ export const uploadFirmwareVersion = async (request, res, next) => {
     let nameExist;
     s3.listObjects(params1, function (err, data) {
       if (err) {
-        throw new Error("File retrieving failed");
+        throw new Error("File retrieving faileddd");
       } else {
         const { Contents } = data;
         Contents.forEach((e) => {
