@@ -2,6 +2,7 @@ import {
   BadRequestError,
   InternalServerError,
   NotFoundError,
+  handleError,
 } from "../../../helpers/errors/custom-error";
 import {
   createResponse,
@@ -115,26 +116,51 @@ export const uploadFirmwareVersion = async (request, res, next) => {
       secretAccessKey: process.env.AWS_SECRET,
     });
     const reqfile = request.file;
+
     let myfile = reqfile.originalname.split(".");
     let filetype = myfile[myfile.length - 1];
-    console.log("reqfile", reqfile);
-    console.log("myfile", myfile);
-    console.log("filetype", filetype);
+    // console.log("reqfile", reqfile);
+    // console.log("myfile", myfile);
+    // console.log("filetype", filetype);
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
-      Key: `${uniqid()}.${filetype}`,
+      Key: `${request.body.fileName}.${filetype}`,
       Body: reqfile.buffer,
     };
-    console.log("params", params);
-    s3.upload(params, (error, data) => {
-      if (error) {
-        throw new Error("File uploading failed");
+    // console.log("params", params);
+    const params1 = {
+      Bucket: process.env.AWS_BUCKET_LIST_NAME,
+      Prefix: process.env.FOLDER_NAME,
+    };
+    let list = [];
+    let nameExist;
+    s3.listObjects(params1, function (err, data) {
+      if (err) {
+        throw new Error("File retrieving failed");
       } else {
-        console.log("Passed in AWS upload", data);
-        let dataObject = {
-          message: "File uploaded successfully",
-        };
-        return handleResponse(res, dataObject);
+        const { Contents } = data;
+        Contents.forEach((e) => {
+          list.push(e.Key);
+        });
+        nameExist = list.includes(
+          `SensieTech/${request.body.fileName}.${filetype}`
+        );
+        console.log("name", nameExist);
+        if (nameExist) {
+          return res.status(400).send("File name must be unique");
+        } else {
+          s3.upload(params, (error, data) => {
+            if (error) {
+              throw new Error("File uploading failed");
+            } else {
+              console.log("Passed in AWS upload", data);
+              let dataObject = {
+                message: "File uploaded successfully",
+              };
+              return handleResponse(res, dataObject);
+            }
+          });
+        }
       }
     });
   } catch (e) {
