@@ -245,7 +245,11 @@ export const graphData = async (req, res, next) => {
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
       graphData = sortResponsePeriodWise(mergeArrayResponse);
       for (let i = 7; i > 0; i--) {
-        if (graphData[i]["totaliser_current_value"] !== 0) {
+        if (
+          graphData[i]["totaliser_current_value"] !== 0 &&
+          graphData[i]["totaliser_current_value"] >=
+            graphData[i + 1]["totaliser_current_value"]
+        ) {
           graphData[i]["totaliser_current_value"] =
             graphData[i]["totaliser_current_value"] -
             graphData[i - 1]["totaliser_current_value"];
