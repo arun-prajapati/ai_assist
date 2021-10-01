@@ -13,10 +13,14 @@ import { logger, level } from "../../../config/logger/logger";
 import deviceHistory from "../../../models/deviceHistory.model";
 import Devices from "../../../models/device.model";
 import moment from "moment";
+//const  multer=require('multer')
+import multer from "multer";
+import uniqid from "uniqid";
+//const aws=require('aws-sdk')
+import aws from "aws-sdk";
 import { createFA09payload } from "../../../services/mqtt/hardwareResponse";
 const REPLACE_DELIMETER = "*";
 const CLOUD_TO_ESP_TOPIC = process.env.CLOUD_TO_ESP || "SensieTech/*/c2f";
-
 export const getDeviceHistoryData = async (req, res, next) => {
   logger.log(level.info, `>> Controller: getDeviceHistoryData()`);
   try {
@@ -97,6 +101,39 @@ export const firmwareVersion = async (req, res, next) => {
       return handleResponse(res, dataObject);
     }
     return next(new NotFoundError());
+  } catch (e) {
+    if (e && e.message) return next(new BadRequestError(e.message));
+    logger.log(level.error, `Error: ${JSON.stringify(e)}`);
+    return next(new InternalServerError());
+  }
+};
+export const uploadFirmwareVersion = async (request, res, next) => {
+  logger.log(level.info, `>> Controller: uploadFirmwareVersion()`);
+  try {
+    const s3 = new aws.S3({
+      accessKeyId: process.env.AWS_ID,
+      secretAccessKey: process.env.AWS_SECRET,
+    });
+    const reqfile = request.file;
+    let myfile = reqfile.originalname.split(".");
+    let filetype = myfile[myfile.length - 1];
+    console.log("reqfile", reqfile);
+    console.log("myfile", myfile);
+    console.log("filetype", filetype);
+    const params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: `${uniqid()}.${filetype}`,
+      Body: reqfile.buffer,
+    };
+    console.log("params", params);
+    s3.upload(params, (error, data) => {
+      if (error) {
+        return res.status(404).send(error);
+      } else {
+        console.log("Passed in AWS upload", data);
+        return res.status(200).send(data);
+      }
+    });
   } catch (e) {
     if (e && e.message) return next(new BadRequestError(e.message));
     logger.log(level.error, `Error: ${JSON.stringify(e)}`);
