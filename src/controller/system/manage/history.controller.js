@@ -4,7 +4,7 @@ import {
   NotFoundError,
 } from "../../../helpers/errors/custom-error";
 import {
-  //createResponse,
+  createResponse,
   handleResponse,
   //databaseparser,
 } from "../../../helpers/utility";
@@ -128,10 +128,13 @@ export const uploadFirmwareVersion = async (request, res, next) => {
     console.log("params", params);
     s3.upload(params, (error, data) => {
       if (error) {
-        return res.status(404).send(error);
+        throw new Error("File uploading failed");
       } else {
         console.log("Passed in AWS upload", data);
-        return res.status(200).send(data);
+        let dataObject = {
+          message: "File uploaded succesfully",
+        };
+        return handleResponse(res, dataObject);
       }
     });
   } catch (e) {
