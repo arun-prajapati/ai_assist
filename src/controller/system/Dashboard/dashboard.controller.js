@@ -303,7 +303,7 @@ export const graphData = async (req, res, next) => {
 };
 const sortResponsePeriodWise = (array) => {
   let sortedPeriodWiseArray = array.sort(function (a, b) {
-    return a.date - b.date;
+    return Number(new Date(a.date)) - Number(new Date(b.date));
   });
   return sortedPeriodWiseArray;
 };
