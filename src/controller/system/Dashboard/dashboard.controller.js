@@ -235,7 +235,7 @@ export const graphData = async (req, res, next) => {
             },
           },
         },
-        { $sort: { _id: 1 } },
+        { $sort: { _id: -1 } },
       ];
       graphData = await deviceHistory.aggregate(pipeline);
       //graphData = JSON.parse(JSON.stringify(graphData));
