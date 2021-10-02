@@ -199,7 +199,7 @@ export const graphData = async (req, res, next) => {
       graphData = sortResponsePeriodWise(mergeArrayResponse);
     } else if (req.query.type === "week") {
       var dates2 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
-      dates2.setDate(dates2.getDate());
+      dates2.setDate(dates2.getDate() - 1);
       var dates3 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates3.setDate(dates3.getDate() - 8);
       console.log("Week Date after -1", dates2);
@@ -371,6 +371,7 @@ const generateDefaultPropertiesOfWeek = (data) => {
     ); //.toDateString();
     totalDays.push(ansDate);
   }
+  console.log("list of week days", totalDays);
   totalDays = JSON.parse(JSON.stringify(totalDays));
   let dayIncludedInDBResponse = data.map(
     (day) => new Date(moment(day.date).format("YYYY-MM-DD:h:m:s"))
