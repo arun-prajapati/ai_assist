@@ -235,7 +235,7 @@ export const graphData = async (req, res, next) => {
             },
           },
         },
-        { $sort: { _id: -1 } },
+        { $sort: { date: -1 } },
       ];
       graphData = await deviceHistory.aggregate(pipeline);
       //graphData = JSON.parse(JSON.stringify(graphData));
@@ -363,7 +363,7 @@ const generateDefaultPropertiesOfWeek = (data) => {
   //dates1.setDate(dates.getDate() + 2);
   dates1.setDate(dates1.getDate() - 9);
   console.log(">>++", dates1);
-  for (let i = 0; i <=7; i++) {
+  for (let i = 0; i <= 7; i++) {
     let ansDate = new Date(
       moment(dates1.setDate(dates1.getDate() + 1))
         .tz("Asia/calcutta")
