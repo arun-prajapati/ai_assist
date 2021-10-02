@@ -14,7 +14,7 @@ import deviceHistory from "../../../models/deviceHistory.model";
 import { CONSTANTS as PERIOD_DATA } from "../../../constants/periodData";
 import moment from "moment";
 const mongoose = require("mongoose");
-let dates = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD:h:m:s"));
+let dates = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD h:mm:ss"));
 let dateData = {
   yy: dates.getFullYear(),
   mm: dates.getMonth() + 1,
@@ -361,7 +361,7 @@ const generateDefaultPropertiesOfWeek = (data) => {
   console.log("origin timezone Date", dates1);
   let totalDays = [];
   //dates1.setDate(dates.getDate() + 2);
-  dates1.setDate(dates.getDate() - 9);
+  dates1.setDate(dates1.getDate() - 9);
   console.log(">>++", dates1);
   for (let i = 0; i <= 7; i++) {
     let ansDate = new Date(
