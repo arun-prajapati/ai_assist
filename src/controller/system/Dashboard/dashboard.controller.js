@@ -171,6 +171,7 @@ export const graphData = async (req, res, next) => {
           { $sort: { _id: 1 } },
         ];
         graphData = await deviceHistory.aggregate(pipeline);
+        console.log("Hours graph Data", graphData);
         // graphData = JSON.parse(JSON.stringify(graphData));
         // let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
         // let mergeArrayResponse = [...graphData, ...defaultgraphData];
