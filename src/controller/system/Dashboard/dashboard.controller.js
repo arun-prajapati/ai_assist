@@ -201,6 +201,7 @@ export const graphData = async (req, res, next) => {
       graphData = JSON.parse(JSON.stringify(graphData));
       console.log("Graph Data", graphData);
       let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
+      console.log("Default propeties BY hours", defaultgraphData);
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
       graphData = sortResponsePeriodWise(mergeArrayResponse);
     } else if (req.query.type === "week") {
