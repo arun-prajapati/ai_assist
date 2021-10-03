@@ -15,8 +15,9 @@ import { CONSTANTS as PERIOD_DATA } from "../../../constants/periodData";
 import moment from "moment";
 const mongoose = require("mongoose");
 let dates = new Date(
-  moment().tz("Asia/calcutta").format("YYYY-MM-DDTHH:MM:SSZ")
+  moment().tz("Asia/calcutta").format("YYYY-MM-DD HH:MM:SS")
 );
+
 let dateData = {
   yy: dates.getFullYear(),
   mm: dates.getMonth() + 1,
@@ -105,6 +106,7 @@ export const deviceCount = async (req, res, next) => {
 export const graphData = async (req, res, next) => {
   logger.log(level.info, `✔ Controller graphData()`);
   let graphData = [];
+  console.log("dateData", dates);
   console.log("DASHBOARD GRAPH DATE", dateData);
   try {
     let pipeline;
