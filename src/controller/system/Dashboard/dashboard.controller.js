@@ -190,7 +190,7 @@ export const graphData = async (req, res, next) => {
         console.log("hours", hours.slice(12, 14));
         let demo = {
           ///new Date(moment(deviceData.updatedAt).tz("Asia/calcutta").format("YYYY-MM-DD"))
-          _id: JSON.parse(JSON.stringify(hours.slice(12, 14))),
+          _id: JSON.parse(hours.slice(12, 14)),
           totaliser_current_value: deviceData.totaliser_current_value,
         };
 
@@ -203,7 +203,7 @@ export const graphData = async (req, res, next) => {
       let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
       console.log("Default propeties BY hours", defaultgraphData);
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
-      graphData = sortResponsePeriodWise(mergeArrayResponse);
+      graphData = sortResponsePeriodWiseByHours(mergeArrayResponse);
     } else if (req.query.type === "week") {
       var dates2 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates2.setDate(dates2.getDate() - 1);
@@ -311,6 +311,12 @@ export const graphData = async (req, res, next) => {
 const sortResponsePeriodWise = (array) => {
   let sortedPeriodWiseArray = array.sort(function (a, b) {
     return Number(new Date(a.date)) - Number(new Date(b.date));
+  });
+  return sortedPeriodWiseArray;
+};
+const sortResponsePeriodWiseByHours = (array) => {
+  let sortedPeriodWiseArray = array.sort(function (a, b) {
+    return a._id - b._id;
   });
   return sortedPeriodWiseArray;
 };
