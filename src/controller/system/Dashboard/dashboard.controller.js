@@ -318,9 +318,11 @@ const generateDefaultPropertiesOfHours = (data) => {
   let hourNotIncludedInDBResponse = totalHours.filter(
     (x) => !hourIncludedInDBResponse.includes(x)
   );
+  console.log("hoursinclude", hourIncludedInDBResponse);
   let generateNotIncludedHourResponse = hourNotIncludedInDBResponse.map(
     (hour) => defaultBatteryProperty(hour)
   );
+  console.log("hoursnotincluded", hourNotIncludedInDBResponse);
   return generateNotIncludedHourResponse;
 };
 const generateDefaultPropertiesOfDays = (data) => {
