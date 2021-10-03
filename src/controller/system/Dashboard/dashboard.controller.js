@@ -14,7 +14,9 @@ import deviceHistory from "../../../models/deviceHistory.model";
 import { CONSTANTS as PERIOD_DATA } from "../../../constants/periodData";
 import moment from "moment";
 const mongoose = require("mongoose");
-let dates = new Date(Date.now());
+let dates = new Date(
+  new Date().toLocaleString("en-US", { timeZone: "Asia/calcutta" })
+);
 
 let dateData = {
   yy: dates.getFullYear(),
