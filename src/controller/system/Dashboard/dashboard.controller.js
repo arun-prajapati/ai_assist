@@ -190,14 +190,15 @@ export const graphData = async (req, res, next) => {
         console.log("hours", hours.slice(12, 14));
         let demo = {
           ///new Date(moment(deviceData.updatedAt).tz("Asia/calcutta").format("YYYY-MM-DD"))
-          _id: hours.slice(12, 14),
+          _id: JSON.parse(hours.slice(12, 14)),
           totaliser_current_value: deviceData.totaliser_current_value,
         };
+
         console.log("demo", demo);
         graphData.push(demo);
         //graphData = [];
       }
-      graphData = JSON.parse(graphData);
+      graphData = JSON.parse(JSON.stringify(graphData));
       console.log("Graph Data", graphData);
       let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
