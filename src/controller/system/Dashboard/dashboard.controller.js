@@ -197,7 +197,7 @@ export const graphData = async (req, res, next) => {
         graphData.push(demo);
         //graphData = [];
       }
-      graphData = JSON.parse(JSON.stringify(graphData));
+      graphData = JSON.parse(graphData);
       console.log("Graph Data", graphData);
       let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
