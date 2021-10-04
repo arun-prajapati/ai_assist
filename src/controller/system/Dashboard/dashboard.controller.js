@@ -269,6 +269,7 @@ export const graphData = async (req, res, next) => {
           );
         }
       }
+      console.log("lopp result", graphData);
     } else {
       pipeline = [
         {
