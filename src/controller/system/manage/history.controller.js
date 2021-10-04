@@ -22,6 +22,7 @@ import uniqid from "uniqid";
 //const aws=require('aws-sdk')
 import aws from "aws-sdk";
 import { createFA09payload } from "../../../services/mqtt/hardwareResponse";
+import { restart } from "nodemon";
 const REPLACE_DELIMETER = "*";
 const CLOUD_TO_ESP_TOPIC = process.env.CLOUD_TO_ESP || "SensieTech/*/c2f";
 export const getDeviceHistoryData = async (req, res, next) => {
@@ -228,21 +229,21 @@ export const listFirmwareVersions = async (request, res, next) => {
 export const downloadDeviceHistoryData = async (req, res, next) => {
   logger.log(level.info, `>> Controller: downloadDeviceHistoryData()`);
   try {
-    console.log(
-      ">>>",
-      new Date(new Date(req.body.startDate).setHours(0, 0, 0))
-    );
-    console.log(
-      ">>>",
-      new Date(new Date(req.body.endDate).setHours(23, 59, 59))
-    );
+    // console.log(
+    //   ">>>",
+    //   new Date(new Date(req.body.startDate).setHours(0, 0, 0))
+    // );
+    // console.log(
+    //   ">>>",
+    //   new Date(new Date(req.body.endDate).setHours(23, 59, 59))
+    // );
     let historyData = await deviceHistory.findData(
       {
         deviceId: req.query.deviceId,
-        date: {
-          $gte: new Date(new Date(req.body.startDate).setHours(0, 0, 0)),
-          $lte: new Date(new Date(req.body.endDate).setHours(23, 59, 59)),
-        },
+        // date: {
+        //   $gte: new Date(new Date(req.body.startDate).setHours(0, 0, 0)),
+        //   $lte: new Date(new Date(req.body.endDate).setHours(23, 59, 59)),
+        // },
       },
       {
         pmac: 1,
@@ -268,7 +269,7 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
       };
       data.push(historyDataObject);
     }
-    console.log("Final Array of object of history Data", data);
+    //  / console.log("Final Array of object of history Data", data);
     let workbook = new excel.Workbook();
     let worksheet = workbook.addWorksheet("Devicehistory");
     worksheet.columns = [
@@ -294,15 +295,10 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
       "Content-Disposition",
       "attachment; filename=" + "DeviceHistory.xlsx"
     );
+    
     return workbook.xlsx.write(res).then(function () {
-      res.status(200).send("File Downloaded succesfully");
+      res.status(200).end();
     });
-    // let dataObject = {
-    //   message: "Device history fetched succesfully",
-    //   count: historyData.length,
-    //   data: historyData,
-    // };
-    // return handleResponse(res, dataObject);
   } catch (e) {
     if (e && e.message) return next(new BadRequestError(e.message));
     logger.log(level.error, `Error: ${JSON.stringify(e)}`);
