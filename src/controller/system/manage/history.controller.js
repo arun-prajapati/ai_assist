@@ -289,7 +289,7 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
       "Content-Disposition",
       "attachment; filename=Devicehistory.csv"
     );
-    res.setHeader("Access-Control-Request-Method", "get");
+    //res.setHeader("Access-Control-Request-Method", "get");
 
     res.status(200).end(csvData);
   } catch (e) {
