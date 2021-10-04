@@ -48,6 +48,7 @@ export const getDeviceHistoryData = async (req, res, next) => {
         date: 1,
         time: 1,
         flowValue: 1,
+        flowUnit: 1,
         totaliser_current_value: 1,
         valveCurrentstate: 1,
         pumpCurrentstate: 1,
