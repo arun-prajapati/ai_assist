@@ -9,7 +9,7 @@ import {
   handleResponse,
   //databaseparser,
 } from "../../../helpers/utility";
-const excel = require("exceljs");
+var Excel = require("exceljs");
 
 import { mqttClient } from "../../../config/mqtt/mqtt";
 import { logger, level } from "../../../config/logger/logger";
@@ -270,34 +270,36 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
       data.push(historyDataObject);
     }
     console.log("Final Array of object of history Data", data);
-    let workbook = new excel.Workbook();
-    let worksheet = workbook.addWorksheet("Devicehistory");
-    worksheet.columns = [
-      { header: "Id", key: "Id", width: 5 },
-      { header: "flowValue", key: "flowValue", width: 25 },
-      { header: "flowUnit", key: "flowUnit", width: 25 },
-      { header: "pumpCurrentstate", key: "pumpCurrentstate", width: 10 },
-      { header: "valveCurrentstate", key: "valveCurrentstate", width: 10 },
-      {
-        header: "totaliser_current_value",
-        key: "totaliser_current_value",
-        width: 10,
-      },
-      { header: "pmac", key: "pmac", width: 10 },
-      { header: "vmac", key: "vmac", width: 10 },
+    var workbook = new Excel.Workbook();
+    var sheet = workbook.addWorksheet("Sheet1");
+    sheet.columns = [
+      { header: "Id", key: "id" },
+      { header: "Course", key: "course" },
+      { header: "URL.", key: "url" },
     ];
-    worksheet.addRows(data);
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
-    res.setHeader(
-      "Content-Disposition",
-      "attachment; filename=" + "DeviceHistory.xlsx"
-    );
-
-    return workbook.xlsx.write(res).then(function () {
-      res.status(200).end();
+    sheet.addRow({
+      id: 1,
+      course: "HTML",
+      url: "https://vlemonn.com/tutorial/html",
+    });
+    sheet.addRow({
+      id: 2,
+      course: "Java Script",
+      url: "https://vlemonn.com/tutorial/java-script",
+    });
+    sheet.addRow({
+      id: 3,
+      course: "Electron JS",
+      url: "https://vlemonn.com/tutorial/electron-js",
+    });
+    sheet.addRow({
+      id: 4,
+      course: "Node JS",
+      url: "https://vlemonn.com/tutorial/node-js",
+    });
+    workbook.xlsx.writeFile("My First Excel.xlsx").then(function () {
+      // Success Message
+      // alert("File Saved");
     });
   } catch (e) {
     if (e && e.message) return next(new BadRequestError(e.message));
