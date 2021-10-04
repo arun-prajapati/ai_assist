@@ -263,6 +263,7 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
         },
       },
       {
+        date: 1,
         pmac: 1,
         vmac: 1,
         pumpCurrentstate: 1,
@@ -276,6 +277,7 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
     for (const row of historyData) {
       let historyDataObject = {
         Id: row._id,
+        date: row.date,
         flowValue: row.flowValue,
         flowUnit: row.flowUnit,
         pumpCurrentstate: row.pumpCurrentstate ? "online" : "offline",
@@ -289,6 +291,7 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
     console.log("Final Array of object of history Data", data);
     const csvFields = [
       "Id",
+      "date",
       "flowValue",
       "flowUnit",
       "pumpCurrentstate",
