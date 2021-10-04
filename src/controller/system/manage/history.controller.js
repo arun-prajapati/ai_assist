@@ -270,7 +270,7 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
     }
     console.log("Final Array of object of history Data", data);
     let workbook = new excel.Workbook();
-    let worksheet = workbook.addWorksheet("Tutorials");
+    let worksheet = workbook.addWorksheet("Devicehistory");
     worksheet.columns = [
       { header: "Id", key: "Id", width: 5 },
       { header: "flowValue", key: "flowValue", width: 25 },
@@ -295,7 +295,7 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
       "attachment; filename=" + "DeviceHistory.xlsx"
     );
     return workbook.xlsx.write(res).then(function () {
-      res.status(200).end();
+      res.status(200).send("File Downloaded succesfully");
     });
     // let dataObject = {
     //   message: "Device history fetched succesfully",
