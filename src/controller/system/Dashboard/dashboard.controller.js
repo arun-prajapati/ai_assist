@@ -211,7 +211,7 @@ export const graphData = async (req, res, next) => {
       dates3.setDate(dates3.getDate() - 8);
       console.log(
         "Week Date after -1",
-        new Date(new Date(dates2)).setHours(23, 59, 59)
+        new Date(new Date(dates2).setHours(23, 59, 59))
       );
       console.log("Week Date after -8", dates3);
       pipeline = [
