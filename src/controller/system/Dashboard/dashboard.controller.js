@@ -15,7 +15,7 @@ import { CONSTANTS as PERIOD_DATA } from "../../../constants/periodData";
 import moment from "moment";
 const mongoose = require("mongoose");
 let dates = new Date(
-  new Date().toLocaleString("en-US", { timeZone: "Asia/calcutta" })
+  new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"))
 );
 
 let dateData = {
