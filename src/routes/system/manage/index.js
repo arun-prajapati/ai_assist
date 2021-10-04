@@ -23,7 +23,7 @@ routes.route(PATH.DEVICE_HISTORY).post(DeviceHistoryCtrl.getDeviceHistoryData);
 
 routes
   .route(PATH.DOWNLOAD_DEVICE_HISTORY)
-  .post(DeviceHistoryCtrl.downloadDeviceHistoryData);
+  .get(DeviceHistoryCtrl.downloadDeviceHistoryData);
 routes
   .route(PATH.FIRMWARE_VERSION)
   .post(DeviceHistoryCtrl.firmwareVersion)
