@@ -229,21 +229,21 @@ export const listFirmwareVersions = async (request, res, next) => {
 export const downloadDeviceHistoryData = async (req, res, next) => {
   logger.log(level.info, `>> Controller: downloadDeviceHistoryData()`);
   try {
-    console.log(
-      ">>>",
-      new Date(new Date(req.body.startDate).setHours(0, 0, 0))
-    );
-    console.log(
-      ">>>",
-      new Date(new Date(req.body.endDate).setHours(23, 59, 59))
-    );
+    // console.log(
+    //   ">>>",
+    //   new Date(new Date(req.body.startDate).setHours(0, 0, 0))
+    // );
+    // console.log(
+    //   ">>>",
+    //   new Date(new Date(req.body.endDate).setHours(23, 59, 59))
+    // );
     let historyData = await deviceHistory.findData(
       {
         deviceId: req.query.deviceId,
-        date: {
-          $gte: new Date(new Date(req.body.startDate).setHours(0, 0, 0)),
-          $lte: new Date(new Date(req.body.endDate).setHours(23, 59, 59)),
-        },
+        // date: {
+        //   $gte: new Date(new Date(req.body.startDate).setHours(0, 0, 0)),
+        //   $lte: new Date(new Date(req.body.endDate).setHours(23, 59, 59)),
+        // },
       },
       {
         pmac: 1,
@@ -269,7 +269,7 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
       };
       data.push(historyDataObject);
     }
-    //  / console.log("Final Array of object of history Data", data);
+    console.log("Final Array of object of history Data", data);
     let workbook = new excel.Workbook();
     let worksheet = workbook.addWorksheet("Devicehistory");
     worksheet.columns = [
