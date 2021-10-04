@@ -260,6 +260,11 @@ export const graphData = async (req, res, next) => {
           graphData[i]["totaliser_current_value"] =
             graphData[i]["totaliser_current_value"] -
             graphData[i - 1]["totaliser_current_value"];
+          console.log(
+            "SUbstraction",
+            graphData[i]["totaliser_current_value"] -
+              graphData[i - 1]["totaliser_current_value"]
+          );
         }
       }
       console.log("merger array", mergeArrayResponse);
