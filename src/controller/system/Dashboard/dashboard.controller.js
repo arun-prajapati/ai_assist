@@ -209,7 +209,10 @@ export const graphData = async (req, res, next) => {
       dates2.setDate(dates2.getDate() - 1);
       var dates3 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates3.setDate(dates3.getDate() - 8);
-      console.log("Week Date after -1", dates2);
+      console.log(
+        "Week Date after -1",
+        new Date(new Date(dates2)).setHours(23, 59, 59)
+      );
       console.log("Week Date after -8", dates3);
       pipeline = [
         {
@@ -223,7 +226,7 @@ export const graphData = async (req, res, next) => {
           $match: {
             deviceId: mongoose.Types.ObjectId(req.query.deviceId),
             date: {
-              $gte: new Date(new Date(dates3)),
+              $gte: new Date(new Date(dates3)).setHours(0, 0, 0),
               $lte: new Date(new Date(dates2)).setHours(23, 59, 59),
             },
           },
