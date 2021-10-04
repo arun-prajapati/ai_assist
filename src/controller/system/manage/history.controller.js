@@ -229,22 +229,37 @@ export const listFirmwareVersions = async (request, res, next) => {
 export const downloadDeviceHistoryData = async (req, res, next) => {
   logger.log(level.info, `>> Controller: downloadDeviceHistoryData()`);
   try {
-    console.log(req.query);
-    console.log(req.query["startDate"]);
     console.log(
       ">>>",
-      new Date(new Date(req.query["startDate"]).setHours(0, 0, 0))
+      new Date(
+        moment(req.query["startDate"]).tz("Asia/calcutta").format("YYYY-MM-DD")
+      )
     );
     console.log(
       ">>>",
-      new Date(new Date(req.body.endDate).setHours(23, 59, 59))
+      new Date(
+        moment(req.query["endDate"]).tz("Asia/calcutta").format("YYYY-MM-DD")
+      )
     );
+    // let demo = new Date(
+    //   moment(req.query["startDate"]).tz("Asia/calcutta").format("YYYY-MM-DD")
+    // );
+
+    // console.log(demo);
     let historyData = await deviceHistory.findData(
       {
         deviceId: req.query.deviceId,
         date: {
-          $gte: new Date(new Date(req.body.startDate).setHours(0, 0, 0)),
-          $lte: new Date(new Date(req.body.endDate).setHours(23, 59, 59)),
+          $gte: new Date(
+            moment(req.query["startDate"])
+              .tz("Asia/calcutta")
+              .format("YYYY-MM-DD")
+          ),
+          $lte: new Date(
+            moment(req.query["endDate"])
+              .tz("Asia/calcutta")
+              .format("YYYY-MM-DD")
+          ),
         },
       },
       {
