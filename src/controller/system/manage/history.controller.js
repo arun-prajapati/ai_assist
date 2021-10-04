@@ -295,8 +295,8 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
       "Content-Disposition",
       "attachment; filename=" + "DeviceHistory.xlsx"
     );
-    
-    return workbook.xlsx.write(res).then(function () {
+
+    workbook.xlsx.write(res).then(function () {
       res.status(200).end();
     });
   } catch (e) {
