@@ -7,6 +7,7 @@ const routes = new Router();
 const PATH = {
   ROOT: "/",
   DEVICE_HISTORY: "/history",
+  DOWNLOAD_DEVICE_HISTORY: "/download/history",
   PUMP: "/pump",
   FIRMWARE_VERSION: "/firmwareVersion",
   UPLOAD_FIRMWARE: "/uploadFirmware",
@@ -18,10 +19,11 @@ const storage = multer.memoryStorage({
 });
 const upload = multer({ storage }).single("file");
 
+routes.route(PATH.DEVICE_HISTORY).post(DeviceHistoryCtrl.getDeviceHistoryData);
+
 routes
-  .route(PATH.DEVICE_HISTORY)
-  .post(DeviceHistoryCtrl.getDeviceHistoryData)
-  .get(DeviceHistoryCtrl.downloadDeviceHistoryData);
+  .route(PATH.DOWNLOAD_DEVICE_HISTORY)
+  .post(DeviceHistoryCtrl.downloadDeviceHistoryData);
 routes
   .route(PATH.FIRMWARE_VERSION)
   .post(DeviceHistoryCtrl.firmwareVersion)
