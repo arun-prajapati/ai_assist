@@ -224,7 +224,7 @@ export const graphData = async (req, res, next) => {
             deviceId: mongoose.Types.ObjectId(req.query.deviceId),
             date: {
               $gte: new Date(new Date(dates3)),
-              $lte: new Date(new Date(dates2)), //.setHours(23, 59, 59),
+              $lte: new Date(new Date(dates2)).setHours(23, 59, 59),
             },
           },
         },
