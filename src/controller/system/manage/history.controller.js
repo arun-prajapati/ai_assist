@@ -9,6 +9,8 @@ import {
   handleResponse,
   //databaseparser,
 } from "../../../helpers/utility";
+const excel = require("exceljs");
+
 import { mqttClient } from "../../../config/mqtt/mqtt";
 import { logger, level } from "../../../config/logger/logger";
 import deviceHistory from "../../../models/deviceHistory.model";
@@ -33,14 +35,26 @@ export const getDeviceHistoryData = async (req, res, next) => {
       ">>>",
       new Date(new Date(req.body.endDate).setHours(23, 59, 59))
     );
-    let historyData = await deviceHistory.findData({
-      deviceId: req.query.deviceId,
-      date: {
-        //moment.tz(start, "Asia/calcutta").format("DDMMYYYY")
-        $gte: new Date(new Date(req.body.startDate).setHours(0, 0, 0)), //.toLocaleString("en-US", { timeZone: "Asia/calcutta" }),
-        $lte: new Date(new Date(req.body.endDate).setHours(23, 59, 59)), //.toLocaleString("en-US", { timeZone: "Asia/calcutta" }),
+    let historyData = await deviceHistory.findData(
+      {
+        deviceId: req.query.deviceId,
+        date: {
+          //moment.tz(start, "Asia/calcutta").format("DDMMYYYY")
+          $gte: new Date(new Date(req.body.startDate).setHours(0, 0, 0)), //.toLocaleString("en-US", { timeZone: "Asia/calcutta" }),
+          $lte: new Date(new Date(req.body.endDate).setHours(23, 59, 59)), //.toLocaleString("en-US", { timeZone: "Asia/calcutta" }),
+        },
       },
-    });
+      {
+        date: 1,
+        time: 1,
+        flowValue: 1,
+        totaliser_current_value: 1,
+        valveCurrentstate: 1,
+        pumpCurrentstate: 1,
+        pstate: 1,
+        vstate: 1,
+      }
+    );
     let dataObject = {
       message: "Device history fetched succesfully",
       count: historyData.length,
@@ -204,6 +218,90 @@ export const listFirmwareVersions = async (request, res, next) => {
         return handleResponse(res, dataObject);
       }
     });
+  } catch (e) {
+    if (e && e.message) return next(new BadRequestError(e.message));
+    logger.log(level.error, `Error: ${JSON.stringify(e)}`);
+    return next(new InternalServerError());
+  }
+};
+export const downloadDeviceHistoryData = async (req, res, next) => {
+  logger.log(level.info, `>> Controller: downloadDeviceHistoryData()`);
+  try {
+    console.log(
+      ">>>",
+      new Date(new Date(req.body.startDate).setHours(0, 0, 0))
+    );
+    console.log(
+      ">>>",
+      new Date(new Date(req.body.endDate).setHours(23, 59, 59))
+    );
+    let historyData = await deviceHistory.findData(
+      {
+        deviceId: req.query.deviceId,
+        date: {
+          $gte: new Date(new Date(req.body.startDate).setHours(0, 0, 0)),
+          $lte: new Date(new Date(req.body.endDate).setHours(23, 59, 59)),
+        },
+      },
+      {
+        pmac: 1,
+        vmac: 1,
+        pumpCurrentstate: 1,
+        valveCurrentstate: 1,
+        flowValue: 1,
+        flowUnit: 1,
+        totaliser_current_value: 1,
+      }
+    );
+    let data = [];
+    for (const row of historyData) {
+      let historyDataObject = {
+        Id: row._id,
+        flowValue: row.flowValue,
+        flowUnit: row.flowUnit,
+        pumpCurrentstate: row.pumpCurrentstate ? "online" : "offline",
+        valveCurrentstate: row.valveCurrentstate ? "online" : "offline",
+        totaliser_current_value: row.totaliser_current_value,
+        pmac: row.pmac,
+        vmac: row.vmac,
+      };
+      data.push(historyDataObject);
+    }
+    console.log("Final Array of object of history Data", data);
+    let workbook = new excel.Workbook();
+    let worksheet = workbook.addWorksheet("Tutorials");
+    worksheet.columns = [
+      { header: "Id", key: "Id", width: 5 },
+      { header: "flowValue", key: "flowValue", width: 25 },
+      { header: "flowUnit", key: "flowUnit", width: 25 },
+      { header: "pumpCurrentstate", key: "pumpCurrentstate", width: 10 },
+      { header: "valveCurrentstate", key: "valveCurrentstate", width: 10 },
+      {
+        header: "totaliser_current_value",
+        key: "totaliser_current_value",
+        width: 10,
+      },
+      { header: "pmac", key: "pmac", width: 10 },
+      { header: "vmac", key: "vmac", width: 10 },
+    ];
+    worksheet.addRows(data);
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=" + "DeviceHistory.xlsx"
+    );
+    return workbook.xlsx.write(res).then(function () {
+      res.status(200).end();
+    });
+    // let dataObject = {
+    //   message: "Device history fetched succesfully",
+    //   count: historyData.length,
+    //   data: historyData,
+    // };
+    // return handleResponse(res, dataObject);
   } catch (e) {
     if (e && e.message) return next(new BadRequestError(e.message));
     logger.log(level.error, `Error: ${JSON.stringify(e)}`);
