@@ -9,7 +9,7 @@ import {
   handleResponse,
   //databaseparser,
 } from "../../../helpers/utility";
-var Excel = require("exceljs");
+const CsvParser = require("json2csv").Parser;
 
 import { mqttClient } from "../../../config/mqtt/mqtt";
 import { logger, level } from "../../../config/logger/logger";
@@ -270,37 +270,22 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
       data.push(historyDataObject);
     }
     console.log("Final Array of object of history Data", data);
-    var workbook = new Excel.Workbook();
-    var sheet = workbook.addWorksheet("Sheet1");
-    sheet.columns = [
-      { header: "Id", key: "id" },
-      { header: "Course", key: "course" },
-      { header: "URL.", key: "url" },
+    const csvFields = [
+      "Id",
+      "flowValue",
+      "flowUnit",
+      "pumpCurrentstate",
+      "valveCurrentstate",
+      "totaliser_current_value",
+      "pmac",
+      "vmac",
     ];
-    sheet.addRow({
-      id: 1,
-      course: "HTML",
-      url: "https://vlemonn.com/tutorial/html",
-    });
-    sheet.addRow({
-      id: 2,
-      course: "Java Script",
-      url: "https://vlemonn.com/tutorial/java-script",
-    });
-    sheet.addRow({
-      id: 3,
-      course: "Electron JS",
-      url: "https://vlemonn.com/tutorial/electron-js",
-    });
-    sheet.addRow({
-      id: 4,
-      course: "Node JS",
-      url: "https://vlemonn.com/tutorial/node-js",
-    });
-    workbook.xlsx.writeFile("My First Excel.xlsx").then(function () {
-      // Success Message
-      // alert("File Saved");
-    });
+    const csvParser = new CsvParser({ csvFields });
+    const csvData = csvParser.parse(data);
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", "attachment; filename=tutorials.csv");
+
+    res.status(200).end(csvData);
   } catch (e) {
     if (e && e.message) return next(new BadRequestError(e.message));
     logger.log(level.error, `Error: ${JSON.stringify(e)}`);
