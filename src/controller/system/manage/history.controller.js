@@ -282,7 +282,7 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
     ];
     const csvParser = new CsvParser({ csvFields });
     const csvData = csvParser.parse(data);
-    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Type", "csv");
     res.setHeader(
       "Content-Disposition",
       "attachment; filename=Devicehistory.csv"
