@@ -229,9 +229,11 @@ export const listFirmwareVersions = async (request, res, next) => {
 export const downloadDeviceHistoryData = async (req, res, next) => {
   logger.log(level.info, `>> Controller: downloadDeviceHistoryData()`);
   try {
+    console.log(req.query);
+    console.log(req.query["startDate"]);
     console.log(
       ">>>",
-      new Date(new Date(req.body.startDate).setHours(0, 0, 0))
+      new Date(new Date(req.query["startDate"]).setHours(0, 0, 0))
     );
     console.log(
       ">>>",
@@ -287,6 +289,7 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
       "Content-Disposition",
       "attachment; filename=Devicehistory.csv"
     );
+    res.setHeader("Access-Control-Request-Method", "get");
 
     res.status(200).end(csvData);
   } catch (e) {
