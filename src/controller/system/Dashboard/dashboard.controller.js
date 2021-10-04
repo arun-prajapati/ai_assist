@@ -251,6 +251,7 @@ export const graphData = async (req, res, next) => {
       console.log(" Default graph Data date ", defaultgraphData);
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
       graphData = sortResponsePeriodWise(mergeArrayResponse);
+      console.log("merger array", graphData);
       for (let i = 7; i > 0; i--) {
         if (
           graphData[i]["totaliser_current_value"] !== 0 &&
@@ -260,6 +261,7 @@ export const graphData = async (req, res, next) => {
           graphData[i]["totaliser_current_value"] =
             graphData[i]["totaliser_current_value"] -
             graphData[i - 1]["totaliser_current_value"];
+          console.log("i, i-1", i, i - 1);
           console.log(
             "SUbstraction",
             graphData[i]["totaliser_current_value"] -
@@ -267,7 +269,6 @@ export const graphData = async (req, res, next) => {
           );
         }
       }
-      console.log("merger array", mergeArrayResponse);
     } else {
       pipeline = [
         {
