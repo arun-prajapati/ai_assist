@@ -602,10 +602,10 @@ const createFA07payload = (operation) => {
 const GET_ERROR_MESSAGE = (msgFrameString, state) => {
   let message;
   switch (state) {
-    case "00": {
-      message = `${msgFrameString}Command Success`;
-      break;
-    }
+    // case "00": {
+    //   message = `${msgFrameString}Command Success`;
+    //   break;
+    // }
     case "01": {
       message = `${msgFrameString}Command Failure`;
       break;
@@ -659,9 +659,12 @@ export const handle_FA03_Response = async (macId, msgId, payload) => {
         state
       );
       console.log("answer", erroMessage);
-      var webSocketTopic = process.env.CLOUD_TO_WS;
-      console.log("topic", webSocketTopic);
-      mqttClient.publish(webSocketTopic, erroMessage);
+      if (erroMessage) {
+        console.log("inside");
+        var webSocketTopic = process.env.CLOUD_TO_WS;
+        console.log("topic", webSocketTopic);
+        mqttClient.publish(webSocketTopic, erroMessage);
+      }
     }
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
@@ -686,9 +689,11 @@ export const handle_FA04_Response = async (macId, msgId, payload) => {
         state
       );
       console.log("answer", erroMessage);
-      var webSocketTopic = process.env.CLOUD_TO_WS;
-      console.log("topic", webSocketTopic);
-      mqttClient.publish(webSocketTopic, erroMessage);
+      if (erroMessage) {
+        var webSocketTopic = process.env.CLOUD_TO_WS;
+        console.log("topic", webSocketTopic);
+        mqttClient.publish(webSocketTopic, erroMessage);
+      }
     }
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
@@ -709,9 +714,11 @@ export const handle_FA07_Response = async (macId, msgId, payload) => {
       let { name } = device;
       let erroMessage = GET_ERROR_MESSAGE(` ${name}: Operation Mode `, state);
       console.log("answer", erroMessage);
-      var webSocketTopic = process.env.CLOUD_TO_WS;
-      console.log("topic", webSocketTopic);
-      mqttClient.publish(webSocketTopic, erroMessage);
+      if (erroMessage) {
+        var webSocketTopic = process.env.CLOUD_TO_WS;
+        console.log("topic", webSocketTopic);
+        mqttClient.publish(webSocketTopic, erroMessage);
+      }
     }
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
@@ -736,9 +743,11 @@ export const handle_FA08_Response = async (macId, msgId, payload) => {
         state
       );
       console.log("answer", erroMessage);
-      var webSocketTopic = process.env.CLOUD_TO_WS;
-      console.log("topic", webSocketTopic);
-      mqttClient.publish(webSocketTopic, erroMessage);
+      if (erroMessage) {
+        var webSocketTopic = process.env.CLOUD_TO_WS;
+        console.log("topic", webSocketTopic);
+        mqttClient.publish(webSocketTopic, erroMessage);
+      }
     }
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
@@ -760,9 +769,11 @@ export const handle_FA09_Response = async (macId, msgId, payload) => {
       let { name } = device;
       let erroMessage = GET_ERROR_MESSAGE(` ${name}: Firmware Upgrade `, state);
       console.log("answer", erroMessage);
-      var webSocketTopic = process.env.CLOUD_TO_WS;
-      console.log("topic", webSocketTopic);
-      mqttClient.publish(webSocketTopic, erroMessage);
+      if (erroMessage) {
+        var webSocketTopic = process.env.CLOUD_TO_WS;
+        console.log("topic", webSocketTopic);
+        mqttClient.publish(webSocketTopic, erroMessage);
+      }
     }
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
