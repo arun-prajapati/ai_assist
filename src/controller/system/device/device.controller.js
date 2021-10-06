@@ -214,17 +214,17 @@ export const updateDevice = async (req, res, next) => {
       console.log(
         "update device data",
         updateDeviceData,
-        startDate,
-        endDate,
-        startTime,
-        endTime
+        updateDeviceData.startDate,
+        updateDeviceData.endDate,
+        updateDeviceData.startTime,
+        updateDeviceData.endTime
       );
       publishScheduleMSG(
         updateDeviceData,
-        startDate,
-        endDate,
-        startTime,
-        endTime
+        updateDeviceData.startDate,
+        updateDeviceData.endDate,
+        updateDeviceData.startTime,
+        updateDeviceData.endTime
       );
     }
     if (configurationCondt) {
