@@ -211,6 +211,14 @@ export const updateDevice = async (req, res, next) => {
     //await DeviceSrv.addDeviceHistoryData(updateDeviceData);
     if (scheduleCondt) {
       console.log("inside Scheduling");
+      console.log(
+        "update device data",
+        updateDeviceData,
+        startDate,
+        endDate,
+        startTime,
+        endTime
+      );
       publishScheduleMSG(
         updateDeviceData,
         startDate,
