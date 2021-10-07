@@ -32,106 +32,109 @@ export const createDevice = async (req, res, next) => {
       body.startTime = body.startTime ? getHHMMSS(body.startTime) : undefined;
       body.endTime = body.endTime ? getHHMMSS(body.endTime) : undefined;
     }
-    let deviceData = await Devices.createData(body);
-    const output = `
-    <h2>Hello</h2>
-    <h3>Newly Created device named ${req.body.name} successfully  added on portal.Please find below attachment to find configuration details</h3>
-    <h4>Regards,</h4>
-    <h4>Bacancy Systems</h4>`;
-    let transporter = nodemailer.createTransport({
-      service: "gmail",
-      port: 25,
-      secure: false,
-      auth: {
-        user: "digi5technologies@gmail.com",
-        pass: "Digi5vgec@2021",
-      },
-      tls: {
-        rejectUnauthorized: false,
-      },
-    });
-    let students = [
-      {
-        name: req.body.name,
-        pmac: req.body.pmac,
-        vmac: req.body.vmac,
-        threshold: req.body.threshold,
-        lineSize: req.body.lineSize,
-        pipeSize: req.body.pipeSize,
-        operationMode: req.body.operationMode,
-        payloadInterval: req.body.payloadInterval,
-        startDate: moment
-          .tz(req.body.startDate, "Asia/calcutta")
-          .format("DDMMYYYY"),
-        endDate: moment
-          .tz(req.body.endDate, "Asia/calcutta")
-          .format("DDMMYYYY"),
-        startTime: req.body.startTime,
-        endTime: req.body.endTime,
-      },
-    ];
-    console.log("students", students);
-    console.log(path.join(__dirname, "../views/", "report-template.ejs"));
-    await ejs.renderFile(
-      path.join(__dirname, "../views/", "report-template.ejs"),
-      {
-        students: students,
-      },
-      async (err, data) => {
-        if (err) {
-          console.log(err);
-          //res.send(err);
-        } else {
-          let options = {
-            height: "11.25in",
-            width: "8.5in",
-            header: {
-              height: "20mm",
-            },
-            async: true,
-            footer: {
-              height: "20mm",
-            },
-          };
-          pdf
-            .create(data, options)
-            .toFile("deviceConfiguration.pdf", function (err, data) {
-              if (err) {
-                console.log("ÏNside pdf erro", err);
-              } else {
-                console.log("Pdf created successfully");
-              }
-            });
-        }
-      }
-    );
-    setTimeout(() => {
-      let mailOptions = {
-        from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
-        to: "prempanwala710@gmail.com", // list of receivers
-        subject: "New Device Added At NEPL", // Subject line
-        text: "Hello world?", // plain text body
-        html: output, // html body
-        attachments: [
-          {
-            filename: "deviceConfiguration.pdf",
-            path: "deviceConfiguration.pdf",
-            contentType: "application/pdf",
-          },
-        ],
-      };
+    // let deviceData = await Devices.createData(body);
+    // const output = `
+    // <h2>Hello</h2>
+    // <h3>Newly Created device named ${req.body.name} successfully  added on portal.Please find below attachment to find configuration details</h3>
+    // <h4>Regards,</h4>
+    // <h4>Bacancy Systems</h4>`;
+    // let transporter = nodemailer.createTransport({
+    //   service: "gmail",
+    //   port: 25,
+    //   secure: false,
+    //   auth: {
+    //     user: "digi5technologies@gmail.com",
+    //     pass: "Digi5vgec@2021",
+    //   },
+    //   tls: {
+    //     rejectUnauthorized: false,
+    //   },
+    // });
+    // let students = [
+    //   {
+    //     name: req.body.name,
+    //     pmac: req.body.pmac,
+    //     vmac: req.body.vmac,
+    //     threshold: req.body.threshold,
+    //     lineSize: req.body.lineSize,
+    //     pipeSize: req.body.pipeSize,
+    //     operationMode: req.body.operationMode,
+    //     payloadInterval: req.body.payloadInterval,
+    //     startDate: moment
+    //       .tz(req.body.startDate, "Asia/calcutta")
+    //       .format("DDMMYYYY"),
+    //     endDate: moment
+    //       .tz(req.body.endDate, "Asia/calcutta")
+    //       .format("DDMMYYYY"),
+    //     startTime: req.body.startTime,
+    //     endTime: req.body.endTime,
+    //   },
+    // ];
+    // console.log("students", students);
+    // console.log(
+    //   "folder path",
+    //   path.join("../../../views", "report-template.ejs")
+    // );
+    // await ejs.renderFile(
+    //   path.join(__dirname, "../views/", "report-template.ejs"),
+    //   {
+    //     students: students,
+    //   },
+    //   async (err, data) => {
+    //     if (err) {
+    //       console.log(err);
+    //       //res.send(err);
+    //     } else {
+    //       let options = {
+    //         height: "11.25in",
+    //         width: "8.5in",
+    //         header: {
+    //           height: "20mm",
+    //         },
+    //         async: true,
+    //         footer: {
+    //           height: "20mm",
+    //         },
+    //       };
+    //       pdf
+    //         .create(data, options)
+    //         .toFile("deviceConfiguration.pdf", function (err, data) {
+    //           if (err) {
+    //             console.log("ÏNside pdf erro", err);
+    //           } else {
+    //             console.log("Pdf created successfully");
+    //           }
+    //         });
+    //     }
+    //   }
+    // );
+    // setTimeout(() => {
+    //   let mailOptions = {
+    //     from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
+    //     to: "prempanwala710@gmail.com", // list of receivers
+    //     subject: "New Device Added At NEPL", // Subject line
+    //     text: "Hello world?", // plain text body
+    //     html: output, // html body
+    //     attachments: [
+    //       {
+    //         filename: "deviceConfiguration.pdf",
+    //         path: "deviceConfiguration.pdf",
+    //         contentType: "application/pdf",
+    //       },
+    //     ],
+    //   };
 
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          //return console.log(error);
-          // res.status(200).send("false");
-        } else {
-          // res.status(200).send("true");
-        }
-        console.log("Message sent: %s", info.messageId);
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-      });
-    }, 3000);
+    //   transporter.sendMail(mailOptions, (error, info) => {
+    //     if (error) {
+    //       //return console.log(error);
+    //       // res.status(200).send("false");
+    //     } else {
+    //       // res.status(200).send("true");
+    //     }
+    //     console.log("Message sent: %s", info.messageId);
+    //     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    //   });
+    // }, 3000);
 
     //await DeviceSrv.addDeviceHistoryData(deviceData);
     let dataObject = { message: "Device created succesfully" };
@@ -300,6 +303,8 @@ export const updateDevice = async (req, res, next) => {
         startTime: startTime ? getHHMMSS(startTime) : undefined,
         endTime: endTime ? getHHMMSS(endTime) : undefined,
       };
+      console.log("startTime", startTime);
+      console.log("endTime", endTime);
     }
     if (configurationCondt) {
       updateDeviceObject = {

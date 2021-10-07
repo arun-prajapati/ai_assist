@@ -227,7 +227,7 @@ export const listFirmwareVersions = async (request, res, next) => {
   }
 };
 export const downloadDeviceHistoryData = async (req, res, next) => {
-  logger.log(level.info, `>> Controller: downloadDeviceHistoryData()`);
+  logger.log(level.info, `>> Controller: downloadDeviceHistoryDatas()`);
   try {
     console.log(
       ">>>",
