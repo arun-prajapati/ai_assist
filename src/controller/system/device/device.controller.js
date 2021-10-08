@@ -32,7 +32,7 @@ export const createDevice = async (req, res, next) => {
       body.startTime = body.startTime ? getHHMMSS(body.startTime) : undefined;
       body.endTime = body.endTime ? getHHMMSS(body.endTime) : undefined;
     }
-    let deviceData = await Devices.createData(body);
+    //  let deviceData = await Devices.createData(body);
     // const output = `
     // <h2>Hello</h2>
     // <h3>Newly Created device named ${req.body.name} successfully  added on portal.Please find below attachment to find configuration details</h3>
