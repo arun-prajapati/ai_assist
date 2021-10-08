@@ -36,8 +36,8 @@ export const createDevice = async (req, res, next) => {
     const output = `
     <h2>Hello</h2>
     <h3>Newly Created device named ${req.body.name} successfully  added on portal.Please find below attachment to find configuration details</h3>
-    <h4>Regards, 
-   Bacancy Systems</h4>`;
+    <h4>Regards, <h4>
+   <h4>Bacancy Systems</h4>`;
     let transporter = nodemailer.createTransport({
       service: "gmail",
       port: 25,
