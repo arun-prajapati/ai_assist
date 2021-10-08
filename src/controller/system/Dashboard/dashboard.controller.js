@@ -14,16 +14,14 @@ import deviceHistory from "../../../models/deviceHistory.model";
 import { CONSTANTS as PERIOD_DATA } from "../../../constants/periodData";
 import moment from "moment";
 const mongoose = require("mongoose");
-let dates = new Date(
-  new Date().toLocaleString("en-US", {
-    timeZone: "Asia/calcutta",
-  })
-);
-let dateData = {
-  yy: dates.getFullYear(),
-  mm: dates.getMonth() + 1,
-  dd: dates.getDate(),
-};
+let dates = new Date().toLocaleString("en-US", {
+  timeZone: "Asia/calcutta",
+});
+// let dateData = {
+//   yy: dates.getFullYear(),
+//   mm: dates.getMonth() + 1,
+//   dd: dates.getDate(),
+// };
 
 const defaultBatteryProperty = (period) => {
   let data = {
@@ -108,7 +106,7 @@ export const graphData = async (req, res, next) => {
   logger.log(level.info, `✔ Controller graphData()`);
   let graphData = [];
   console.log("dateData", dates);
-  console.log("DASHBOARD GRAPH DATE", dateData);
+  // console.log("DASHBOARD GRAPH DATE", dateData);
   try {
     let pipeline;
     if (req.query.type === "day") {
@@ -116,95 +114,95 @@ export const graphData = async (req, res, next) => {
       dates1.setDate(dates1.getDate() - 1);
       //dates.setHours(0, 0, 0);
       console.log(">>===", dates1);
-      let historyData = await deviceHistory.findData(
-        {
-          deviceId: mongoose.Types.ObjectId(req.query.deviceId),
-          date: {
-            $gte: new Date(new Date(dates1)), //.toLocaleString("en-US", {
-            //timeZone: "Asia/calcutta",
-            //}),
-            $lte: new Date(new Date(dates1)).setHours(23, 59, 59), //.toLocaleString(
-            // "en-US",
-            //{ timeZone: "Asia/calcutta" }
-            //),
-          },
-        },
-        { createdAt: 0 },
-        { sort: { date: -1 }, limit: 2 }
-      );
-      console.log("historyData", historyData);
-      console.log("historyData", historyData.length);
-      if (historyData && historyData.length > 0) {
-        pipeline = [
-          {
-            $addFields: {
-              date_timezone: {
-                $dateToParts: { date: "$date" },
-              },
-            },
-          },
-          {
-            $match: {
-              deviceId: mongoose.Types.ObjectId(req.query.deviceId),
-              "date_timezone.year": dateData.yy,
-              "date_timezone.month": dateData.mm,
-              "date_timezone.day": dateData.dd,
-            },
-          },
-          {
-            $group: {
-              _id: "$date_timezone.hour",
-              totaliser: { $push: "$$ROOT" },
-            },
-          }, //totaliserValue: {
-          //   $subtract: [
-          //     "$totaliser.totaliser_current_value",
-          //     historyData[0].totaliser_current_value,
-          //   ],
-          {
-            $project: {
-              totaliser_current_value: {
-                $subtract: [
-                  { $last: "$totaliser.totaliser_current_value" },
-                  historyData[0].totaliser_current_value,
-                ],
-              },
-            },
-          },
-          { $sort: { _id: 1 } },
-        ];
-        graphData = await deviceHistory.aggregate(pipeline);
-        console.log("Hours graph Data", graphData);
-        // graphData = JSON.parse(JSON.stringify(graphData));
-        // let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
-        // let mergeArrayResponse = [...graphData, ...defaultgraphData];
-        // graphData = sortResponsePeriodWise(mergeArrayResponse);
-      } else {
-        let deviceData = await Devices.findOneDocument({
-          _id: mongoose.Types.ObjectId(req.query.deviceId),
-        });
-        console.log("deviceData", deviceData);
-        let hours = new Date(
-          moment(deviceData.updatedAt).tz("Asia/calcutta").format()
-        );
-        hours = JSON.stringify(hours);
-        console.log("hours", hours.slice(12, 14));
-        let demo = {
-          ///new Date(moment(deviceData.updatedAt).tz("Asia/calcutta").format("YYYY-MM-DD"))
-          _id: Number(hours.slice(12, 14)),
-          totaliser_current_value: deviceData.totaliser_current_value,
-        };
+      // let historyData = await deviceHistory.findData(
+      //   {
+      //     deviceId: mongoose.Types.ObjectId(req.query.deviceId),
+      //     date: {
+      //       $gte: new Date(new Date(dates1)), //.toLocaleString("en-US", {
+      //       //timeZone: "Asia/calcutta",
+      //       //}),
+      //       $lte: new Date(new Date(dates1)).setHours(23, 59, 59), //.toLocaleString(
+      //       // "en-US",
+      //       //{ timeZone: "Asia/calcutta" }
+      //       //),
+      //     },
+      //   },
+      //   { createdAt: 0 },
+      //   { sort: { date: -1 }, limit: 2 }
+      // );
+      // console.log("historyData", historyData);
+      // console.log("historyData", historyData.length);
+      // if (historyData && historyData.length > 0) {
+      //   pipeline = [
+      //     {
+      //       $addFields: {
+      //         date_timezone: {
+      //           $dateToParts: { date: "$date" },
+      //         },
+      //       },
+      //     },
+      //     {
+      //       $match: {
+      //         deviceId: mongoose.Types.ObjectId(req.query.deviceId),
+      //         "date_timezone.year": dateData.yy,
+      //         "date_timezone.month": dateData.mm,
+      //         "date_timezone.day": dateData.dd,
+      //       },
+      //     },
+      //     {
+      //       $group: {
+      //         _id: "$date_timezone.hour",
+      //         totaliser: { $push: "$$ROOT" },
+      //       },
+      //     }, //totaliserValue: {
+      //     //   $subtract: [
+      //     //     "$totaliser.totaliser_current_value",
+      //     //     historyData[0].totaliser_current_value,
+      //     //   ],
+      //     {
+      //       $project: {
+      //         totaliser_current_value: {
+      //           $subtract: [
+      //             { $last: "$totaliser.totaliser_current_value" },
+      //             historyData[0].totaliser_current_value,
+      //           ],
+      //         },
+      //       },
+      //     },
+      //     { $sort: { _id: 1 } },
+      //   ];
+      //   graphData = await deviceHistory.aggregate(pipeline);
+      //   console.log("Hours graph Data", graphData);
+      //   // graphData = JSON.parse(JSON.stringify(graphData));
+      //   // let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
+      //   // let mergeArrayResponse = [...graphData, ...defaultgraphData];
+      //   // graphData = sortResponsePeriodWise(mergeArrayResponse);
+      // } else {
+      //   let deviceData = await Devices.findOneDocument({
+      //     _id: mongoose.Types.ObjectId(req.query.deviceId),
+      //   });
+      //   console.log("deviceData", deviceData);
+      //   let hours = new Date(
+      //     moment(deviceData.updatedAt).tz("Asia/calcutta").format()
+      //   );
+      //   hours = JSON.stringify(hours);
+      //   console.log("hours", hours.slice(12, 14));
+      //   let demo = {
+      //     ///new Date(moment(deviceData.updatedAt).tz("Asia/calcutta").format("YYYY-MM-DD"))
+      //     _id: Number(hours.slice(12, 14)),
+      //     totaliser_current_value: deviceData.totaliser_current_value,
+      //   };
 
-        console.log("demo", demo);
-        graphData.push(demo);
-        //graphData = [];
-      }
-      graphData = JSON.parse(JSON.stringify(graphData));
-      console.log("Graph Data", graphData);
-      let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
-      console.log("Default propeties BY hours", defaultgraphData);
-      let mergeArrayResponse = [...graphData, ...defaultgraphData];
-      graphData = sortResponsePeriodWiseByHours(mergeArrayResponse);
+      //   console.log("demo", demo);
+      //   graphData.push(demo);
+      //   //graphData = [];
+      // }
+      // graphData = JSON.parse(JSON.stringify(graphData));
+      // console.log("Graph Data", graphData);
+      // let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
+      // console.log("Default propeties BY hours", defaultgraphData);
+      // let mergeArrayResponse = [...graphData, ...defaultgraphData];
+      // graphData = sortResponsePeriodWiseByHours(mergeArrayResponse);
     } else if (req.query.type === "week") {
       var dates2 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates2.setDate(dates2.getDate() - 1);
