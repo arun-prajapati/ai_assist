@@ -41,14 +41,14 @@ export const createDevice = async (req, res, next) => {
     let transporter = nodemailer.createTransport({
       service: "gmail",
       port: 25,
-      secure: false,
+      secure: true,
       auth: {
         user: "digi5technologies@gmail.com",
         pass: "Digi5vgec@2021",
       },
-      tls: {
-        rejectUnauthorized: false,
-      },
+      // tls: {
+      //   rejectUnauthorized: false,
+      // },
     });
     let students = [
       {
