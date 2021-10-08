@@ -14,12 +14,12 @@ import deviceHistory from "../../../models/deviceHistory.model";
 import { CONSTANTS as PERIOD_DATA } from "../../../constants/periodData";
 import moment from "moment";
 const mongoose = require("mongoose");
-let dates = moment.tz(new Date(), "Asia/calcutta").format("YYYY/MM/DDhh:mm:ss");
-// let dateData = {
-//   yy: dates.getFullYear(),
-//   mm: dates.getMonth() + 1,
-//   dd: dates.getDate(),
-// };
+let dates = moment.tz(new Date(), "Asia/calcutta").format("YYYY-MM-DDhh:mm:ss");
+let dateData = {
+  yy: dates.getFullYear(),
+  mm: dates.getMonth() + 1,
+  dd: dates.getDate(),
+};
 
 const defaultBatteryProperty = (period) => {
   let data = {
