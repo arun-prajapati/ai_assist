@@ -98,7 +98,7 @@ export const graphData = async (req, res, next) => {
   logger.log(level.info, `✔ Controller graphData()`);
   let graphData = [];
   let dates = new Date(
-    moment().tz("Asia/calcutta").format("YYYY-MM-DDhh:mm:ss")
+    moment().tz("Asia/calcutta").format("YYYY/MM/DD hh:mm:ss")
   );
   let dateData = {
     yy: dates.getFullYear(),
