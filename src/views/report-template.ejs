@@ -84,6 +84,7 @@ table, th, td {
   border: 1px solid black;
 }
 </style>
+<script src="/js/moment.min.js"></script>
 </head>
 <body>
     <div class="invoice-box">
@@ -98,7 +99,9 @@ table, th, td {
                                 <img src="http://sepindia.org/wp-content/uploads/2013/11/nepl.png" style="width:100%; max-width:300px;">
                             </td>
                             <td>
-                                Created On: <%= new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'long', day: '2-digit'}).format(new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"))) %><br>
+                                Created On: <%= new Date().toLocaleString("en-US", {
+                                    timeZone: "Asia/calcutta",
+                                  }) %><br>
                             </td>
                         </tr>
                     </table>
