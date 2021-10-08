@@ -94,14 +94,9 @@ table, th, td {
         <table cellpadding="0" cellspacing="0">
           <% if (students.length > 0) { %>
 <% students.forEach(student => {%>
-    <tr class="top">
+    <tr class="top" colspan="2">
         <td class="title">
             <img src="http://sepindia.org/wp-content/uploads/2013/11/nepl.png" style="width:100%; max-width:300px;">
-        </td>
-        <td>
-            Created On: <%= new Date().toLocaleString("en-US", {
-                timeZone: "Asia/calcutta",
-              }) %><br>
         </td>
     </tr>
     <tr class="information">
@@ -112,6 +107,9 @@ table, th, td {
         </td>
         <td>
              Device Name: <%= student.name %><br>
+             Created On: <%= new Date().toLocaleString("en-US", {
+                timeZone: "Asia/calcutta",
+              }) %><br>
         </td>
     </tr>
             <tr class="heading">
