@@ -138,13 +138,13 @@ export const createDevice = async (req, res, next) => {
 
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          //return console.log(error);
-          // res.status(200).send("false");
+          console.log("error in sending", error);
         } else {
           // res.status(200).send("true");
+          console.log("no error");
         }
-        console.log("Message sent: %s", info.messageId);
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        // console.log("Message sent: %s", info.messageId);
+        // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
       });
     }, 3000);
 
