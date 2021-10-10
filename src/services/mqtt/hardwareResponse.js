@@ -470,8 +470,8 @@ const getStatusAndThresholdOfDeviceFA06 = (payload) => {
   console.log(">>>payload");
   let state = payload.slice(2, 4);
   let totaliser_current_value = payload.slice(4, 12);
-  let flowValue = payload.slice(12, 14);
-  let flowUnits = payload.slice(14, 16);
+  let flowValue = payload.slice(12, 16);
+  let flowUnits = payload.slice(16, 18);
   console.log(
     ">>>",
     state,
