@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as DeviceHistoryCtrl from "../../../controller/system/manage/history.controller";
 import PumpRoutes from "./pump.routes";
 import multer from "multer";
+import { AuthMiddleware } from "../../../middleware/authMiddleware";
 const routes = new Router();
 
 const PATH = {
@@ -19,18 +20,20 @@ const storage = multer.memoryStorage({
 });
 const upload = multer({ storage }).single("file");
 
-routes.route(PATH.DEVICE_HISTORY).post(DeviceHistoryCtrl.getDeviceHistoryData);
+routes
+  .route(PATH.DEVICE_HISTORY)
+  .post(AuthMiddleware, DeviceHistoryCtrl.getDeviceHistoryData);
 
 routes
   .route(PATH.DOWNLOAD_DEVICE_HISTORY)
-  .get(DeviceHistoryCtrl.downloadDeviceHistoryData);
+  .get(AuthMiddleware, DeviceHistoryCtrl.downloadDeviceHistoryData);
 routes
   .route(PATH.FIRMWARE_VERSION)
-  .post(DeviceHistoryCtrl.firmwareVersion)
-  .get(DeviceHistoryCtrl.listFirmwareVersions);
+  .post(AuthMiddleware, DeviceHistoryCtrl.firmwareVersion)
+  .get(AuthMiddleware, DeviceHistoryCtrl.listFirmwareVersions);
 routes
   .route(PATH.UPLOAD_FIRMWARE)
-  .post(upload, DeviceHistoryCtrl.uploadFirmwareVersion);
+  .post(AuthMiddleware, upload, DeviceHistoryCtrl.uploadFirmwareVersion);
 
 routes.use(PATH.PUMP, PumpRoutes);
 

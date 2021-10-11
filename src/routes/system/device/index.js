@@ -3,7 +3,7 @@ import * as DeviceCtrl from "../../../controller/system/device/device.controller
 import * as ErrorMiddleware from "../../../middleware/validatorError";
 import { validate as DeviceValidate } from "../../../validator/device/device.validator";
 import { CONSTANTS as SYSTEM_CONSTANTS } from "../../../constants/system/system";
-//import { AuthMiddleware } from "../../../middleware/authMiddleware";
+import { AuthMiddleware } from "../../../middleware/authMiddleware";
 const routes = new Router();
 
 const PATH = {
@@ -15,17 +15,19 @@ routes
   .route(PATH.ROOT)
   .post(
     [
+      AuthMiddleware,
       DeviceValidate(SYSTEM_CONSTANTS.CREATE_DEVICE),
       ErrorMiddleware.ExpressValidatorError,
     ],
     DeviceCtrl.createDevice
   )
-  .get(DeviceCtrl.getDevices);
+  .get(AuthMiddleware, DeviceCtrl.getDevices);
 
 routes
   .route(PATH.DEVICEID)
   .get(
     [
+      AuthMiddleware,
       DeviceValidate(SYSTEM_CONSTANTS.GET_SINGLE_DEVICE),
       ErrorMiddleware.ExpressValidatorError,
     ],
@@ -33,6 +35,7 @@ routes
   )
   .delete(
     [
+      AuthMiddleware,
       DeviceValidate(SYSTEM_CONSTANTS.REMOVE_SINGLE_DEVICE),
       ErrorMiddleware.ExpressValidatorError,
     ],
@@ -40,6 +43,7 @@ routes
   )
   .patch(
     [
+      AuthMiddleware,
       DeviceValidate(SYSTEM_CONSTANTS.UPDATE_SINGLE_DEVICE),
       ErrorMiddleware.ExpressValidatorError,
     ],
