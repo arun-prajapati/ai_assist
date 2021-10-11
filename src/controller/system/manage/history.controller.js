@@ -79,8 +79,8 @@ export const firmwareVersion = async (req, res, next) => {
     if (device) {
       let PUMP_TOPIC, VALVE_TOPIC;
       let FA09payload = createFA09payload(url);
-      FA09payload.replace("https", "http");
-      console.log("paylodFA09MSG", FA09payload);
+      FA09payload = FA09payload.replace("https", "http");
+      console.log("paylodFA09MSG ", FA09payload);
       if (pmac && vmac) {
         console.log("both");
         PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, pmac);
