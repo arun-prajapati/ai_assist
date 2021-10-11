@@ -10,7 +10,7 @@ const PATH = {
   DEVICECOUNTS: "/deviceCount",
   STATS: "/stats",
 };
-routes.route(PATH.DEVICECOUNTS).get(AuthMiddleware, DashboardCtrl.deviceCount);
-routes.route(PATH.STATS).get(AuthMiddleware, DashboardCtrl.graphData);
+routes.route(PATH.DEVICECOUNTS).get(DashboardCtrl.deviceCount);
+routes.route(PATH.STATS).get(DashboardCtrl.graphData);
 
 export default routes;
