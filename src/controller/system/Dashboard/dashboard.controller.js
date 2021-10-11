@@ -131,13 +131,14 @@ export const graphData = async (req, res, next) => {
         { sort: { date: -1 }, limit: 2 }
       );
       console.log("historyData", historyData);
-      console.log(
-        "historyData totalizer values",
-        historyData[0].totaliser_current_value
-      );
+
       // historyData[0].totaliser_current_value
       console.log("historyData", historyData.length);
       if (historyData && historyData.length > 0) {
+        console.log(
+          "historyData totalizer values",
+          historyData[0].totaliser_current_value
+        );
         pipeline = [
           {
             $addFields: {
