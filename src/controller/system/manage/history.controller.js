@@ -210,7 +210,7 @@ export const listFirmwareVersions = async (request, res, next) => {
         var demo = [];
         Contents.forEach((e) => {
           demo.push(
-            "https://bacancy-system-nptl.s3.ap-south-1.amazonaws.com/" + e.Key
+            "http://bacancy-system-nptl.s3.ap-south-1.amazonaws.com/" + e.Key
           );
         });
         console.log(demo);
