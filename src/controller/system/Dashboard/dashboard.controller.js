@@ -298,7 +298,7 @@ export const graphData = async (req, res, next) => {
         {
           $project: {
             totaliser_current_value: {
-              $max: "$totaliser.totaliser_current_value",
+              $last: "$totaliser.totaliser_current_value",
             },
           },
         },
@@ -306,10 +306,69 @@ export const graphData = async (req, res, next) => {
       ];
       graphData = await deviceHistory.aggregate(pipeline);
       graphData = JSON.parse(JSON.stringify(graphData));
-      let defaultgraphData = generateDefaultPropertiesOfDays(graphData);
+      let defaultgraphData = generateDefaultPropertiesOfDays(
+        graphData,
+        dateData
+      );
+      let demoDate = new Date(dateData.yy, dateData.mm - 1, 1);
+      demoDate = new Date(
+        moment(demoDate).tz("Asia/calcutta").format("YYYY-MM-DD")
+      );
+      let demo1Date = new Date(demoDate);
+      console.log("demodate", demoDate);
+      demoDate.setDate(demoDate.getDate() - 1);
+      console.log("After substracting to find previous month date", demoDate);
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
       graphData = sortResponsePeriodWise(mergeArrayResponse);
+      console.log(
+        "length of Month statistics  graph data",
+        mergeArrayResponse.length
+      );
+      let historyData = await deviceHistory.findData(
+        {
+          deviceId: mongoose.Types.ObjectId(req.query.deviceId),
+          date: {
+            $gte: new Date(new Date(demoDate)),
+            $lte: new Date(new Date(demo1Date)),
+          },
+        },
+        {},
+        {
+          sort: { date: -1 },
+          limit: 1,
+        }
+      );
+      // console.log("Previous Month record", historyData);
+      for (let i = mergeArrayResponse.length - 1; i > 0; i--) {
+        if (
+          graphData[i]["totaliser_current_value"] !== 0 &&
+          graphData[i]["totaliser_current_value"] >=
+            graphData[i - 1]["totaliser_current_value"]
+        ) {
+          graphData[i]["totaliser_current_value"] =
+            graphData[i]["totaliser_current_value"] -
+            graphData[i - 1]["totaliser_current_value"];
+          console.log("i, i-1", i, i - 1);
+          console.log(
+            "SUbstraction",
+            graphData[i]["totaliser_current_value"] -
+              graphData[i - 1]["totaliser_current_value"]
+          );
+        }
+      }
+      if (historyData && historyData.length > 0) {
+        if (
+          graphData[0]["totaliser_current_value"] !== 0 &&
+          graphData[0]["totaliser_current_value"] >=
+            historyData[0]["totaliser_current_value"]
+        ) {
+          graphData[0]["totaliser_current_value"] =
+            graphData[0]["totaliser_current_value"] -
+            historyData[0]["totaliser_current_value"];
+        }
+      }
     }
+
     res.send(graphData);
   } catch (e) {
     if (e && e.message) return next(new BadRequestError(e.message));
@@ -342,8 +401,9 @@ const generateDefaultPropertiesOfHours = (data) => {
   console.log("hoursnotincluded", hourNotIncludedInDBResponse);
   return generateNotIncludedHourResponse;
 };
-const generateDefaultPropertiesOfDays = (data) => {
+const generateDefaultPropertiesOfDays = (data, dateData) => {
   let { yy, mm } = dateData;
+  console.log("Inside Default properties of months", dateData);
   const thirtyDaysMonths = PERIOD_DATA.THIRTY_DAY_MONTHS;
   let totalDays = PERIOD_DATA.DAYS;
   let isLeapYear = checkLeapYear(yy);
