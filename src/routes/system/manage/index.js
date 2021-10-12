@@ -26,7 +26,7 @@ routes
 
 routes
   .route(PATH.DOWNLOAD_DEVICE_HISTORY)
-  .get(AuthMiddleware, DeviceHistoryCtrl.downloadDeviceHistoryData);
+  .get(DeviceHistoryCtrl.downloadDeviceHistoryData);
 routes
   .route(PATH.FIRMWARE_VERSION)
   .post(AuthMiddleware, DeviceHistoryCtrl.firmwareVersion)
