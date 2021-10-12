@@ -11,6 +11,7 @@ import {
 } from "../../../helpers/utility";
 import nodemailer from "nodemailer";
 const CsvParser = require("json2csv").Parser;
+const parse = require("json2csv");
 
 import { mqttClient } from "../../../config/mqtt/mqtt";
 import { logger, level } from "../../../config/logger/logger";
@@ -304,17 +305,6 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
     ];
     const csvParser = new CsvParser({ csvFields });
     const csvData = csvParser.parse(data);
-    console.log("csvData", csvData);
-    res.setHeader("Content-Type", "csv");
-    res.setHeader(
-      "Content-Disposition",
-      "attachment; filename=Devicehistory.csv"
-    );
-    const output = `
-    <h2>Hello</h2>
-    <h3>Histrory details</h3>
-    <h4>Regards, <h4>
-   <h4>Bacancy Systems</h4>`;
     let transporter = nodemailer.createTransport({
       service: "gmail",
       port: 25,
@@ -330,12 +320,11 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
         to: "prempanwala710@gmail.com", // list of receivers
         subject: "History NEPL", // Subject line
         text: "Hello world?", // plain text body
-        html: output, // html body
+        html: "jhfjfj", // html body
         attachments: [
           {
-            filename: "Devicehistory.csv",
-            path: "Devicehistory.csv",
-            contentType: "application/csv",
+            filename: "file.csv",
+            content: csvData,
           },
         ],
       };
@@ -351,6 +340,12 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
         // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
       });
     }, 3000);
+    console.log("csvData", csvData);
+    res.setHeader("Content-Type", "csv");
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=Devicehistory.csv"
+    );
     res.status(200).end(csvData);
   } catch (e) {
     if (e && e.message) return next(new BadRequestError(e.message));
