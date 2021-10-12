@@ -11,6 +11,9 @@ const PATH = {
   STATS: "/stats",
 };
 routes.route(PATH.DEVICECOUNTS).get(AuthMiddleware, DashboardCtrl.deviceCount);
-routes.route(PATH.STATS).get(AuthMiddleware, DashboardCtrl.graphData);
+routes
+  .route(PATH.STATS)
+  .get(AuthMiddleware, DashboardCtrl.graphData)
+  .post(DashboardCtrl.mailDeviceGraphData);
 
 export default routes;
