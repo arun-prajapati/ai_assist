@@ -488,7 +488,11 @@ const generateDefaultPropertiesOfWeek = (data) => {
 };
 export const mailDeviceGraphData = async (req, res, next) => {
   logger.log(level.info, `>> Controller: mailDeviceGraphData()`);
+
   try {
+    let deviceData = await Devices.findOneDocument({
+      _id: mongoose.Types.ObjectId(req.body.deviceId),
+    });
     const output = `
     <h2>Hello</h2>
     <h3>Requested ${req.body.type}'s  statistics of  ${deviceData.name} are below Attached with.</h3>
@@ -502,9 +506,6 @@ export const mailDeviceGraphData = async (req, res, next) => {
         user: "digi5technologies@gmail.com",
         pass: "osuvgltfiefskdcm",
       },
-    });
-    let deviceData = await Devices.findOneDocument({
-      _id: mongoose.Types.ObjectId(req.body.deviceId),
     });
     setTimeout(() => {
       let mailOptions = {
