@@ -273,7 +273,7 @@ export const removeDevice = async (req, res, next) => {
     console.log("Device Details while removing it from portal", deviceData);
     const output = `
       <h2>Hello</h2>
-      <h3> Device named ${req.body.name} successfully  removed from portal.Please find below attachment to find configuration details.</h3>
+      <h3> Device named ${deviceData.name} successfully  removed from portal.Please find below attachment to find configuration details.</h3>
       <h4>Regards, <h4>
      <h4>Bacancy Systems</h4>`;
     let transporter = nodemailer.createTransport({

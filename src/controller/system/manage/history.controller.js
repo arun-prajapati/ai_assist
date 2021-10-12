@@ -303,6 +303,7 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
     ];
     const csvParser = new CsvParser({ csvFields });
     const csvData = csvParser.parse(data);
+    console.log("csvData", csvData);
     res.setHeader("Content-Type", "csv");
     res.setHeader(
       "Content-Disposition",
