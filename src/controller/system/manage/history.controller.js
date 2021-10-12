@@ -14,7 +14,7 @@ const CsvParser = require("json2csv").Parser;
 import { mqttClient } from "../../../config/mqtt/mqtt";
 import { logger, level } from "../../../config/logger/logger";
 import deviceHistory from "../../../models/deviceHistory.model";
-import Device from "../../../models/device.model";
+import Devices from "../../../models/device.model";
 import moment from "moment";
 const mongoose = require("mongoose");
 //const  multer=require('multer')
@@ -394,7 +394,7 @@ export const mailDeviceHistoryData = async (req, res, next) => {
     const csvParser = new CsvParser({ csvFields });
     const csvData = csvParser.parse(data);
     console.log("deviceId", req.query.deviceId);
-    let deviceData = await Device.findOneDocument({
+    let deviceData = await Devices.findOneDocument({
       _id: mongoose.Types.ObjectId(req.query.deviceId),
     });
     console.log("deviceData", deviceData);
