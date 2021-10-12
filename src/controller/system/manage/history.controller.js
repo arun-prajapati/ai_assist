@@ -16,6 +16,7 @@ import { logger, level } from "../../../config/logger/logger";
 import deviceHistory from "../../../models/deviceHistory.model";
 import Devices from "../../../models/device.model";
 import moment from "moment";
+const mongoose = require("mongoose");
 //const  multer=require('multer')
 import multer from "multer";
 import uniqid from "uniqid";
@@ -392,7 +393,9 @@ export const mailDeviceHistoryData = async (req, res, next) => {
     ];
     const csvParser = new CsvParser({ csvFields });
     const csvData = csvParser.parse(data);
-    let deviceData = await Devices.findOneDocument({ _id: req.query.deviceId });
+    let deviceData = await Devices.findOneDocument({
+      _id: mongoose.Types.ObjectId(req.query.deviceId),
+    });
     const output = `
     <h2>Hello</h2>
     <h3>Requested Device History ${deviceData.name} details are below attached with.</h3>
