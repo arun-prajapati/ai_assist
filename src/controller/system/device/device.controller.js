@@ -271,117 +271,117 @@ export const removeDevice = async (req, res, next) => {
   try {
     let deviceData = await Devices.deleteData({ _id: req.params.deviceId });
     console.log("Device Details while removing it from portal", deviceData);
-    //   const output = `
-    //   <h2>Hello</h2>
-    //   <h3> Device named ${req.body.name} successfully  removed from portal.Please find below attachment to find configuration details.</h3>
-    //   <h4>Regards, <h4>
-    //  <h4>Bacancy Systems</h4>`;
-    //   let transporter = nodemailer.createTransport({
-    //     service: "gmail",
-    //     port: 25,
-    //     secure: true,
-    //     auth: {
-    //       user: "digi5technologies@gmail.com",
-    //       pass: "osuvgltfiefskdcm",
-    //     },
-    //   });
-    //   let students = [
-    //     {
-    //       name: req.body.name,
-    //       pmac: req.body.pmac,
-    //       vmac: req.body.vmac,
-    //       threshold: req.body.threshold,
-    //       lineSize: req.body.lineSize,
-    //       pipeSize: req.body.pipeSize,
-    //       operationMode: req.body.operationMode,
-    //       payloadInterval: req.body.payloadInterval,
-    //       startDate: moment
-    //         .tz(req.body.startDate, "Asia/calcutta")
-    //         .format("DD/MM/YYYY"),
-    //       endDate: moment
-    //         .tz(req.body.endDate, "Asia/calcutta")
-    //         .format("DD/MM/YYYY"),
-    //       startTime: [
-    //         req.body.startTime.slice(0, 2),
-    //         ":",
-    //         req.body.startTime.slice(2, 4),
-    //         ":",
-    //         req.body.startTime.slice(4),
-    //       ].join(""),
-    //       endTime: [
-    //         req.body.endTime.slice(0, 2),
-    //         ":",
-    //         req.body.endTime.slice(2, 4),
-    //         ":",
-    //         req.body.endTime.slice(4),
-    //       ].join(""),
-    //     },
-    //   ];
-    //   console.log("students", students);
-    //   console.log(
-    //     "folder path",
-    //     path.join(process.cwd(), "/src/views", "report-template.ejs")
-    //   );
-    //   await ejs.renderFile(
-    //     path.join(process.cwd(), "/src/views", "report-template.ejs"),
-    //     {
-    //       students: students,
-    //     },
-    //     async (err, data) => {
-    //       if (err) {
-    //         console.log(err);
-    //         //res.send(err);
-    //       } else {
-    //         let options = {
-    //           height: "11.25in",
-    //           width: "8.5in",
-    //           header: {
-    //             height: "20mm",
-    //           },
-    //           async: true,
-    //           footer: {
-    //             height: "20mm",
-    //           },
-    //         };
-    //         pdf
-    //           .create(data, options)
-    //           .toFile("deviceConfiguration.pdf", function (err, data) {
-    //             if (err) {
-    //               console.log("ÏNside pdf erro", err);
-    //             } else {
-    //               console.log("Pdf created successfully");
-    //             }
-    //           });
-    //       }
-    //     }
-    //   );
-    //   setTimeout(() => {
-    //     let mailOptions = {
-    //       from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
-    //       to: "prempanwala710@gmail.com", // list of receivers
-    //       subject: "New Device Added At NEPL", // Subject line
-    //       text: "Hello world?", // plain text body
-    //       html: output, // html body
-    //       attachments: [
-    //         {
-    //           filename: "deviceConfiguration.pdf",
-    //           path: "deviceConfiguration.pdf",
-    //           contentType: "application/pdf",
-    //         },
-    //       ],
-    //     };
+    const output = `
+      <h2>Hello</h2>
+      <h3> Device named ${req.body.name} successfully  removed from portal.Please find below attachment to find configuration details.</h3>
+      <h4>Regards, <h4>
+     <h4>Bacancy Systems</h4>`;
+    let transporter = nodemailer.createTransport({
+      service: "gmail",
+      port: 25,
+      secure: true,
+      auth: {
+        user: "digi5technologies@gmail.com",
+        pass: "osuvgltfiefskdcm",
+      },
+    });
+    let students = [
+      {
+        name: deviceData.name,
+        pmac: deviceData.pmac,
+        vmac: deviceData.vmac,
+        threshold: deviceData.threshold,
+        lineSize: deviceData.lineSize,
+        pipeSize: deviceData.pipeSize,
+        operationMode: deviceData.operationMode,
+        payloadInterval: deviceData.payloadInterval,
+        startDate: moment
+          .tz(deviceData.startDate, "Asia/calcutta")
+          .format("DD/MM/YYYY"),
+        endDate: moment
+          .tz(deviceData.endDate, "Asia/calcutta")
+          .format("DD/MM/YYYY"),
+        startTime: [
+          deviceData.startTime.slice(0, 2),
+          ":",
+          deviceData.startTime.slice(2, 4),
+          ":",
+          deviceData.startTime.slice(4),
+        ].join(""),
+        endTime: [
+          deviceData.endTime.slice(0, 2),
+          ":",
+          deviceData.endTime.slice(2, 4),
+          ":",
+          deviceData.endTime.slice(4),
+        ].join(""),
+      },
+    ];
+    console.log("students", students);
+    console.log(
+      "folder path",
+      path.join(process.cwd(), "/src/views", "report-template.ejs")
+    );
+    await ejs.renderFile(
+      path.join(process.cwd(), "/src/views", "report-template.ejs"),
+      {
+        students: students,
+      },
+      async (err, data) => {
+        if (err) {
+          console.log(err);
+          //res.send(err);
+        } else {
+          let options = {
+            height: "11.25in",
+            width: "8.5in",
+            header: {
+              height: "20mm",
+            },
+            async: true,
+            footer: {
+              height: "20mm",
+            },
+          };
+          pdf
+            .create(data, options)
+            .toFile("deviceConfiguration.pdf", function (err, data) {
+              if (err) {
+                console.log("Ïnside pdf erro", err);
+              } else {
+                console.log("Pdf created successfully");
+              }
+            });
+        }
+      }
+    );
+    setTimeout(() => {
+      let mailOptions = {
+        from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
+        to: "prempanwala710@gmail.com", // list of receivers
+        subject: "Device Removed From NEPL", // Subject line
+        text: "Hello world?", // plain text body
+        html: output, // html body
+        attachments: [
+          {
+            filename: "deviceConfiguration.pdf",
+            path: "deviceConfiguration.pdf",
+            contentType: "application/pdf",
+          },
+        ],
+      };
 
-    //     transporter.sendMail(mailOptions, (error, info) => {
-    //       if (error) {
-    //         console.log("error in sending", error);
-    //       } else {
-    //         // res.status(200).send("true");
-    //         console.log("no error");
-    //       }
-    //       // console.log("Message sent: %s", info.messageId);
-    //       // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-    //     });
-    //   }, 3000);
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log("error in sending", error);
+        } else {
+          // res.status(200).send("true");
+          console.log("no error");
+        }
+        // console.log("Message sent: %s", info.messageId);
+        // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      });
+    }, 3000);
     let dataObject = { message: "Device deleted succesfully" };
     return handleResponse(res, dataObject);
   } catch (e) {
