@@ -379,7 +379,7 @@ export const mailDeviceHistoryData = async (req, res, next) => {
       };
       data.push(historyDataObject);
     }
-    console.log("Final Array of object of history Data", data);
+    //console.log("Final Array of object of history Data", data);
     const csvFields = [
       "Id",
       "date",
@@ -400,7 +400,7 @@ export const mailDeviceHistoryData = async (req, res, next) => {
     console.log("deviceData", deviceData);
     const output = `
     <h2>Hello</h2>
-    <h3>Requested Device History ${deviceData[0].name} details are below attached with.</h3>
+    <h3>Requested Device History ${deviceData.name} details are below attached with.</h3>
     <h4>Regards,<h4>
    <h4>Bacancy Systems</h4>`;
     let transporter = nodemailer.createTransport({
