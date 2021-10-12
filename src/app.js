@@ -8,10 +8,10 @@ const app = express();
 const MORGAN_DEV_FORMAT = "dev";
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(morgan(MORGAN_DEV_FORMAT));
-app.set('view engine', 'ejs');
+app.set("view engine", "ejs");
 const PATH = {
   API: "/api/v1",
 };
