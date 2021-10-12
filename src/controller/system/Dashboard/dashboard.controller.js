@@ -491,7 +491,7 @@ export const mailDeviceGraphData = async (req, res, next) => {
   try {
     const output = `
     <h2>Hello</h2>
-    <h3>Graph.</h3>
+    <h3>Requested ${req.body.type}'s  statistics of  ${deviceData.name} are below Attached with.</h3>
     <h4>Regards,<h4>
    <h4>Bacancy Systems</h4>`;
     let transporter = nodemailer.createTransport({
@@ -503,16 +503,19 @@ export const mailDeviceGraphData = async (req, res, next) => {
         pass: "osuvgltfiefskdcm",
       },
     });
+    let deviceData = await Devices.findOneDocument({
+      _id: mongoose.Types.ObjectId(req.body.deviceId),
+    });
     setTimeout(() => {
       let mailOptions = {
         from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
         to: `${req.body.email}`, // list of receivers
-        subject: "Requested  Device History", // Subject line
+        subject: `Requested ${req.body.type}'s  statistics of  ${deviceData.name} `, // Subject line
         text: "Hello world?", // plain text body
         html: output,
         attachments: [
           {
-            filename: "graph" + ".jpg",
+            filename: `${deviceData.name}` + ".jpg",
             contentType: "image/jpeg",
             content: new Buffer.from(
               req.body.image.split("base64,")[1],
