@@ -11,8 +11,6 @@ import {
 } from "../../../helpers/utility";
 import nodemailer from "nodemailer";
 const CsvParser = require("json2csv").Parser;
-const parse = require("json2csv");
-
 import { mqttClient } from "../../../config/mqtt/mqtt";
 import { logger, level } from "../../../config/logger/logger";
 import deviceHistory from "../../../models/deviceHistory.model";
@@ -305,6 +303,100 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
     ];
     const csvParser = new CsvParser({ csvFields });
     const csvData = csvParser.parse(data);
+    console.log("csvData", csvData);
+    res.setHeader("Content-Type", "csv");
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=Devicehistory.csv"
+    );
+    res.status(200).end(csvData);
+  } catch (e) {
+    if (e && e.message) return next(new BadRequestError(e.message));
+    logger.log(level.error, `Error: ${JSON.stringify(e)}`);
+    return next(new InternalServerError());
+  }
+};
+export const mailDeviceHistoryData = async (req, res, next) => {
+  logger.log(level.info, `>> Controller: mailDeviceHistoryData()`);
+  try {
+    console.log(
+      ">>>",
+      new Date(
+        moment(req.query["startDate"]).tz("Asia/calcutta").format("YYYY-MM-DD")
+      )
+    );
+    console.log(
+      ">>>",
+      new Date(
+        moment(req.query["endDate"]).tz("Asia/calcutta").format("YYYY-MM-DD")
+      )
+    );
+    // let demo = new Date(
+    //   moment(req.query["startDate"]).tz("Asia/calcutta").format("YYYY-MM-DD")
+    // );
+
+    // console.log(demo);
+    let historyData = await deviceHistory.findData(
+      {
+        deviceId: req.query.deviceId,
+        date: {
+          $gte: new Date(
+            moment(req.query["startDate"])
+              .tz("Asia/calcutta")
+              .format("YYYY-MM-DD")
+          ),
+          $lte: new Date(
+            moment(req.query["endDate"])
+              .tz("Asia/calcutta")
+              .format("YYYY-MM-DD")
+          ),
+        },
+      },
+      {
+        date: 1,
+        pmac: 1,
+        vmac: 1,
+        pumpCurrentstate: 1,
+        valveCurrentstate: 1,
+        flowValue: 1,
+        flowUnit: 1,
+        totaliser_current_value: 1,
+      }
+    );
+    let data = [];
+    for (const row of historyData) {
+      let historyDataObject = {
+        Id: row._id,
+        date: row.date,
+        flowValue: row.flowValue,
+        flowUnit: row.flowUnit,
+        pumpCurrentstate: row.pumpCurrentstate ? "online" : "offline",
+        valveCurrentstate: row.valveCurrentstate ? "online" : "offline",
+        totaliser_current_value: row.totaliser_current_value,
+        pmac: row.pmac,
+        vmac: row.vmac,
+      };
+      data.push(historyDataObject);
+    }
+    console.log("Final Array of object of history Data", data);
+    const csvFields = [
+      "Id",
+      "date",
+      "flowValue",
+      "flowUnit",
+      "pumpCurrentstate",
+      "valveCurrentstate",
+      "totaliser_current_value",
+      "pmac",
+      "vmac",
+    ];
+    const csvParser = new CsvParser({ csvFields });
+    const csvData = csvParser.parse(data);
+    const output = `
+    <h2>Hello</h2>
+    <h3>Requested Device History ${req.body.name} details are below attached with.</h3>
+    <h4>Regards,<h4>
+   <h4>Bacancy Systems</h4>`;
     let transporter = nodemailer.createTransport({
       service: "gmail",
       port: 25,
@@ -318,12 +410,12 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
       let mailOptions = {
         from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
         to: "prempanwala710@gmail.com", // list of receivers
-        subject: "History NEPL", // Subject line
+        subject: "Requested  Device History", // Subject line
         text: "Hello world?", // plain text body
-        html: "jhfjfj", // html body
+        html: output, // html body
         attachments: [
           {
-            filename: "file.csv",
+            filename: "History.csv",
             content: csvData,
           },
         ],
@@ -339,14 +431,12 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
         // console.log("Message sent: %s", info.messageId);
         // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
       });
-    }, 3000);
+      let dataObject = {
+        message: "Mail sent succesfully",
+      };
+      return handleResponse(res, dataObject);
+    }, 2000);
     console.log("csvData", csvData);
-    res.setHeader("Content-Type", "csv");
-    res.setHeader(
-      "Content-Disposition",
-      "attachment; filename=Devicehistory.csv"
-    );
-    res.status(200).end(csvData);
   } catch (e) {
     if (e && e.message) return next(new BadRequestError(e.message));
     logger.log(level.error, `Error: ${JSON.stringify(e)}`);
