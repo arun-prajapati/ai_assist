@@ -396,9 +396,10 @@ export const mailDeviceHistoryData = async (req, res, next) => {
     let deviceData = await Devices.findOneDocument({
       _id: mongoose.Types.ObjectId(req.query.deviceId),
     });
+    console.log("deviceData", deviceData);
     const output = `
     <h2>Hello</h2>
-    <h3>Requested Device History ${deviceData.name} details are below attached with.</h3>
+    <h3>Requested Device History ${deviceData[0].name} details are below attached with.</h3>
     <h4>Regards,<h4>
    <h4>Bacancy Systems</h4>`;
     let transporter = nodemailer.createTransport({
