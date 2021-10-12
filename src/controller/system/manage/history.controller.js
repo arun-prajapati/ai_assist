@@ -9,6 +9,7 @@ import {
   handleResponse,
   //databaseparser,
 } from "../../../helpers/utility";
+import nodemailer from "nodemailer";
 const CsvParser = require("json2csv").Parser;
 
 import { mqttClient } from "../../../config/mqtt/mqtt";
@@ -309,8 +310,47 @@ export const downloadDeviceHistoryData = async (req, res, next) => {
       "Content-Disposition",
       "attachment; filename=Devicehistory.csv"
     );
-    //res.setHeader("Access-Control-Request-Method", "get");
+    const output = `
+    <h2>Hello</h2>
+    <h3>Histrory details</h3>
+    <h4>Regards, <h4>
+   <h4>Bacancy Systems</h4>`;
+    let transporter = nodemailer.createTransport({
+      service: "gmail",
+      port: 25,
+      secure: true,
+      auth: {
+        user: "digi5technologies@gmail.com",
+        pass: "osuvgltfiefskdcm",
+      },
+    });
+    setTimeout(() => {
+      let mailOptions = {
+        from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
+        to: "prempanwala710@gmail.com", // list of receivers
+        subject: "History NEPL", // Subject line
+        text: "Hello world?", // plain text body
+        html: output, // html body
+        attachments: [
+          {
+            filename: "Devicehistory.csv",
+            path: "Devicehistory.csv",
+            contentType: "application/csv",
+          },
+        ],
+      };
 
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log("error in sending", error);
+        } else {
+          // res.status(200).send("true");
+          console.log("no error");
+        }
+        // console.log("Message sent: %s", info.messageId);
+        // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      });
+    }, 3000);
     res.status(200).end(csvData);
   } catch (e) {
     if (e && e.message) return next(new BadRequestError(e.message));
