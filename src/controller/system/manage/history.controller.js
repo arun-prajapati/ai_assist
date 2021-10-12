@@ -393,10 +393,11 @@ export const mailDeviceHistoryData = async (req, res, next) => {
     ];
     const csvParser = new CsvParser({ csvFields });
     const csvData = csvParser.parse(data);
+    console.log("deviceId", req.query.deviceId);
     let deviceData = await Devices.findOneDocument({
       _id: mongoose.Types.ObjectId(req.query.deviceId),
     });
-    console.log("deviceData", deviceData);
+    // console.log("deviceData", deviceData);
     const output = `
     <h2>Hello</h2>
     <h3>Requested Device History ${deviceData[0].name} details are below attached with.</h3>
