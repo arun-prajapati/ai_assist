@@ -409,7 +409,7 @@ export const mailDeviceHistoryData = async (req, res, next) => {
     setTimeout(() => {
       let mailOptions = {
         from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
-        to: "prempanwala710@gmail.com", // list of receivers
+        to: `${req.body.email}`, // list of receivers
         subject: "Requested  Device History", // Subject line
         text: "Hello world?", // plain text body
         html: output, // html body
