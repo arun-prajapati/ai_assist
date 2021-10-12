@@ -44,7 +44,7 @@ export const createDevice = async (req, res, next) => {
       secure: true,
       auth: {
         user: "digi5technologies@gmail.com",
-        pass: "prem0131#",
+        pass: "osuvgltfiefskdcm",
       },
       // tls: {
       //   rejectUnauthorized: false,
