@@ -335,7 +335,7 @@ export const graphData = async (req, res, next) => {
       demoDate.setDate(demoDate.getDate() - 1);
       console.log("After substracting to find previous month date", demoDate);
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
-      graphData = sortResponsePeriodWise(mergeArrayResponse);
+      graphData = sortResponsePeriodWiseByHours(mergeArrayResponse);
       console.log(
         "length of Month statistics  graph data",
         mergeArrayResponse.length
