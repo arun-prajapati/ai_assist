@@ -24,7 +24,23 @@ import uniqid from "uniqid";
 export const addAlertconfigurationData = async (req, res, next) => {
   logger.log(level.info, `>> Controller: addAlertconfigurationData()`);
   try {
+    let deviceData = await Devices.findOneDocument({ _id: req.body.deviceId });
+    req.body.name = deviceData.name;
     await Alerts.createData(req.body);
+    let dataObject = {
+      message: "Alert Configuration Added succesfully",
+    };
+    return handleResponse(res, dataObject);
+  } catch (e) {
+    if (e && e.message) return next(new BadRequestError(e.message));
+    logger.log(level.error, `Error: ${JSON.stringify(e)}`);
+    return next(new InternalServerError());
+  }
+};
+export const getAlertconfigurationData = async (req, res, next) => {
+  logger.log(level.info, `>> Controller: getAlertconfigurationData()`);
+  try {
+    let alertConfigurationData = await Alerts.createData(req.body);
     let dataObject = {
       message: "Alert Configuration Added succesfully",
     };
