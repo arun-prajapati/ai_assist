@@ -111,6 +111,7 @@ export const graphData = async (req, res, next) => {
   try {
     let pipeline;
     if (req.query.type === "day") {
+      let midnightBase = 0;
       var dates1 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates1.setDate(dates1.getDate() - 1);
       //dates.setHours(0, 0, 0);
@@ -169,15 +170,13 @@ export const graphData = async (req, res, next) => {
           {
             $project: {
               totaliser_current_value: {
-                $subtract: [
-                  { $last: "$totaliser.totaliser_current_value" },
-                  historyData[0].totaliser_current_value,
-                ],
+                $last: "$totaliser.totaliser_current_value",
               },
             },
           },
           { $sort: { _id: 1 } },
         ];
+        midnightBase = historyData[0].totaliser_current_value;
         graphData = await deviceHistory.aggregate(pipeline);
         console.log("Hours graph Data", graphData);
         // graphData = JSON.parse(JSON.stringify(graphData));
@@ -199,7 +198,6 @@ export const graphData = async (req, res, next) => {
           _id: Number(hours.slice(12, 14)),
           totaliser_current_value: deviceData.totaliser_current_value,
         };
-
         console.log("demo", demo);
         graphData.push(demo);
         //graphData = [];
@@ -210,6 +208,17 @@ export const graphData = async (req, res, next) => {
       console.log("Default propeties BY hours", defaultgraphData);
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
       graphData = sortResponsePeriodWiseByHours(mergeArrayResponse);
+      console.log("Inside Day", mergeArrayResponse.length - 1);
+      console.log("mid night base", midnightBase);
+      for (let i = mergeArrayResponse.length - 1; i >= 0; i--) {
+        if (
+          graphData[i]["totaliser_current_value"] !== 0 &&
+          graphData[i]["totaliser_current_value"] >= midnightBase
+        ) {
+          graphData[i]["totaliser_current_value"] =
+            graphData[i]["totaliser_current_value"] - midnightBase;
+        }
+      }
     } else if (req.query.type === "week") {
       var dates2 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates2.setDate(dates2.getDate() - 1);
