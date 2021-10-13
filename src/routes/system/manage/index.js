@@ -38,7 +38,10 @@ routes
   .route(PATH.UPLOAD_FIRMWARE)
   .post(AuthMiddleware, upload, DeviceHistoryCtrl.uploadFirmwareVersion);
 
-routes.route(PATH.ALERT).post(DeviceAlertCtrl.addAlertconfigurationData);
+routes
+  .route(PATH.ALERT)
+  .post(DeviceAlertCtrl.addAlertconfigurationData)
+  .get(DeviceAlertCtrl.getAlertconfigurationData);
 routes.use(PATH.PUMP, PumpRoutes);
 
 export default routes;
