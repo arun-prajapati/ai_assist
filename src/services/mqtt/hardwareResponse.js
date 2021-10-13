@@ -367,10 +367,12 @@ export const VALVE_STATUS = async (macId, payload) => {
         { createdAt: 0 },
         { sort: { date: -1 }, limit: 2 }
       );
-      console.log("historyData", historyData);
+      console.log(" IN valve status historyData", historyData);
       console.log("historyData", historyData.length);
+      console.log("In valve status", macId);
       if (historyData && historyData.length > 0) {
         if (totaliser_current_value < historyData[0].totaliser_current_value) {
+          console.log("inside");
           await deviceHistory.updateData(
             {
               vmac: macId,
