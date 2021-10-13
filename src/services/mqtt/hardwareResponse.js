@@ -369,6 +369,7 @@ export const VALVE_STATUS = async (macId, payload) => {
       );
       console.log(" IN valve status historyData", historyData);
       console.log("historyData", historyData.length);
+      console.log("totaliservalue", totaliser_current_value);
       console.log("In valve status", macId);
       if (historyData && historyData.length > 0) {
         if (totaliser_current_value < historyData[0].totaliser_current_value) {
