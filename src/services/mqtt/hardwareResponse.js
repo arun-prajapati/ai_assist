@@ -353,6 +353,34 @@ export const VALVE_STATUS = async (macId, payload) => {
     let deviceExist = await Devices.findOneDocument({ vmac: macId }); //findOne
     let deviceHistoryExist = await deviceHistory.isExist({ vmac: macId });
     if (deviceExist) {
+      var dates1 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
+      dates1.setDate(dates1.getDate() - 1);
+      console.log(">>===", dates1);
+      let historyData = await deviceHistory.findData(
+        {
+          deviceId: mongoose.Types.ObjectId(deviceExist._id),
+          date: {
+            $gte: new Date(new Date(dates1)),
+            $lte: new Date(new Date(dates1)).setHours(23, 59, 59),
+          },
+        },
+        { createdAt: 0 },
+        { sort: { date: -1 }, limit: 2 }
+      );
+      console.log("historyData", historyData);
+      console.log("historyData", historyData.length);
+      if (historyData && historyData.length > 0) {
+        if (totaliser_current_value < historyData[0].totaliser_current_value) {
+          await deviceHistory.updateData(
+            {
+              vmac: macId,
+            },
+            {
+              totaliser_current_value,
+            }
+          );
+        }
+      }
       if (deviceExist.vstate !== 1) {
         let {
           pmac,
