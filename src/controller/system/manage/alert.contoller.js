@@ -40,7 +40,10 @@ export const addAlertconfigurationData = async (req, res, next) => {
 export const getAlertconfigurationData = async (req, res, next) => {
   logger.log(level.info, `>> Controller: getAlertconfigurationData()`);
   try {
-    let alertConfigurationData = await Alerts.findData();
+    let alertConfigurationData = await Alerts.findData(
+      {},
+      { createdAt: 0, updatedAt: 0 }
+    );
     let dataObject = {
       message: "Alert Configuration Fetched succesfully",
       data: alertConfigurationData,
