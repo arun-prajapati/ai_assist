@@ -7,6 +7,9 @@ const schema = {
     ref: "Device",
     trim: true,
   },
+  name: {
+    type: String,
+  },
   alertName: {
     type: [String],
   },
