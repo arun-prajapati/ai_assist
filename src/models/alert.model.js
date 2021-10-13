@@ -19,7 +19,7 @@ const schema = {
   subject: {
     type: String,
   },
-  Description: { type: String },
+  description: { type: String },
 };
 
 let schemaOption = {
