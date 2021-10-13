@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as DeviceHistoryCtrl from "../../../controller/system/manage/history.controller";
+import * as DeviceAlertCtrl from "../../../controller/system/manage/alert.contoller";
 import PumpRoutes from "./pump.routes";
 import multer from "multer";
 import { AuthMiddleware } from "../../../middleware/authMiddleware";
@@ -12,6 +13,7 @@ const PATH = {
   PUMP: "/pump",
   FIRMWARE_VERSION: "/firmwareVersion",
   UPLOAD_FIRMWARE: "/uploadFirmware",
+  ALERT: "/alert",
 };
 const storage = multer.memoryStorage({
   destination: function (req, file, callback) {
@@ -36,6 +38,7 @@ routes
   .route(PATH.UPLOAD_FIRMWARE)
   .post(AuthMiddleware, upload, DeviceHistoryCtrl.uploadFirmwareVersion);
 
+routes.route(PATH.ALERT).post(DeviceAlertCtrl.addAlertconfigurationData);
 routes.use(PATH.PUMP, PumpRoutes);
 
 export default routes;
