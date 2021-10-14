@@ -8,4 +8,5 @@ export const CONSTANTS = {
   FA07: "FA07",
   FA08: "FA08",
   FA09: "FA09",
+  FA10: "FA10",
 };

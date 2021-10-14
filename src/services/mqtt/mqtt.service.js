@@ -64,8 +64,8 @@ export const handleMQTTData = async (macId, data) => {
         HR.handle_FA08_Response(macId, msgId, payload);
         break;
       }
-      case MESSAGE.FA09: {
-        HR.handle_FA09_Response(macId, msgId, payload);
+      case MESSAGE.FA10: {
+        HR.handle_FA10_Response(macId, msgId, payload);
         break;
       }
     }

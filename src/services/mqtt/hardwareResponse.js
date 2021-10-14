@@ -7,6 +7,8 @@ import { CONSTANTS as MESSAGE } from "../../constants/messages/messageId";
 import deviceHistory from "../../models/deviceHistory.model";
 import * as DeviceSrv from "../../services/device/device.service";
 import { flowUnit } from "../../constants/flowUnit";
+import Alerts from "../../models/alert.model";
+import nodemailer from "nodemailer";
 const mongoose = require("mongoose");
 const START_DELIMETER = "AAAA";
 const END_DELIMETER = "5555";
@@ -774,6 +776,103 @@ export const handle_FA09_Response = async (macId, msgId, payload) => {
         console.log("topic", webSocketTopic);
         mqttClient.publish(webSocketTopic, erroMessage);
       }
+    }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
+export const handle_FA10_Response = async (macId, msgId, payload) => {
+  try {
+    console.log("Inside FA10 response");
+    // const recievedMACId = macId;
+    // let state = payload.slice(2, 4);
+    // console.log("state", state);
+    // console.log("state", typeof state);
+    // //! get doc from DB using that mac if not exist then do nothing
+    // let device = await Devices.findOneDocument({
+    //   $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+    // });
+    mailAlerts("615edffc321f51002b4bcd43", "abc");
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
+
+export const mailAlerts = async (id, alerts) => {
+  try {
+    let alertRecord = await Alerts.findData({
+      deviceId: mongoose.Types.ObjectId(id),
+      alertName: alerts,
+    });
+    if (alertRecord && alertRecord.length > 0) {
+      console.log("Alert Record", alertRecord);
+      for (let i = 0; i < alertRecord.length; i++) {
+        let transporter = nodemailer.createTransport({
+          service: "gmail",
+          port: 25,
+          secure: true,
+          auth: {
+            user: "digi5technologies@gmail.com",
+            pass: "osuvgltfiefskdcm",
+          },
+        });
+        const output = `<h2>${
+          alertRecord[i].description
+        }.</h2> <h2>DateTime is ${new Date(
+          moment().tz("Asia/calcutta").format("YYYY/MM/DD hh:mm:ss")
+        )}</h2>  <h2>Site Name:${alertRecord[i].name}</h2>`;
+        console.log("Recievers email address", alertRecord[i].receiverEmail);
+        let mailOptions = {
+          from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
+          to: alertRecord[i].receiverEmail, // list of receivers
+          subject: alertRecord[i].subject, // Subject line
+          text: "Hello world?", // plain text body
+          html: output, // html body
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.log("error in sending", error);
+          } else {
+            // res.status(200).send("true");
+            console.log("no error");
+          }
+          // console.log("Message sent: %s", info.messageId);
+          // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        });
+      }
+    } else {
+      let transporter = nodemailer.createTransport({
+        service: "gmail",
+        port: 25,
+        secure: true,
+        auth: {
+          user: "digi5technologies@gmail.com",
+          pass: "osuvgltfiefskdcm",
+        },
+      });
+      let deviceData = await Devices.findOneDocument({
+        _id: mongoose.Types.ObjectId(id),
+      });
+      const output = `<h2>${alerts}.</h2> <h2>DateTime is ${new Date(
+        moment().tz("Asia/calcutta").format("YYYY/MM/DD hh:mm:ss")
+      )}</h2>  <h2>Site Name:${deviceData.name}</h2>`;
+      let mailOptions = {
+        from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
+        to: "prempanwala710@gmail.com", // list of receivers
+        subject: "Alerts", // Subject line
+        text: "Hello world?", // plain text body
+        html: output, // html body
+      };
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log("error in sending", error);
+        } else {
+          // res.status(200).send("true");
+          console.log("no error");
+        }
+        // console.log("Message sent: %s", info.messageId);
+        // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      });
     }
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
