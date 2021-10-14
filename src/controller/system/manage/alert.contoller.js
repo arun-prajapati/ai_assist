@@ -56,7 +56,6 @@ export const getAlertconfigurationData = async (req, res, next) => {
     return next(new InternalServerError());
   }
 };
-
 export const updateAlertconfigurationData = async (req, res, next) => {
   logger.log(level.info, `>> Controller: updateAlertconfigurationData()`);
   try {
