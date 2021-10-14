@@ -60,7 +60,7 @@ export const getAlertconfigurationData = async (req, res, next) => {
 export const updateAlertconfigurationData = async (req, res, next) => {
   logger.log(level.info, `>> Controller: updateAlertconfigurationData()`);
   try {
-    let alertData = await Alerts.findOneDocument({ _id: req.body.id });
+    let alertData = await Alerts.findOneDocument({ _id: req.params.id });
     if (!alertData) {
       throw new Error("No Device Found");
     }
@@ -89,6 +89,24 @@ export const updateAlertconfigurationData = async (req, res, next) => {
     );
     let dataObject = {
       message: "Alert Configuration updated succesfully",
+    };
+    return handleResponse(res, dataObject);
+  } catch (e) {
+    if (e && e.message) return next(new BadRequestError(e.message));
+    logger.log(level.error, `Error: ${JSON.stringify(e)}`);
+    return next(new InternalServerError());
+  }
+};
+export const deleteAlertconfigurationData = async (req, res, next) => {
+  logger.log(level.info, `>> Controller: deleteAlertconfigurationData()`);
+  try {
+    let alertData = await Alerts.findOneDocument({ _id: req.params.id });
+    if (!alertData) {
+      throw new Error("No Device Found");
+    }
+    await Alerts.deleteData({ _id: req.params.id });
+    let dataObject = {
+      message: "Alert Configuration Deleted succesfully",
     };
     return handleResponse(res, dataObject);
   } catch (e) {

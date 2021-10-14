@@ -42,7 +42,8 @@ routes
   .route(PATH.ALERT)
   .post(DeviceAlertCtrl.addAlertconfigurationData)
   .get(DeviceAlertCtrl.getAlertconfigurationData)
-  .patch(DeviceAlertCtrl.updateAlertconfigurationData);
+  .patch(DeviceAlertCtrl.updateAlertconfigurationData)
+  .delete(DeviceAlertCtrl.deleteAlertconfigurationData);
 routes.use(PATH.PUMP, PumpRoutes);
 
 export default routes;
