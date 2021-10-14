@@ -14,6 +14,7 @@ const PATH = {
   FIRMWARE_VERSION: "/firmwareVersion",
   UPLOAD_FIRMWARE: "/uploadFirmware",
   ALERT: "/alert",
+  ALERT_BY_ID: "/alert/:id",
 };
 const storage = multer.memoryStorage({
   destination: function (req, file, callback) {
@@ -44,6 +45,9 @@ routes
   .get(DeviceAlertCtrl.getAlertconfigurationData)
   .patch(DeviceAlertCtrl.updateAlertconfigurationData)
   .delete(DeviceAlertCtrl.deleteAlertconfigurationData);
+routes
+  .route(PATH.ALERT_BY_ID)
+  .get(DeviceAlertCtrl.getSingleAlertconfigurationData);
 routes.use(PATH.PUMP, PumpRoutes);
 
 export default routes;

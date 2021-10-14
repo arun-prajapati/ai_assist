@@ -114,3 +114,22 @@ export const deleteAlertconfigurationData = async (req, res, next) => {
     return next(new InternalServerError());
   }
 };
+export const getSingleAlertconfigurationData = async (req, res, next) => {
+  logger.log(level.info, `>> Controller: getSingleAlertconfigurationData()`);
+  try {
+    let alertConfigurationData = await Alerts.findData(
+      { _id: req.params.id },
+      { createdAt: 0, updatedAt: 0 }
+    );
+    let dataObject = {
+      message: "Alert Configuration Fetched succesfully",
+      data: alertConfigurationData,
+      count: alertConfigurationData.length,
+    };
+    return handleResponse(res, dataObject);
+  } catch (e) {
+    if (e && e.message) return next(new BadRequestError(e.message));
+    logger.log(level.error, `Error: ${JSON.stringify(e)}`);
+    return next(new InternalServerError());
+  }
+};
