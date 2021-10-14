@@ -104,7 +104,7 @@ export const deleteAlertconfigurationData = async (req, res, next) => {
     if (!alertData) {
       throw new Error("No Device Found");
     }
-    await Alerts.deleteData({ _id: req.params.id });
+    await Alerts.deleteData({ _id: req.query.id });
     let dataObject = {
       message: "Alert Configuration Deleted succesfully",
     };
