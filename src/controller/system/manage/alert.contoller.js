@@ -56,3 +56,44 @@ export const getAlertconfigurationData = async (req, res, next) => {
     return next(new InternalServerError());
   }
 };
+
+export const updateAlertconfigurationData = async (req, res, next) => {
+  logger.log(level.info, `>> Controller: updateAlertconfigurationData()`);
+  try {
+    let alertData = await Alerts.findOneDocument({ _id: req.body.id });
+    if (!alertData) {
+      throw new Error("No Device Found");
+    }
+    let updatefields = {
+      alertName: req.body.alertName,
+      receiverEmail: req.body.receiverEmail,
+      subject: req.body.subject,
+      description: req.body.description,
+    };
+    if (req.body.deviceId) {
+      let deviceData = await Devices.findOneDocument({
+        _id: req.body.deviceId,
+      });
+      req.body.name = deviceData.name;
+      updatefields = {
+        ...updatefields,
+        deviceId: req.body.deviceId,
+        name: req.body.name,
+      };
+    }
+    await Alerts.updateData(
+      {
+        _id: req.body.id,
+      },
+      updatefields
+    );
+    let dataObject = {
+      message: "Alert Configuration updated succesfully",
+    };
+    return handleResponse(res, dataObject);
+  } catch (e) {
+    if (e && e.message) return next(new BadRequestError(e.message));
+    logger.log(level.error, `Error: ${JSON.stringify(e)}`);
+    return next(new InternalServerError());
+  }
+};
