@@ -83,7 +83,7 @@ export const updateAlertconfigurationData = async (req, res, next) => {
     }
     await Alerts.updateData(
       {
-        _id: req.body.id,
+        _id: req.query.id,
       },
       updatefields
     );
