@@ -450,3 +450,33 @@ export const mailDeviceHistoryData = async (req, res, next) => {
     return next(new InternalServerError());
   }
 };
+
+export const deleteFirmwareVersions = async (request, res, next) => {
+  logger.log(level.info, `>> Controller: deleteFirmwareVersions()`);
+  try {
+    const s3 = new aws.S3({
+      accessKeyId: process.env.AWS_ID,
+      secretAccessKey: process.env.AWS_SECRET,
+    });
+    const params = {
+      Bucket: process.env.AWS_BUCKET_LIST_NAME,
+      Key: `SensieTech/${request.body.fileName}`,
+    };
+    console.log("params", params);
+    s3.deleteObject(params, function (err, data) {
+      if (err) {
+        // an error occurred
+        console.log(err, err.stack);
+        throw new Error("Firmware Deletion Failed");
+      } else console.log("NO error", data); // successful response
+    });
+    let dataObject = {
+      message: "Firmware version Deleted successfully",
+    };
+    return handleResponse(res, dataObject);
+  } catch (e) {
+    if (e && e.message) return next(new BadRequestError(e.message));
+    logger.log(level.error, `Error: ${JSON.stringify(e)}`);
+    return next(new InternalServerError());
+  }
+};

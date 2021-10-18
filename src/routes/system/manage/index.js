@@ -34,7 +34,8 @@ routes
 routes
   .route(PATH.FIRMWARE_VERSION)
   .post(AuthMiddleware, DeviceHistoryCtrl.firmwareVersion)
-  .get(AuthMiddleware, DeviceHistoryCtrl.listFirmwareVersions);
+  .get(AuthMiddleware, DeviceHistoryCtrl.listFirmwareVersions)
+  .delete(DeviceHistoryCtrl.deleteFirmwareVersions);
 routes
   .route(PATH.UPLOAD_FIRMWARE)
   .post(AuthMiddleware, upload, DeviceHistoryCtrl.uploadFirmwareVersion);
