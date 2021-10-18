@@ -460,7 +460,7 @@ export const deleteFirmwareVersions = async (request, res, next) => {
     });
     const params = {
       Bucket: process.env.AWS_BUCKET_LIST_NAME,
-      Key: `SensieTech/${request.body.fileName}`,
+      Key: `SensieTech/${request.params.fileName}`,
     };
     console.log("params", params);
     s3.deleteObject(params, function (err, data) {
