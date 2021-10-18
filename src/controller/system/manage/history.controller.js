@@ -74,6 +74,7 @@ export const firmwareVersion = async (req, res, next) => {
   logger.log(level.info, `>> Controller: firmwareVersion()`);
   try {
     let { pmac, vmac, url } = req.body;
+    url = "http://bacancy-system-nptl.s3.ap-south-1.amazonaws.com/" + url;
     let device = await Devices.findOneDocument({
       $or: [{ pmac: pmac }, { vmac: vmac }],
     });
@@ -210,9 +211,7 @@ export const listFirmwareVersions = async (request, res, next) => {
         const { Contents } = data;
         var demo = [];
         Contents.forEach((e) => {
-          demo.push(
-            "http://bacancy-system-nptl.s3.ap-south-1.amazonaws.com/" + e.Key
-          );
+          demo.push(-+e.Key);
         });
         console.log(demo);
         let dataObject = {
