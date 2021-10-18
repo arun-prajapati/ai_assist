@@ -211,7 +211,7 @@ export const listFirmwareVersions = async (request, res, next) => {
         const { Contents } = data;
         var demo = [];
         Contents.forEach((e) => {
-          demo.push(-+e.Key);
+          demo.push(e.Key);
         });
         console.log(demo);
         let dataObject = {
