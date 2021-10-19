@@ -14,7 +14,8 @@ const extractDataOBJ = (data) => {
     payloadWithoutStartDelimeter.length - 4
   );
   console.log("split ", splitByEndDelimeter);
-  let payloadWithoutDelimeters = splitByEndDelimeter[0];
+  let payloadWithoutDelimeters = splitByEndDelimeter;
+  console.log("payloadWithoutDelimeters", payloadWithoutDelimeters);
   let extractMSGId = payloadWithoutStartDelimeter.slice(0, 4);
   let payloadWithoutMSGId = payloadWithoutDelimeters.split(extractMSGId);
   let payload = payloadWithoutMSGId[1];
