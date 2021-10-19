@@ -8,7 +8,11 @@ const END_DELIMETER = "5555";
 const extractDataOBJ = (data) => {
   let splitByStartDelimeter = data.split(START_DELIMETER);
   let payloadWithoutStartDelimeter = splitByStartDelimeter[1];
-  let splitByEndDelimeter = payloadWithoutStartDelimeter.split(END_DELIMETER);
+  // let splitByEndDelimeter = payloadWithoutStartDelimeter.split(END_DELIMETER);
+  let splitByEndDelimeter = payloadWithoutStartDelimeter.substring(
+    0,
+    payloadWithoutStartDelimeter.length - 4
+  );
   let payloadWithoutDelimeters = splitByEndDelimeter[0];
   let extractMSGId = payloadWithoutStartDelimeter.slice(0, 4);
   let payloadWithoutMSGId = payloadWithoutDelimeters.split(extractMSGId);
