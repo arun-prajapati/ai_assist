@@ -749,8 +749,10 @@ export const handle_FA08_Response = async (macId, msgId, payload) => {
         mqttClient.publish(webSocketTopic, erroMessage);
       }
       if (state === "00") {
-        let operation = device.operationMode === "manual" ? true : false;
-        const FA08payload = createFA08payload(operation, device.pumpDuration);
+        const FA08payload = createFA08payload(
+          device.pumpCurrentstate,
+          device.pumpDuration
+        );
         var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(
           REPLACE_DELIMETER,
           device.pmac
