@@ -548,14 +548,14 @@ export const publishPumpOperation = async (pmac, vmac, operation, min) => {
   pmac = filterMac(pmac);
   //const FA07payload = createFA07payload(operation);
   const FA08payload = createFA08payload(operation, min);
-  // var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, pmac);
+  var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, pmac);
   var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(REPLACE_DELIMETER, vmac);
-  //mqttClient.publish(PUMP_TOPIC, FA07payload);
-  //mqttClient.publish(VALVE_TOPIC, FA07payload);
-  // mqttClient.publish(PUMP_TOPIC, FA08payload, { qos: 2 }, (err, result) => {
-  //   console.log(err);
-  //   console.log(result);
-  // });
+  // mqttClient.publish(PUMP_TOPIC, FA07payload);
+  // mqttClient.publish(VALVE_TOPIC, FA07payload);
+  mqttClient.publish(PUMP_TOPIC, FA08payload, { qos: 2 }, (err, result) => {
+    console.log(err);
+    console.log(result);
+  });
   mqttClient.publish(VALVE_TOPIC, FA08payload, { qos: 2 });
 
   return true;
@@ -748,25 +748,25 @@ export const handle_FA08_Response = async (macId, msgId, payload) => {
         console.log("topic", webSocketTopic);
         mqttClient.publish(webSocketTopic, erroMessage);
       }
-      if (state === "00") {
-        const FA08payload = createFA08payload(
-          device.pumpCurrentstate,
-          device.pumpDuration
-        );
-        var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(
-          REPLACE_DELIMETER,
-          device.pmac
-        );
-        mqttClient.publish(
-          PUMP_TOPIC,
-          FA08payload,
-          { qos: 2 },
-          (err, result) => {
-            console.log(err);
-            console.log(result);
-          }
-        );
-      }
+      //   if (state === "00") {
+      //     const FA08payload = createFA08payload(
+      //       device.pumpCurrentstate,
+      //       device.pumpDuration
+      //     );
+      //     var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(
+      //       REPLACE_DELIMETER,
+      //       device.pmac
+      //     );
+      //     mqttClient.publish(
+      //       PUMP_TOPIC,
+      //       FA08payload,
+      //       { qos: 2 },
+      //       (err, result) => {
+      //         console.log(err);
+      //         console.log(result);
+      //       }
+      //     );
+      //   }
     }
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
