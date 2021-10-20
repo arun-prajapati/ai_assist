@@ -9,7 +9,7 @@ export const addDeviceHistoryData = async (deviceData) => {
   });
   deviceData.time = moment
     .tz(moment().format(), "Asia/calcutta")
-    .format("hh:mm:ss a");
+    .format("hh:mm:ss");
   deviceData.deviceId = deviceData._id;
   delete deviceData._id;
   console.log(">>afterdate modified", deviceData.date);
