@@ -34,6 +34,7 @@ export const userLogin = async (req, res, next) => {
         refreshToken: tokens.refreshToken,
         _id: userData._id,
         email: userData.email,
+        name: userData.name,
       },
     };
     return handleResponse(res, dataObject);
