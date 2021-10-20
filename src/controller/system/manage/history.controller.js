@@ -56,6 +56,7 @@ export const getDeviceHistoryData = async (req, res, next) => {
         pumpCurrentstate: 1,
         pstate: 1,
         vstate: 1,
+        updatedBy: 1,
       }
     );
     let dataObject = {
