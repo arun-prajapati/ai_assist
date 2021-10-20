@@ -113,6 +113,7 @@ const schema = {
     type: Number,
     default: 0,
   },
+  updatedBy: String,
 };
 
 let schemaOption = {

@@ -261,6 +261,7 @@ export const PUMP_STATUS = async (macId, payload) => {
   try {
     let state = getStatusOfDeviceFA05(payload);
     let deviceExist = await Devices.findOneDocument({ pmac: macId });
+    let deviceHistoryExist = await deviceHistory.isExist({ pmac: macId });
     if (deviceExist) {
       if (deviceExist.pstate !== 1) {
         let {
@@ -319,7 +320,22 @@ export const PUMP_STATUS = async (macId, payload) => {
             pumpLastUpdated: moment().format(),
           }
         );
-        //await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+        updateDeviceData.updatedBy = "Pump";
+        if (!deviceHistoryExist) {
+          // updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
+          var dates = new Date(moment().tz("Asia/calcutta").format());
+          dates.setDate(dates.getDate() - 1);
+          console.log(">>dates", dates);
+          updateDeviceData.date = new Date(new Date(dates).setHours(0, 0, 0));
+          updateDeviceData.time = moment
+            .tz(moment().format(), "Asia/calcutta")
+            .format("hh:mm:ss");
+          updateDeviceData.deviceId = updateDeviceData._id;
+          delete updateDeviceData._id;
+          await deviceHistory.createData(updateDeviceData);
+          return true;
+        }
+        await DeviceSrv.addDeviceHistoryData(updateDeviceData);
       } else if (state === "01") {
         // pump ON
         let updateDeviceData = await Devices.updateData(
@@ -332,7 +348,23 @@ export const PUMP_STATUS = async (macId, payload) => {
             pumpLastUpdated: moment().format(),
           }
         );
-        //await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+
+        updateDeviceData.updatedBy = "Pump";
+        if (!deviceHistoryExist) {
+          //updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
+          dates = new Date(moment().tz("Asia/calcutta").format());
+          dates.setDate(dates.getDate() - 1);
+          console.log(">>dates", dates);
+          updateDeviceData.date = new Date(new Date(dates).setHours(0, 0, 0));
+          updateDeviceData.time = moment
+            .tz(moment().format(), "Asia/calcutta")
+            .format("hh:mm:ss");
+          updateDeviceData.deviceId = updateDeviceData._id;
+          delete updateDeviceData._id;
+          await deviceHistory.createData(updateDeviceData);
+          return true;
+        }
+        await DeviceSrv.addDeviceHistoryData(updateDeviceData);
       }
     }
   } catch (error) {
@@ -415,6 +447,7 @@ export const VALVE_STATUS = async (macId, payload) => {
             flowUnit: flowunits,
           }
         );
+        updateDeviceData.updatedBy = "Valve";
         if (!deviceHistoryExist) {
           // updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
           var dates = new Date(moment().tz("Asia/calcutta").format());
@@ -445,6 +478,7 @@ export const VALVE_STATUS = async (macId, payload) => {
             flowUnit: flowunits,
           }
         );
+        updateDeviceData.updatedBy = "Valve";
         if (!deviceHistoryExist) {
           //updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
           dates = new Date(moment().tz("Asia/calcutta").format());
