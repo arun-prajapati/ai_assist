@@ -11,6 +11,7 @@ export const defaultUserData = async () => {
       if (!isEmailExist) {
         let hashPassword = await encrypt(process.env.DEFAULT_PASSWORD);
         let defaultData = {
+          name: process.env.DEFAULT_NAME,
           email: process.env.DEFAULT_EMAIL,
           password: hashPassword,
         };

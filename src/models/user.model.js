@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 import SchemaModel from "../..../../config/database/mongoDBOperation";
 const schema = {
+  name: String,
   email: {
     type: String,
     trim: true,
