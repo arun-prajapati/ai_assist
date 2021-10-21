@@ -40,10 +40,46 @@ export const addAlertconfigurationData = async (req, res, next) => {
 export const getAlertconfigurationData = async (req, res, next) => {
   logger.log(level.info, `>> Controller: getAlertconfigurationData()`);
   try {
-    let alertConfigurationData = await Alerts.findData(
-      {},
-      { createdAt: 0, updatedAt: 0 }
-    );
+    let alertConfigurationData = await Alerts.aggregate([
+      {
+        $lookup: {
+          from: "devices",
+          localField: "deviceId",
+          foreignField: "_id",
+          as: "demo",
+        },
+      },
+      {
+        $unwind: "$demo",
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            name: {
+              $concat: ["$demo.name"],
+            },
+            alertName: {
+              $concatArrays: ["$alertName"],
+            },
+            receiverEmail: {
+              $concatArrays: ["$receiverEmail"],
+            },
+            subject: {
+              $concat: ["$subject"],
+            },
+            description: {
+              $concat: ["$description"],
+            },
+            deviceId: {
+              $concat: [{ $toString: "$deviceId" }],
+            },
+            _id: {
+              $concat: [{ $toString: "$_id" }],
+            },
+          },
+        },
+      },
+    ]);
     let dataObject = {
       message: "Alert Configuration Fetched succesfully",
       data: alertConfigurationData,
@@ -61,7 +97,7 @@ export const updateAlertconfigurationData = async (req, res, next) => {
   try {
     let alertData = await Alerts.findOneDocument({ _id: req.query.id });
     if (!alertData) {
-      throw new Error("No Device Found");
+      throw new Error("No Alert Found");
     }
     let updatefields = {
       alertName: req.body.alertName,
@@ -101,7 +137,7 @@ export const deleteAlertconfigurationData = async (req, res, next) => {
   try {
     let alertData = await Alerts.findOneDocument({ _id: req.query.id });
     if (!alertData) {
-      throw new Error("No Device Found");
+      throw new Error("No Alert Found");
     }
     await Alerts.deleteData({ _id: req.query.id });
     let dataObject = {
