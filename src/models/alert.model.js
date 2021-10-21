@@ -4,7 +4,7 @@ import SchemaModel from "../..../../config/database/mongoDBOperation";
 const schema = {
   deviceId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Device",
+    ref: "Devices",
     trim: true,
   },
   name: {

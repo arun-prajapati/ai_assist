@@ -136,7 +136,7 @@ let schemaOption = {
   versionKey: false,
 };
 
-let modelName = "Device";
+let modelName = "Devices";
 let deviceSchema = Schema(schema, schemaOption);
 
 let deviceModel = model(modelName, deviceSchema);
