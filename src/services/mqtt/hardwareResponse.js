@@ -29,6 +29,7 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
       });
 
       if (device) {
+        console.log("inside", device);
         let {
           pmac,
           vmac,
@@ -73,7 +74,7 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
           startTime,
           endTime
         );
-        
+
         console.log(">>FA04Payload", FA04payload);
         //! for pump send FA02,FA03
         publishPumpOperationType(pmac, vmac, operationMode);
@@ -82,7 +83,7 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
         //! for valve send FA02,FA03
         mqttClient.publish(VALVE_TOPIC, FA03payload);
         mqttClient.publish(VALVE_TOPIC, FA04payload);
-        console.log("Published Message After FA01")
+        console.log("Published Message After FA01");
       }
     }
   } catch (error) {
