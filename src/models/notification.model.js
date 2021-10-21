@@ -2,8 +2,10 @@ import { Schema, model } from "mongoose";
 const mongoose = require("mongoose");
 import SchemaModel from "../..../../config/database/mongoDBOperation";
 const schema = {
-  siteName: {
-    type: [String],
+  siteId: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Devices",
+    trim: true,
   },
   receiverEmail: {
     type: [String],

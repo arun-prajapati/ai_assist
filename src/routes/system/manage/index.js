@@ -17,6 +17,7 @@ const PATH = {
   ALERT: "/alert",
   ALERT_BY_ID: "/alert/:id",
   NOTIFICATION: "/notification",
+  NOTIFICATION_BY_ID: "/notification/:id",
 };
 const storage = multer.memoryStorage({
   destination: function (req, file, callback) {
@@ -43,7 +44,10 @@ routes
   .post(AuthMiddleware, upload, DeviceHistoryCtrl.uploadFirmwareVersion);
 routes
   .route(PATH.NOTIFICATION)
-  .post(DeviceNotificationCtrl.addNotificationData);
+  .post(DeviceNotificationCtrl.addNotificationData)
+  .get(DeviceNotificationCtrl.getNotificationData)
+  .patch(DeviceNotificationCtrl.updateNotificationData)
+  .delete(DeviceNotificationCtrl.deleteNotificationData);
 routes
   .route(PATH.ALERT)
   .post(DeviceAlertCtrl.addAlertconfigurationData)
@@ -53,6 +57,9 @@ routes
 routes
   .route(PATH.ALERT_BY_ID)
   .get(DeviceAlertCtrl.getSingleAlertconfigurationData);
+routes
+  .route(PATH.NOTIFICATION_BY_ID)
+  .get(DeviceNotificationCtrl.getSingleNotificationData);
 routes.use(PATH.PUMP, PumpRoutes);
 
 export default routes;
