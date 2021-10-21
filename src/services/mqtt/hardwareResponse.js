@@ -27,9 +27,8 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
       let device = await Devices.findOneDocument({
         $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
       });
-
+      console.log("inside", device);
       if (device) {
-        console.log("inside", device);
         let {
           pmac,
           vmac,
