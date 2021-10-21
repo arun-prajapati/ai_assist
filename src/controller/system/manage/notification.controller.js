@@ -61,6 +61,9 @@ export const getNotificationData = async (req, res, next) => {
             receiverEmail: {
               $concatArrays: ["$receiverEmail"],
             },
+            _id: {
+              $concat: [{ $toString: "$_id" }],
+            },
           },
         },
       },
