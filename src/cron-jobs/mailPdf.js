@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "39 19 * * *";
+const JOB_TIME = "41 19 * * *";
 const mongoose = require("mongoose");
 const MIN = 15; // this minute ago data should be update
 scheduleJob(JOB_TIME, async () => {
@@ -49,13 +49,13 @@ scheduleJob(JOB_TIME, async () => {
             totaliser: { $push: "$$ROOT" },
           },
         },
-        {
-          $match: {
-            _id: {
-              $in: ["61656910d03729002ce7b0e5", "615eeb21b21ffd002a6cfd47"],
-            },
-          },
-        },
+        // {
+        //   $match: {
+        //     _id: {
+        //       $in: ["61656910d03729002ce7b0e5", "615eeb21b21ffd002a6cfd47"],
+        //     },
+        //   },
+        // },
         {
           $project: {
             date: { $last: "$totaliser.totaliser_current_value" },
