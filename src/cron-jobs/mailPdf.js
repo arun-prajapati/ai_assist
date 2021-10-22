@@ -7,7 +7,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "22 20 * * *";
+const JOB_TIME = "30 05 * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
@@ -15,8 +15,7 @@ scheduleJob(JOB_TIME, async () => {
   try {
     logger.log(level.info, `>> Mail Service Run  at ${moment().format()}`);
     let notificationdata = await Notifications.findData();
-
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < notificationdata.length; i++) {
       let siteId = [];
       siteId = siteId.concat(notificationdata[i].siteId);
       let deviceData = await Devices.findData(
@@ -81,29 +80,28 @@ scheduleJob(JOB_TIME, async () => {
           pass: "osuvgltfiefskdcm",
         },
       });
-      setTimeout(() => {
-        let mailOptions = {
-          from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
-          to: `${notificationdata[i].receiverEmail}`, // list of receivers
-          subject: "Requested  Device History", // Subject line
-          text: "Hello world?", // plain text body
-          html: "ss", // html body
-          attachments: [
-            {
-              filename: "History.csv",
-              content: csvData,
-            },
-          ],
-        };
 
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            console.log("error in sending", error);
-          } else {
-            console.log("no error");
-          }
-        });
-      }, 2000);
+      let mailOptions = {
+        from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
+        to: `${notificationdata[i].receiverEmail}`, // list of receivers
+        subject: "Requested  Device History", // Subject line
+        text: "Hello world?", // plain text body
+        html: "ss", // html body
+        attachments: [
+          {
+            filename: "History.csv",
+            content: csvData,
+          },
+        ],
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log("error in sending", error);
+        } else {
+          console.log("no error");
+        }
+      });
     }
 
     logger.log(level.info, `>> PREM PANWALA at ${moment().format()}`);
