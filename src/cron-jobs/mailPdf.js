@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "24 18 * * *";
+const JOB_TIME = "27 18 * * *";
 const mongoose = require("mongoose");
 const MIN = 15; // this minute ago data should be update
 scheduleJob(JOB_TIME, async () => {
@@ -36,7 +36,7 @@ scheduleJob(JOB_TIME, async () => {
         },
         {
           $match: {
-            deviceId: { $in: siteId },
+            deviceId: { $in: mongoose.Types.ObjectId(siteId) },
             date: {
               $gte: new Date(new Date(dates)),
               $lte: new Date(new Date(dates)).setHours(23, 59, 59),
