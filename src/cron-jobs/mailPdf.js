@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "33 15 * * *";
+const JOB_TIME = "35 15 * * *";
 const MIN = 15; // this minute ago data should be update
 scheduleJob(JOB_TIME, async () => {
   try {
@@ -20,7 +20,7 @@ scheduleJob(JOB_TIME, async () => {
         {
           _id: { $in: siteId },
         },
-        {}
+        {  totaliser_current_value:1}
       );
       console.log("HIIII", siteId);
       console.log("HIIII1", deviceData);
