@@ -57,26 +57,26 @@ export const createDevice = async (req, res, next) => {
         pipeSize: req.body.pipeSize,
         operationMode: req.body.operationMode,
         payloadInterval: req.body.payloadInterval,
-        startDate: moment
-          .tz(req.body.startDate, "Asia/calcutta")
-          .format("DD/MM/YYYY"),
-        endDate: moment
-          .tz(req.body.endDate, "Asia/calcutta")
-          .format("DD/MM/YYYY"),
-        startTime: [
-          req.body.startTime.slice(0, 2),
-          ":",
-          req.body.startTime.slice(2, 4),
-          ":",
-          req.body.startTime.slice(4),
-        ].join(""),
-        endTime: [
-          req.body.endTime.slice(0, 2),
-          ":",
-          req.body.endTime.slice(2, 4),
-          ":",
-          req.body.endTime.slice(4),
-        ].join(""),
+        // startDate: moment
+        //   .tz(req.body.startDate, "Asia/calcutta")
+        //   .format("DD/MM/YYYY"),
+        // endDate: moment
+        //   .tz(req.body.endDate, "Asia/calcutta")
+        //   .format("DD/MM/YYYY"),
+        // startTime: [
+        //   req.body.startTime.slice(0, 2),
+        //   ":",
+        //   req.body.startTime.slice(2, 4),
+        //   ":",
+        //   req.body.startTime.slice(4),
+        // ].join(""),
+        // endTime: [
+        //   req.body.endTime.slice(0, 2),
+        //   ":",
+        //   req.body.endTime.slice(2, 4),
+        //   ":",
+        //   req.body.endTime.slice(4),
+        // ].join(""),
       },
     ];
     console.log("students", students);
