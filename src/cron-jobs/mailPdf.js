@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "58 15 * * *";
+const JOB_TIME = "00 16 * * *";
 const mongoose = require("mongoose");
 const MIN = 15; // this minute ago data should be update
 scheduleJob(JOB_TIME, async () => {
@@ -17,7 +17,7 @@ scheduleJob(JOB_TIME, async () => {
     for (let i = 0; i < 1; i++) {
       let siteId = [];
       siteId = siteId.concat(notificationdata[i].siteId);
-      let deviceData = await Devices.findData(
+      let deviceData = await Devices.findOneDocument(
         {
           _id: { $in: siteId },
         },
