@@ -2,12 +2,14 @@ import { scheduleJob } from "node-schedule";
 import { logger, level } from "../config/logger/logger";
 import moment from "moment";
 var schedule = require("node-schedule-tz");
+import nodemailer from "nodemailer";
 import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "58 19 * * *";
+const JOB_TIME = "15 20 * * *";
 const mongoose = require("mongoose");
+const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
 scheduleJob(JOB_TIME, async () => {
   try {
@@ -21,7 +23,7 @@ scheduleJob(JOB_TIME, async () => {
         {
           _id: { $in: siteId },
         },
-        { totaliser_current_value: 1 }
+        { totaliser_current_value: 1, name: 1 }
       );
       var dates = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates.setDate(dates.getDate() - 1);
@@ -57,6 +59,51 @@ scheduleJob(JOB_TIME, async () => {
       console.log("HIIII", siteId);
       console.log("HIIII1", deviceData);
       console.log("HIIII2", historyData);
+      let data = [];
+      for (let k = 0; k < deviceData.length; k++) {
+        let historyDataObject = {
+          SiteName: deviceData[k].name,
+          totaliser_current_value:
+            deviceData[k].totaliser_current_value -
+            historyData[k].totaliser_current_value,
+        };
+        data.push(historyDataObject);
+      }
+      const csvFields = ["SiteName", "totaliser_current_value"];
+      const csvParser = new CsvParser({ csvFields });
+      const csvData = csvParser.parse(data);
+      let transporter = nodemailer.createTransport({
+        service: "gmail",
+        port: 25,
+        secure: true,
+        auth: {
+          user: "digi5technologies@gmail.com",
+          pass: "osuvgltfiefskdcm",
+        },
+      });
+      setTimeout(() => {
+        let mailOptions = {
+          from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
+          to: `${notificationdata[i].receiverEmail}`, // list of receivers
+          subject: "Requested  Device History", // Subject line
+          text: "Hello world?", // plain text body
+          html: "ss", // html body
+          attachments: [
+            {
+              filename: "History.csv",
+              content: csvData,
+            },
+          ],
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.log("error in sending", error);
+          } else {
+            console.log("no error");
+          }
+        });
+      }, 2000);
     }
 
     logger.log(level.info, `>> PREM PANWALA at ${moment().format()}`);
