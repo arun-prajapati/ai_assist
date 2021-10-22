@@ -298,35 +298,41 @@ export const removeDevice = async (req, res, next) => {
         pipeSize: deviceData.pipeSize,
         operationMode: deviceData.operationMode,
         payloadInterval: deviceData.payloadInterval,
-        startDate: moment
-          .tz(deviceData.startDate, "Asia/calcutta")
-          .format("DD/MM/YYYY"),
-        endDate: moment
-          .tz(deviceData.endDate, "Asia/calcutta")
-          .format("DD/MM/YYYY"),
-        startTime: [
-          deviceData.startTime.slice(0, 2),
-          ":",
-          deviceData.startTime.slice(2, 4),
-          ":",
-          deviceData.startTime.slice(4),
-        ].join(""),
-        endTime: [
-          deviceData.endTime.slice(0, 2),
-          ":",
-          deviceData.endTime.slice(2, 4),
-          ":",
-          deviceData.endTime.slice(4),
-        ].join(""),
+        startDate: deviceData.startDate
+          ? moment
+              .tz(deviceData.startDate, "Asia/calcutta")
+              .format("DD/MM/YYYY")
+          : "NA",
+        endDate: deviceData.endDate
+          ? moment.tz(deviceData.endDate, "Asia/calcutta").format("DD/MM/YYYY")
+          : "NA",
+        startTime: deviceData.startTime
+          ? [
+              deviceData.startTime.slice(0, 2),
+              ":",
+              deviceData.startTime.slice(2, 4),
+              ":",
+              deviceData.startTime.slice(4),
+            ].join("")
+          : "NA",
+        endTime: deviceData.endTime
+          ? [
+              deviceData.endTime.slice(0, 2),
+              ":",
+              deviceData.endTime.slice(2, 4),
+              ":",
+              deviceData.endTime.slice(4),
+            ].join("")
+          : "NA",
       },
     ];
     console.log("students", students);
     console.log(
       "folder path",
-      path.join(process.cwd(), "/src/views", "report-template.ejs")
+      path.join(process.cwd(), "/src/views", "report-template1.ejs")
     );
     await ejs.renderFile(
-      path.join(process.cwd(), "/src/views", "report-template.ejs"),
+      path.join(process.cwd(), "/src/views", "report-template1.ejs"),
       {
         students: students,
       },

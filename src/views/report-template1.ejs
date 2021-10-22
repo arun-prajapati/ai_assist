@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+html{
+    zoom:0.55
+}
+.invoice-box {
+        /* max-width: 2000px; */
+        margin: auto;
+        padding: 30px;
+        border: 1px solid #eee;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+        font-size: 16px;
+        line-height: 24px;
+        font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+        color: #555;
+    }
+    .invoice-box table {
+        width: 100%;
+        line-height: inherit;
+        text-align: left;
+    }
+    .invoice-box table td {
+        padding: 5px;
+        vertical-align: top;
+    }
+    .invoice-box table tr td:nth-child(2) {
+        text-align: right;
+    }
+    .invoice-box table tr.top table td {
+        padding-bottom: 20px;
+    }
+    .invoice-box table tr.top table td.title {
+        font-size: 45px;
+        line-height: 45px;
+        color: #333;
+    }
+    .invoice-box table tr.information table td {
+        padding-bottom: 40px;
+    }
+    .invoice-box table tr.heading td {
+        background: #eee;
+        border-bottom: 1px solid #ddd;
+        font-weight: bold;
+    }
+    .invoice-box table tr.details td {
+        padding-bottom: 20px;
+    }
+    .invoice-box table tr.item td{
+        border-bottom: 1px solid #eee;
+    }
+    .invoice-box table tr.item.last td {
+        border-bottom: none;
+    }
+    .invoice-box table tr.total td:nth-child(2) {
+        border-top: 2px solid #eee;
+        font-weight: bold;
+    }
+    @media only screen and (max-width: 600px) {
+        .invoice-box table tr.top table td {
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+        .invoice-box table tr.information table td {
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+    }
+    /** RTL **/
+    .rtl {
+        direction: rtl;
+        font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+    }
+    .rtl table {
+        text-align: right;
+    }
+    .rtl table tr td:nth-child(2) {
+        text-align: left;
+    }
+table {
+  border-collapse: collapse;
+}
+table, th, td {
+  border: 1px solid black;
+}
+</style>
+
+</head>
+<body>
+    <div class="invoice-box">
+        <table cellpadding="0" cellspacing="0">
+          <% if (students.length > 0) { %>
+<% students.forEach(student => {%>
+    <tr class="top" >
+        <td class="title" colspan="2">
+            <img src="https://bacancy-system-nptl.s3.ap-south-1.amazonaws.com/nepl.png" style="width:100%; max-width:300px;">
+        </td>
+    </tr>
+    <tr class="information">
+        <td>
+            Bacancy Systems<br>
+            1207 to 1210 Times Square I, Thaltej - Shilaj Rd,<br>
+            opposite Rambag, Thaltej, Ahmedabad, Gujarat 380059
+        </td>
+        <td>
+             Device Name: <%= student.name %><br>
+             Created On: <%= new Date().toLocaleString("en-US", {
+                timeZone: "Asia/calcutta",
+              }) %><br>
+        </td>
+    </tr>
+            <tr class="heading">
+                <td>
+                    Device Details
+                </td>
+                <td>
+                    Values
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Pump Mac Address
+                </td>
+                <td>
+                    <%= student.pmac %><br>
+                </td>
+            </tr>
+                <tr>
+                    <td>
+                        Valve Mac Address
+                    </td>
+                    <td>
+                        <%= student.vmac %><br>
+                    </td>
+            </tr>
+            <tr>
+                <td>
+                    Threshold
+                </td>
+                <td>
+                    <%= student.threshold %><br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                  LineSize
+                </td>
+                <td>
+                    <%= student.lineSize %><br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    PipeSize
+                </td>
+                <td>
+                    <%= student.pipeSize %><br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    PayloadInterval
+                </td>
+                <td>
+                    <%= student.payloadInterval %><br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Operation Mode
+                </td>
+                <td>
+                    <%= student.operationMode %><br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    StartDate
+                </td>
+                <td>
+                    <%= student.startDate %><br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    EndDate
+                </td>
+                <td>
+                    <%= student.endDate %><br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    StartTime
+                </td>
+                <td>
+                    <%= student.startTime %><br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    EndTime
+                </td>
+                <td>
+                    <%= student.endTime %><br>
+                </td>
+          
+            </tr
+            <%	});%>
+		<% }%>
+        </table>
+    </div>
+</body>
+</html>
