@@ -5,7 +5,7 @@ var schedule = require("node-schedule-tz");
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "00 15 * * *";
+const JOB_TIME = "03 03 * * *";
 const MIN = 15; // this minute ago data should be update
 schedule.scheduleJob(JOB_TIME, "Asia/calcutta", async () => {
   try {
