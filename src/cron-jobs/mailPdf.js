@@ -6,14 +6,15 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "25 15 * * *";
+const JOB_TIME = "33 15 * * *";
 const MIN = 15; // this minute ago data should be update
 scheduleJob(JOB_TIME, async () => {
   try {
     logger.log(level.info, `>> Mail Service Run  at ${moment().format()}`);
     let notificationdata = await Notifications.findData();
-    let siteId = [];
+
     for (let i = 0; i < notificationdata.length; i++) {
+      let siteId = [];
       siteId = siteId.concat(notificationdata[i].siteId);
       let deviceData = await Devices.findData(
         {
