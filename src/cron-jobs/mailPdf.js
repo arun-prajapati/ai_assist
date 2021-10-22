@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "54 19 * * *";
+const JOB_TIME = "58 19 * * *";
 const mongoose = require("mongoose");
 const MIN = 15; // this minute ago data should be update
 scheduleJob(JOB_TIME, async () => {
@@ -28,13 +28,6 @@ scheduleJob(JOB_TIME, async () => {
       console.log(">>===", new Date(new Date(dates)));
       console.log(">>===", new Date(new Date(dates).setHours(23, 59, 59)));
       let historyData = await deviceHistory.aggregate([
-        // {
-        //   $addFields: {
-        //     date_timezone: {
-        //       $dateToParts: { date: "$date" },
-        //     },
-        //   },
-        // },
         {
           $match: {
             date: {
@@ -49,18 +42,16 @@ scheduleJob(JOB_TIME, async () => {
             totaliser: { $push: "$$ROOT" },
           },
         },
-        // {
-        //   $match: {
-        //     _id: {
-        //       $in: ["61656910d03729002ce7b0e5", "615eeb21b21ffd002a6cfd47"],
-        //     },
-        //   },
-        // },
-        // {
-        //   $project: {
-        //     date: { $last: "$totaliser.totaliser_current_value" },
-        //   },
-        // },
+        {
+          $match: {
+            _id: { $in: siteId },
+          },
+        },
+        {
+          $project: {
+            date: { $last: "$totaliser.totaliser_current_value" },
+          },
+        },
         // { $sort: { date: -1 } },
       ]);
       console.log("HIIII", siteId);
