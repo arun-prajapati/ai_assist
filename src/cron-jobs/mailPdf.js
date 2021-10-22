@@ -14,7 +14,7 @@ scheduleJob(JOB_TIME, async () => {
     logger.log(level.info, `>> Mail Service Run  at ${moment().format()}`);
     let notificationdata = await Notifications.findData();
 
-    for (let i = 0; i < notificationdata.length; i++) {
+    for (let i = 0; i < 1; i++) {
       let siteId = [];
       siteId = siteId.concat(notificationdata[i].siteId);
       let deviceData = await Devices.findData(
@@ -28,14 +28,14 @@ scheduleJob(JOB_TIME, async () => {
       console.log(">>===", dates);
       let historyData = await deviceHistory.findData(
         {
-          deviceId: { $in: mongoose.Types.ObjectId(siteId) },
+          deviceId: { $in: siteId },
           date: {
             $gte: new Date(new Date(dates)),
             $lte: new Date(new Date(dates)).setHours(23, 59, 59),
           },
         },
         { totaliser_current_value: 1 },
-        { sort: { date: -1 }, limit: 1 }
+        { sort: { date: -1 } }
       );
       console.log("HIIII", siteId);
       console.log("HIIII1", deviceData);
