@@ -1,1 +1,2 @@
-import "./deviceUpdate"
+import "./deviceUpdate";
+import "./mailPdf";
