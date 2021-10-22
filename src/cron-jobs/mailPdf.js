@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "53 15 * * *";
+const JOB_TIME = "58 15 * * *";
 const mongoose = require("mongoose");
 const MIN = 15; // this minute ago data should be update
 scheduleJob(JOB_TIME, async () => {
@@ -26,7 +26,7 @@ scheduleJob(JOB_TIME, async () => {
       var dates = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates.setDate(dates.getDate() - 1);
       console.log(">>===", dates);
-      let historyData = await deviceHistory.findData(
+      let historyData = await deviceHistory.findOne(
         {
           deviceId: { $in: siteId },
           date: {
