@@ -1,21 +1,17 @@
-import { scheduleJob, schedule } from "node-schedule";
-let rule = new schedule.RecurrenceRule();
-rule.tz = "Asia/calcutta";
-rule.second = 0;
-rule.minute = 15;
-rule.hour = 1;
+import { scheduleJob } from "node-schedule";
 import { logger, level } from "../config/logger/logger";
 import moment from "moment";
+var schedule = require("node-schedule-tz");
 import nodemailer from "nodemailer";
 import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "30 05 * * *";
+const JOB_TIME = "16 01 * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
-schedule.scheduleJob(rule, async () => {
+schedule.scheduleJob(JOB_TIME, "Asia/calcutta", async () => {
   try {
     logger.log(level.info, `>> Mail Service Run  at ${moment().format()}`);
     let notificationdata = await Notifications.findData();
