@@ -1,13 +1,12 @@
 import { scheduleJob } from "node-schedule";
 import { logger, level } from "../config/logger/logger";
 import moment from "moment";
-var schedule = require("node-schedule-tz");
 import nodemailer from "nodemailer";
 import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "55 07 * * *";
+const JOB_TIME = "01 20 * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
