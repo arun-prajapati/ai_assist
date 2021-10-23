@@ -7,11 +7,11 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "16 01 * * *";
+const JOB_TIME = "15 01 * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
-schedule.scheduleJob(JOB_TIME, "Asia/calcutta", async () => {
+scheduleJob({ hour: 19, minute: 50, dayOfWeek: 0 }, async () => {
   try {
     logger.log(level.info, `>> Mail Service Run  at ${moment().format()}`);
     let notificationdata = await Notifications.findData();
