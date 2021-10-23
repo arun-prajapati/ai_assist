@@ -11,7 +11,7 @@ const JOB_TIME = "15 01 * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
-scheduleJob({ hour: 19, minute: 50, dayOfWeek: 0 }, async () => {
+scheduleJob({ hour: 7, minute: 53, dayOfWeek: 0 }, async () => {
   try {
     logger.log(level.info, `>> Mail Service Run  at ${moment().format()}`);
     let notificationdata = await Notifications.findData();
