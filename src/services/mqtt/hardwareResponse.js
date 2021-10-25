@@ -387,6 +387,10 @@ export const VALVE_STATUS = async (macId, payload) => {
     //! convert threshold hax in to decimal
     totaliser_current_value = getDecimalValue(totaliser_current_value);
     flowValue = getDecimalValue(flowValue);
+    if ((flowValue >> 15 & 1) == 1) {
+      flowValue = ~flowValue + 1;
+      console.log("Inside flow value", flowValue);
+    }
     let deviceExist = await Devices.findOneDocument({ vmac: macId }); //findOne
     let deviceHistoryExist = await deviceHistory.isExist({ vmac: macId });
     if (deviceExist) {
@@ -511,10 +515,6 @@ const getStatusAndThresholdOfDeviceFA06 = (payload) => {
   let totaliser_current_value = payload.slice(4, 12);
   let flowValue = payload.slice(12, 16);
   let flowUnits = payload.slice(16, 18);
-  if ((flowValue >> 15 & 1) == 1) {
-    flowValue = ~flowValue + 1;
-    console.log("Inside flow value",flowValue)
-  }
   console.log(
     ">>>",
     state,
