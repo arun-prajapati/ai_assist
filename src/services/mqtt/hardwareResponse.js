@@ -387,7 +387,7 @@ export const VALVE_STATUS = async (macId, payload) => {
     //! convert threshold hax in to decimal
     totaliser_current_value = getDecimalValue(totaliser_current_value);
     flowValue = getDecimalValue(flowValue);
-    if ((flowValue >> 15 & 1) == 1) {
+    if (((flowValue >> 15) & 1) == 1) {
       flowValue = ~flowValue + 1;
       console.log("Inside flow valuess", flowValue);
     }
