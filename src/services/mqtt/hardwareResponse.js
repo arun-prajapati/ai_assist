@@ -511,8 +511,9 @@ const getStatusAndThresholdOfDeviceFA06 = (payload) => {
   let totaliser_current_value = payload.slice(4, 12);
   let flowValue = payload.slice(12, 16);
   let flowUnits = payload.slice(16, 18);
-  if (((flowValue >> 15) & 1) == 1) {
+  if ((flowValue >> 15 & 1) == 1) {
     flowValue = ~flowValue + 1;
+    console.log("Inside flow value",flowValue)
   }
   console.log(
     ">>>",
