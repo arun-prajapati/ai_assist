@@ -27,8 +27,9 @@ export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
       let device = await Devices.findOneDocument({
         $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
       });
-      console.log("inside", device);
+      // console.log("inside", device);
       if (device) {
+        console.log("Inside ");
         let {
           pmac,
           vmac,
@@ -510,6 +511,9 @@ const getStatusAndThresholdOfDeviceFA06 = (payload) => {
   let totaliser_current_value = payload.slice(4, 12);
   let flowValue = payload.slice(12, 16);
   let flowUnits = payload.slice(16, 18);
+  if (((flowValue >> 15) & 1) == 1) {
+    flowValue = ~flowValue + 1;
+  }
   console.log(
     ">>>",
     state,
