@@ -388,12 +388,10 @@ export const VALVE_STATUS = async (macId, payload) => {
     totaliser_current_value = getDecimalValue(totaliser_current_value);
     flowValue = getDecimalValue(flowValue);
     if (((flowValue >> 15) & 1) == 1) {
-      // flowValue = flowValue;
-      // let flowValue = Int16Array(~flowValue);
       var x = new Int16Array(1);
       x[0] = flowValue;
       console.log(x[0]);
-      // console.log(x.length);
+      flowValue = x[0];
       // console.log("Inside flow valuess", Int16Array(flowValue));
     }
     let deviceExist = await Devices.findOneDocument({ vmac: macId }); //findOne
