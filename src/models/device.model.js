@@ -96,12 +96,14 @@ const schema = {
   },
   startDate: {
     type: Date,
+    default: null,
   },
   endDate: {
     type: Date,
+    default: null,
   },
-  startTime: String,
-  endTime: String,
+  startTime: { type: String, default: "" },
+  endTime: { type: String, default: "" },
   pumpCurrentstate: {
     type: Boolean,
     default: false,

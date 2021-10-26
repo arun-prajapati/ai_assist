@@ -177,7 +177,7 @@ export const createFA04payload = (msgId, start, end, startTime, endTime) => {
   let FA04payload;
   let payloadDataLength = "1C";
   if (!start && !end && startTime === "" && endTime === "") {
-    console.log("Inside");
+    console.log("Inside  createFA04payload");
     FA04payload = `${START_DELIMETER}${msgId}${payloadDataLength}0000000000000000000000000000${END_DELIMETER}`;
   } else {
     // let startDate = moment(start).format("DDMMYYYY");
