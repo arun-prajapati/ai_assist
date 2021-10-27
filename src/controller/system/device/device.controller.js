@@ -206,6 +206,25 @@ export const getSingleDevice = async (req, res, next) => {
     console.log("histroydata", historyData);
     //console.log("deviceData.threshold", deviceData.threshold);
     if (historyData && historyData.length > 0) {
+      if (historyData[0].totaliser_current_value === 0) {
+        var dates2 = new Date(
+          moment().tz("Asia/calcutta").format("YYYY-MM-DD")
+        );
+        let historyData1 = await deviceHistory.findOneDocument({
+          deviceId: mongoose.Types.ObjectId(deviceData._id),
+          date: {
+            $gte: new Date(new Date(dates2)),
+            $lte: new Date(new Date(dates2).setHours(23, 59, 59)),
+          },
+          totaliser_current_value: {
+            $gte: 0,
+          },
+        });
+        console.log(
+          "Device history totalise value is 0 so finding next document",
+          historyData1
+        );
+      }
       let Flow = flowCoversion(deviceData.flowValue, deviceData.flowUnit);
       totaliserValue =
         deviceData.totaliser_current_value -
