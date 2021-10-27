@@ -206,6 +206,7 @@ export const getSingleDevice = async (req, res, next) => {
     console.log("histroydata", historyData);
     //console.log("deviceData.threshold", deviceData.threshold);
     if (historyData && historyData.length > 0) {
+      // let midnightBase = historyData[0].totaliser_current_value;
       if (historyData[0].totaliser_current_value === 0) {
         var dates2 = new Date(
           moment().tz("Asia/calcutta").format("YYYY-MM-DD")
@@ -222,9 +223,13 @@ export const getSingleDevice = async (req, res, next) => {
             $gt: 0,
           },
         });
+        if (historyData1 && historyData1.length > 0) {
+          historyData[0].totaliser_current_value =
+            historyData1.totaliser_current_value;
+        }
         console.log(
           "Device history totalise value is 0 so finding next document",
-          historyData1
+          historyData[0].totaliser_current_value
         );
       }
       let Flow = flowCoversion(deviceData.flowValue, deviceData.flowUnit);
