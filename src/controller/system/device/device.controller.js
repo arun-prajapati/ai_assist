@@ -223,7 +223,7 @@ export const getSingleDevice = async (req, res, next) => {
             $gt: 0,
           },
         });
-        if (historyData1 && historyData1.length > 0) {
+        if (historyData1) {
           midnightBase = historyData1.totaliser_current_value;
         }
         console.log(
