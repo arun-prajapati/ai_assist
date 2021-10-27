@@ -210,6 +210,8 @@ export const getSingleDevice = async (req, res, next) => {
         var dates2 = new Date(
           moment().tz("Asia/calcutta").format("YYYY-MM-DD")
         );
+        console.log("dates2", new Date(new Date(dates2)));
+        console.log("dates2", new Date(new Date(dates2).setHours(23, 59, 59)));
         let historyData1 = await deviceHistory.findOneDocument({
           deviceId: mongoose.Types.ObjectId(deviceData._id),
           date: {
