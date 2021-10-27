@@ -177,6 +177,29 @@ export const graphData = async (req, res, next) => {
           { $sort: { _id: 1 } },
         ];
         midnightBase = historyData[0].totaliser_current_value;
+        if (midnightBase === 0) {
+          var dates4 = new Date(
+            moment().tz("Asia/calcutta").format("YYYY-MM-DD")
+          );
+          console.log("dates4", new Date(new Date(dates4)));
+          console.log(
+            "dates4",
+            new Date(new Date(dates4).setHours(23, 59, 59))
+          );
+          let historyData1 = await deviceHistory.findOneDocument({
+            deviceId: mongoose.Types.ObjectId(req.query.deviceId),
+            date: {
+              $gte: new Date(new Date(dates4)),
+              $lte: new Date(new Date(dates4).setHours(23, 59, 59)),
+            },
+            totaliser_current_value: {
+              $gt: 0,
+            },
+          });
+          if (historyData1) {
+            midnightBase = historyData1.totaliser_current_value;
+          }
+        }
         graphData = await deviceHistory.aggregate(pipeline);
         console.log("Hours graph Data", graphData);
         // graphData = JSON.parse(JSON.stringify(graphData));
