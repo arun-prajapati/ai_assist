@@ -216,7 +216,7 @@ export const getSingleDevice = async (req, res, next) => {
           deviceId: mongoose.Types.ObjectId(deviceData._id),
           date: {
             $gte: new Date(new Date(dates2)),
-            $lte: new Date(new Date(dates2).setHours(23, 59, 59)),
+            // $lte: new Date(new Date(dates2).setHours(23, 59, 59)),
           },
           totaliser_current_value: {
             $gte: 0,
