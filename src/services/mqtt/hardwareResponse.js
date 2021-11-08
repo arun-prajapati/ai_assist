@@ -965,7 +965,7 @@ export const handle_FA0A_Response = async (macId, msgId, payload) => {
         Free_Dram: dram_free,
       };
       //process.env.CLOUD_TO_ESP
-      var webSocketTopic = process.env.CLOUD_TO_REQ_RES;
+      var webSocketTopic = process.env.CLOUD_TO_ESP;
       console.log("we1", webSocketTopic);
       console.log("we11", freeMemoryData);
       mqttClient.publish(webSocketTopic, JSON.stringify(freeMemoryData));
