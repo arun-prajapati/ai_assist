@@ -964,8 +964,9 @@ export const handle_FA0A_Response = async (macId, msgId, payload) => {
         Total_Dram: dram_total,
         Free_Dram: dram_free,
       };
-      var webSocketTopic = process.env.CLOUD_TO_WS_FOR_REQ_RES;
-      console.loog("we", webSocketTopic);
+      var webSocketTopic = process.env.CLOUD_TO_WS_REQ_RES;
+      console.loog("we", process.env.CLOUD_TO_WS_REQ_RES);
+      console.loog("we1", webSocketTopic);
       mqttClient.publish(webSocketTopic, JSON.stringify(freeMemoryData));
     }
   } catch (error) {
