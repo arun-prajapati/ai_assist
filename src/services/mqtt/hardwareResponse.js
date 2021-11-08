@@ -939,3 +939,128 @@ export const mailAlerts = async (id, alerts) => {
     logger.log(level.info, "❌ Something went wrong!");
   }
 };
+export const handle_FA0A_Response = async (macId, msgId, payload) => {
+  try {
+    const recievedMACId = macId;
+    let heap_total = payload.slice(2, 10);
+    let heap_free = payload.slice(10, 18);
+    let iram_total = payload.slice(18, 26);
+    let iram_free = payload.slice(26, 34);
+    let dram_total = payload.slice(34, 42);
+    let dram_free = payload.slice(42, 50);
+    let device = await Devices.findOneDocument({
+      $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+    });
+    console.log("device", device);
+
+    if (device) {
+      let { name } = device;
+      let freeMemoryData = {
+        name,
+        Total_Heap: heap_total,
+        Free_Heap: heap_free,
+        Total_Iram: iram_total,
+        Free_Iram: iram_free,
+        Total_Dram: dram_total,
+        Free_Dram: dram_free,
+      };
+      var webSocketTopic = process.env.CLOUD_TO_WS;
+      mqttClient.publish(webSocketTopic, JSON.stringify(freeMemoryData));
+    }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
+
+export const handle_FA0B_Response = async (macId, msgId, payload) => {
+  try {
+    const recievedMACId = macId;
+    let up_time = payload.slice(2);
+    // up_time = JSON.stringify(up_time);
+    up_time = up_time.replace(/\b0+/g, "") + " (hhhhhh:mm:ss)";
+    let device = await Devices.findOneDocument({
+      $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+    });
+    console.log("device", device);
+    if (device) {
+      let { name } = device;
+      let upTimeData = {
+        name,
+        UP_Time: up_time,
+      };
+      var webSocketTopic = process.env.CLOUD_TO_WS;
+      mqttClient.publish(webSocketTopic, JSON.stringify(upTimeData));
+    }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
+
+export const handle_FA0C_Response = async (macId, msgId, payload) => {
+  try {
+    const recievedMACId = macId;
+    let IMEI_VALUE = payload.slice(2);
+    let device = await Devices.findOneDocument({
+      $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+    });
+    console.log("device", device);
+    if (device) {
+      let { name } = device;
+      let ImeiData = {
+        name,
+        IMEI_VALUE,
+      };
+      var webSocketTopic = process.env.CLOUD_TO_WS;
+      mqttClient.publish(webSocketTopic, JSON.stringify(ImeiData));
+    }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
+export const handle_FA0D_Response = async (macId, msgId, payload) => {
+  try {
+    const recievedMACId = macId;
+    let RSSI_VALUE = payload.slice(2);
+    RSSI_VALUE = RSSI_VALUE.replace(/\b0+/g, "");
+    let device = await Devices.findOneDocument({
+      $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+    });
+    console.log("device", device);
+    if (device) {
+      let { name } = device;
+      let RssiData = {
+        name,
+        RSSI_VALUE,
+      };
+      var webSocketTopic = process.env.CLOUD_TO_WS;
+      mqttClient.publish(webSocketTopic, JSON.stringify(RssiData));
+    }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
+
+export const handle_FA0E_Response = async (macId, msgId, payload) => {
+  try {
+    const recievedMACId = macId;
+    let Factory_Reset = payload.slice(2);
+    let device = await Devices.findOneDocument({
+      $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+    });
+    console.log("device", device);
+    if (device) {
+      let { name } = device;
+      let FactoryResetData = {
+        name,
+        Factory_Reset:
+          Factory_Reset === "00"
+            ? "Factory Reset Success"
+            : "Factory Reset Failure",
+      };
+      var webSocketTopic = process.env.CLOUD_TO_WS;
+      mqttClient.publish(webSocketTopic, JSON.stringify(FactoryResetData));
+    }
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};

@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as DeviceHistoryCtrl from "../../../controller/system/manage/history.controller";
 import * as DeviceAlertCtrl from "../../../controller/system/manage/alert.contoller";
 import * as DeviceNotificationCtrl from "../../../controller/system/manage/notification.controller";
+import * as DeviceCommandsCtrl from "../../../controller/system/manage/commands.controller";
 import PumpRoutes from "./pump.routes";
 import multer from "multer";
 import { AuthMiddleware } from "../../../middleware/authMiddleware";
@@ -11,6 +12,7 @@ const PATH = {
   ROOT: "/",
   DEVICE_HISTORY: "/history",
   DOWNLOAD_DEVICE_HISTORY: "/download/history",
+  COMMANDS: "/commands",
   PUMP: "/pump",
   FIRMWARE_VERSION: "/firmwareVersion",
   UPLOAD_FIRMWARE: "/uploadFirmware",
@@ -29,7 +31,7 @@ const upload = multer({ storage }).single("file");
 routes
   .route(PATH.DEVICE_HISTORY)
   .post(AuthMiddleware, DeviceHistoryCtrl.getDeviceHistoryData);
-
+routes.route(PATH.COMMANDS).post(DeviceCommandsCtrl.manageCommandsData);
 routes
   .route(PATH.DOWNLOAD_DEVICE_HISTORY)
   .get(DeviceHistoryCtrl.downloadDeviceHistoryData)

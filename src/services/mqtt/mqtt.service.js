@@ -74,6 +74,26 @@ export const handleMQTTData = async (macId, data) => {
         HR.handle_FA10_Response(macId, msgId, payload);
         break;
       }
+      case MESSAGE.FA0A: {
+        HR.handle_FA0A_Response(macId, msgId, payload);
+        break;
+      }
+      case MESSAGE.FA0B: {
+        HR.handle_FA0B_Response(macId, msgId, payload);
+        break;
+      }
+      case MESSAGE.FA0C: {
+        HR.handle_FA0C_Response(macId, msgId, payload);
+        break;
+      }
+      case MESSAGE.FA0D: {
+        HR.handle_FA0D_Response(macId, msgId, payload);
+        break;
+      }
+      case MESSAGE.FA0E: {
+        HR.handle_FA0E_Response(macId, msgId, payload);
+        break;
+      }
     }
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
