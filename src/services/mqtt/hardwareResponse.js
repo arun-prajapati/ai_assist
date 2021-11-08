@@ -968,7 +968,7 @@ export const handle_FA0A_Response = async (macId, msgId, payload) => {
       console.log("we1", webSocketTopic);
       console.log("we1", freeMemoryData);
       // console.loog("we", process.env.CLOUD_TO_REQ_RES);
-      // mqttClient.publish(webSocketTopic, JSON.stringify(freeMemoryData));
+      mqttClient.publish(webSocketTopic, JSON.stringify(freeMemoryData));
     }
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
