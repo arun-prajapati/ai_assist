@@ -966,7 +966,7 @@ export const handle_FA0A_Response = async (macId, msgId, payload) => {
       };
       var webSocketTopic = "SensieTech/reqres";
       console.loog("we1", webSocketTopic);
-      console.loog("we", process.env.CLOUD_TO_REQ_RES);
+      // console.loog("we", process.env.CLOUD_TO_REQ_RES);
 
       mqttClient.publish(webSocketTopic, JSON.stringify(freeMemoryData));
     }
