@@ -964,11 +964,10 @@ export const handle_FA0A_Response = async (macId, msgId, payload) => {
         Total_Dram: dram_total,
         Free_Dram: dram_free,
       };
-      //process.env.CLOUD_TO_ESP
-      // var webSocketTopic = process.env.CLOUD_TO_REQ_RES;
-      console.log("we1", process.env.CLOUD_TO_PREM);
-      console.log("we11", process.env.CLOUD_TO_REQ_RES);
-      // mqttClient.publish(webSocketTopic, JSON.stringify(freeMemoryData));
+      var webSocketTopic = process.env.CLOUD_TO_REQ_RES;
+      console.log("we1", webSocketTopic);
+      console.log("we1", freeMemoryData);
+      mqttClient.publish(webSocketTopic, JSON.stringify(freeMemoryData));
     }
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
