@@ -990,7 +990,7 @@ export const handle_FA0B_Response = async (macId, msgId, payload) => {
         name,
         UP_Time: up_time,
       };
-      var webSocketTopic = process.env.CLOUD_TO_WS_FOR_REQ_RES;
+      var webSocketTopic = process.env.CLOUD_TO_REQ_RES;
       mqttClient.publish(webSocketTopic, JSON.stringify(upTimeData));
     }
   } catch (error) {
@@ -1012,7 +1012,7 @@ export const handle_FA0C_Response = async (macId, msgId, payload) => {
         name,
         IMEI_VALUE,
       };
-      var webSocketTopic = process.env.CLOUD_TO_WS_FOR_REQ_RES;
+      var webSocketTopic = process.env.CLOUD_TO_REQ_RES;
       mqttClient.publish(webSocketTopic, JSON.stringify(ImeiData));
     }
   } catch (error) {
@@ -1034,7 +1034,7 @@ export const handle_FA0D_Response = async (macId, msgId, payload) => {
         name,
         RSSI_VALUE,
       };
-      var webSocketTopic = process.env.CLOUD_TO_WS_FOR_REQ_RES;
+      var webSocketTopic = process.env.CLOUD_TO_REQ_RES;
       mqttClient.publish(webSocketTopic, JSON.stringify(RssiData));
     }
   } catch (error) {
@@ -1059,7 +1059,7 @@ export const handle_FA0E_Response = async (macId, msgId, payload) => {
             ? "Factory Reset Success"
             : "Factory Reset Failure",
       };
-      var webSocketTopic = process.env.CLOUD_TO_WS_FOR_REQ_RES;
+      var webSocketTopic = process.env.CLOUD_TO_REQ_RES;
       mqttClient.publish(webSocketTopic, JSON.stringify(FactoryResetData));
     }
   } catch (error) {
