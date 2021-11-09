@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "27 08 * * *";
+const JOB_TIME = "34 08 * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
@@ -89,24 +89,22 @@ scheduleJob(JOB_TIME, async () => {
       for (let i = 0; i < notIncludedInHistoryDataArray.length; i++) {
         historyData.push(notIncludedInHistoryDataArray[i]);
       }
-      let sortedPeriodWiseArray = historyData.sort(function (a, b) {
-        return mongoose.Types.ObjectId(a._id) - mongoose.Types.ObjectId(b._id);
-      });
-      let sortedPeriodWiseArray1 = deviceData.sort(function (a, b) {
-        return mongoose.Types.ObjectId(a._id) - mongoose.Types.ObjectId(b._id);
-      });
-      console.log("final device data", sortedPeriodWiseArray1);
+      console.log("final device data", deviceData);
       console.log("final device history data", historyData);
-      console.log("final device(Sorting) history data", sortedPeriodWiseArray);
+      // console.log("final device(Sorting) history data", sortedPeriodWiseArray);
       let data = [];
       for (let k = 0; k < deviceData.length; k++) {
-        let historyDataObject = {
-          SiteName: deviceData[k].name,
-          totaliser_current_value:
-            Number(deviceData[k].totaliser_current_value) -
-            Number(historyData[k].date),
-        };
-        data.push(historyDataObject);
+        let datas = historyData.find((x) => {
+          return x._id === deviceData[k]._id;
+        });
+        console.log("datas", datas);
+        // let historyDataObject = {
+        //   SiteName: deviceData[k].name,
+        //   totaliser_current_value:
+        //     Number(deviceData[k].totaliser_current_value) -
+        //     Number(historyData[k].date),
+        // };
+        // data.push(historyDataObject);
       }
       const csvFields = ["SiteName", "totaliser_current_value"];
       const csvParser = new CsvParser({ csvFields });
