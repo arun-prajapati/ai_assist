@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "05 06 * * *";
+const JOB_TIME = "25 06 * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
@@ -61,23 +61,13 @@ scheduleJob(JOB_TIME, async () => {
       console.log("HIIII", siteId);
       console.log("deviceData", deviceData);
       console.log("historyData", historyData);
-      let notIncludedInHistoryDataArray = [];
-      let demo = [];
+      // let notIncludedInHistoryDataArray = [];
+      for (let i = 0; i < deviceData.length; i++) {
+        deviceData[i]._id = deviceData[i]._id.toString();
+      }
       for (let i = 0; i < historyData.length; i++) {
-        demo.push(historyData[i]._id.toString());
+        historyData[i]._id = historyData[i]._id.toString();
       }
-      console.log("demo value", demo);
-      for (let u = 0; u < deviceData.length; u++) {
-        console.log("_id", deviceData[u]._id);
-        // console.log("answer", demo.includes("615eeb21b21ffd002a6cfd47"));
-        if (!demo.includes((deviceData[u]._id).toString())) {
-          notIncludedInHistoryDataArray.push(deviceData[u]._id);
-        }
-      }
-      console.log(
-        "not included array respoinse",
-        notIncludedInHistoryDataArray
-      );
       let data = [];
       for (let k = 0; k < deviceData.length; k++) {
         let historyDataObject = {
