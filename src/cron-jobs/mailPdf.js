@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "02 08 * * *";
+const JOB_TIME = "07 08 * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
@@ -90,10 +90,14 @@ scheduleJob(JOB_TIME, async () => {
         historyData.push(notIncludedInHistoryDataArray[i]);
       }
       let sortedPeriodWiseArray = historyData.sort(function (a, b) {
-        return String(b._id) - String(a._id);
+        let fa = a.firstName.toLowerCase(),
+          fb = b.firstName.toLowerCase();
+        return fa - fb;
       });
       let sortedPeriodWiseArray1 = deviceData.sort(function (a, b) {
-        return String(b._id) - String(a._id);
+        let fa = a.firstName.toLowerCase(),
+          fb = b.firstName.toLowerCase();
+        return fa - fb;
       });
       console.log("final device data", sortedPeriodWiseArray1);
       // console.log("final device history data", historyData);
