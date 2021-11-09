@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "37 08 * * *";
+const JOB_TIME = "30 17 * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
@@ -22,8 +22,6 @@ scheduleJob(JOB_TIME, async () => {
           _id: { $in: siteId },
         },
         { totaliser_current_value: 1, name: 1 }
-        // { sort: { _id: 1 } }
-        // { $sort: { date: -1 } },
       );
       var dates = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates.setDate(dates.getDate() - 1);
@@ -58,10 +56,7 @@ scheduleJob(JOB_TIME, async () => {
         { $sort: { _id: 1 } },
         // { $sort: { date: -1 } },
       ]);
-      console.log("HIIII", siteId);
-      console.log("deviceData", deviceData);
-      console.log("historyData", historyData);
-
+      console.log("siteId", siteId);
       for (let i = 0; i < deviceData.length; i++) {
         deviceData[i]._id = deviceData[i]._id.toString();
       }
@@ -77,7 +72,6 @@ scheduleJob(JOB_TIME, async () => {
       let notIncludedInHistoryDataArray = [];
       for (let i = 0; i < deviceData.length; i++) {
         if (!demo.includes(deviceData[i]._id)) {
-          // console.log("Inside", deviceData[i].id);
           let dummyDataObject = {
             _id: deviceData[i]._id,
             date: 0,
@@ -91,13 +85,11 @@ scheduleJob(JOB_TIME, async () => {
       }
       console.log("final device data", deviceData);
       console.log("final device history data", historyData);
-      // console.log("final device(Sorting) history data", sortedPeriodWiseArray);
       let data = [];
       for (let k = 0; k < deviceData.length; k++) {
         let datas = historyData.find((x) => {
           return x._id === deviceData[k]._id;
         });
-        console.log("datas", datas);
         let historyDataObject = {
           SiteName: deviceData[k].name,
           totaliser_current_value:
