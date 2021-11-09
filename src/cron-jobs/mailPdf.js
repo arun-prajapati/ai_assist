@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "22 05 * * *";
+const JOB_TIME = "26 05 * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
@@ -21,7 +21,9 @@ scheduleJob(JOB_TIME, async () => {
         {
           _id: { $in: siteId },
         },
-        { totaliser_current_value: 1, name: 1 }
+        { totaliser_current_value: 1, name: 1 },
+        { sort: { _id: 1 } }
+        // { $sort: { date: -1 } },
       );
       var dates = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates.setDate(dates.getDate() - 1);
@@ -53,6 +55,7 @@ scheduleJob(JOB_TIME, async () => {
             name: 1,
           },
         },
+        { sort: { _id: 1 } },
         // { $sort: { date: -1 } },
       ]);
       console.log("HIIII", siteId);
