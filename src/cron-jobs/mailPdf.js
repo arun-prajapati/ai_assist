@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "30 17 * * *";
+const JOB_TIME = "07 05 * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
@@ -85,7 +85,7 @@ scheduleJob(JOB_TIME, async () => {
         to: `${notificationdata[i].receiverEmail}`, // list of receivers
         subject: "Requested  Device History", // Subject line
         text: "Hello world?", // plain text body
-        html: "ss", // html body
+        html: "Device History", // html body
         attachments: [
           {
             filename: "History.csv",
