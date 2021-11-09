@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "44 05 * * *";
+const JOB_TIME = "49 05 * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
@@ -62,8 +62,13 @@ scheduleJob(JOB_TIME, async () => {
       console.log("HIIII1", deviceData);
       console.log("HIIII2", historyData);
       let notIncludedInHistoryDataArray = [];
+      let demo = [];
+      for (let i = 0; i < historyData.length; i++) {
+        demo.push(historyData[i]._id);
+      }
+      console.log("demo value", demo);
       for (let u = 0; u < deviceData.length; u++) {
-        if (!historyData.includes(deviceData[u]._id)) {
+        if (!demo.includes(deviceData[u]._id)) {
           notIncludedInHistoryDataArray.push(deviceData[u]._id);
         }
       }
