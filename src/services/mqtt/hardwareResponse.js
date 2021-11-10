@@ -1028,12 +1028,12 @@ export const handle_FA0A_Response = async (macId, msgId, payload) => {
       let { name } = device;
       let freeMemoryData = {
         name,
-        Total_Heap: heap_total,
-        Free_Heap: heap_free,
-        Total_Iram: iram_total,
-        Free_Iram: iram_free,
-        Total_Dram: dram_total,
-        Free_Dram: dram_free,
+        Total_Heap: Number(heap_total / 1000) + "(kb)",
+        Free_Heap: Number(heap_free / 1000) + "(kb)",
+        Total_Iram: Number(iram_total / 1000) + "(kb)",
+        Free_Iram: Number(iram_free / 1000) + "(kb)",
+        Total_Dram: Number(dram_total / 1000) + "(kb)",
+        Free_Dram: Number(dram_free / 1000) + "(kb)",
       };
       var webSocketTopic = process.env.CLOUD_TO_REQ_RES;
       console.log("we1", webSocketTopic);
@@ -1048,9 +1048,9 @@ export const handle_FA0A_Response = async (macId, msgId, payload) => {
 export const handle_FA0B_Response = async (macId, msgId, payload) => {
   try {
     const recievedMACId = macId;
-    let up_time = payload.slice(2);
+    let up_time = payload.slice(2) + " (hhhhhh:mm:ss)";
     // up_time = JSON.stringify(up_time);
-    up_time = up_time.replace(/\b0+/g, "") + " (hhhhhh:mm:ss)";
+    // up_time = up_time.replace(/\b0+/g, "") ;
     let device = await Devices.findOneDocument({
       $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
     });
@@ -1093,8 +1093,8 @@ export const handle_FA0C_Response = async (macId, msgId, payload) => {
 export const handle_FA0D_Response = async (macId, msgId, payload) => {
   try {
     const recievedMACId = macId;
-    let RSSI_VALUE = payload.slice(2);
-    RSSI_VALUE = RSSI_VALUE.replace(/\b0+/g, "");
+    let RSSI_VALUE = payload.slice(2) + "(dBm)";
+    // RSSI_VALUE = RSSI_VALUE.replace(/\b0+/g, "");
     let device = await Devices.findOneDocument({
       $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
     });
