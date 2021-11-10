@@ -946,11 +946,14 @@ export const mailAlerts = async (id, alerts) => {
             pass: "osuvgltfiefskdcm",
           },
         });
-        const output = `<h2>${
+        // moment.tz(moment().format(), "Asia/calcutta").format("YYYY/MM/DD hh:mm:ss")
+        const output = `<h2>AlertType:${alerts}</h2><h2>${
           alertRecord[i].description
-        }.</h2> <h2>DateTime is ${new Date(
-          moment().tz("Asia/calcutta").format("YYYY/MM/DD hh:mm:ss")
-        )}</h2>  <h2>Site Name:${alertRecord[i].name}</h2>`;
+        }.</h2> <h2>DateTime is ${moment
+          .tz(moment().format(), "Asia/calcutta")
+          .format("YYYY/MM/DD hh:mm:ss")}</h2>  <h2>Site Name:${
+          alertRecord[i].name
+        }</h2>`;
         console.log("Recievers email address", alertRecord[i].receiverEmail);
         let mailOptions = {
           from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
