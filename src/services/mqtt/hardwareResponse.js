@@ -909,11 +909,11 @@ export const getAlertMessage = async (errorId) => {
         break;
       }
       case "02": {
-        alertMessage = `Modbus error `;
+        alertMessage = `Modbus error`;
         break;
       }
       case "04": {
-        alertMessage = `External RTC failure `;
+        alertMessage = `External RTC failure`;
         break;
       }
       case "08": {
