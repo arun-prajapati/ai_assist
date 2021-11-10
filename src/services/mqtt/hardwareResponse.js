@@ -869,7 +869,7 @@ export const handle_EA01_Response = async (macId, msgId, payload) => {
     let alertHisotyData = {};
     let alertMessage = await getAlertMessage(state);
     alertHisotyData = {
-      alertMessage,
+      alertName: alertMessage,
     };
     let device = await Devices.findOneDocument({
       $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
@@ -890,9 +890,9 @@ export const handle_EA01_Response = async (macId, msgId, payload) => {
     }
     alertHisotyData = {
       ...alertHisotyData,
-      Date: new Date().toLocaleString("en-US", {
-        timeZone: "Asia/calcutta",
-      }),
+      Date: new Date(
+        moment().tz("Asia/calcutta").format("YYYY-MM-DD")
+      ).toISOString(),
       time: moment.tz(moment().format(), "Asia/calcutta").format("hh:mm:ss"),
     };
     console.log("alertHistoryData", alertHisotyData);

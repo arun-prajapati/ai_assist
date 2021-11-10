@@ -8,7 +8,7 @@ const schema = {
     trim: true,
   },
   alertName: {
-    type: [String],
+    type: String,
   },
   Date: {
     type: Date,

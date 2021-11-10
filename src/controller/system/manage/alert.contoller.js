@@ -14,6 +14,7 @@ const CsvParser = require("json2csv").Parser;
 import { mqttClient } from "../../../config/mqtt/mqtt";
 import { logger, level } from "../../../config/logger/logger";
 import deviceHistory from "../../../models/deviceHistory.model";
+import AlertsHistory from "../../../models/alerthistory.model";
 import Devices from "../../../models/device.model";
 import Alerts from "../../../models/alert.model";
 import moment from "moment";
@@ -161,6 +162,53 @@ export const getSingleAlertconfigurationData = async (req, res, next) => {
       message: "Alert Configuration Fetched succesfully",
       data: alertConfigurationData,
       count: alertConfigurationData.length,
+    };
+    return handleResponse(res, dataObject);
+  } catch (e) {
+    if (e && e.message) return next(new BadRequestError(e.message));
+    logger.log(level.error, `Error: ${JSON.stringify(e)}`);
+    return next(new InternalServerError());
+  }
+};
+export const getAlertHistoryData = async (req, res, next) => {
+  logger.log(level.info, `>> Controller: getAlertHistoryData()`);
+  try {
+    let alertHistoryData = await AlertsHistory.aggregate([
+      {
+        $lookup: {
+          from: "devices",
+          localField: "deviceId",
+          foreignField: "_id",
+          as: "demo",
+        },
+      },
+      {
+        $unwind: "$demo",
+      },
+      {
+        newRoot: {
+          alertName: {
+            $concat: ["$alertName"],
+          },
+          errorFrom: {
+            $concat: ["$errorFrom"],
+          },
+          Date: {
+            $concat: [{ $toString: "$Date" }],
+          },
+          time: {
+            $concat: [{ $toString: "$time" }],
+          },
+          deviceName: {
+            $concat: ["$demo.name"],
+          },
+        },
+      },
+    ]);
+    let dataObject = {
+      message: "Alert History Fetched succesfully",
+      data: alertHistoryData,
+      count: alertHistoryData.length,
     };
     return handleResponse(res, dataObject);
   } catch (e) {

@@ -20,6 +20,7 @@ const PATH = {
   ALERT_BY_ID: "/alert/:id",
   NOTIFICATION: "/notification",
   NOTIFICATION_BY_ID: "/notification/:id",
+  ALERT_HISOTRY: "/alerthistory",
 };
 const storage = multer.memoryStorage({
   destination: function (req, file, callback) {
@@ -41,6 +42,9 @@ routes
   .post(AuthMiddleware, DeviceHistoryCtrl.firmwareVersion)
   .get(AuthMiddleware, DeviceHistoryCtrl.listFirmwareVersions)
   .delete(DeviceHistoryCtrl.deleteFirmwareVersions);
+routes
+  .route(PATH.ALERT_HISOTRY)
+  .get(AuthMiddleware, DeviceAlertCtrl.getAlertHistoryData);
 routes
   .route(PATH.UPLOAD_FIRMWARE)
   .post(AuthMiddleware, upload, DeviceHistoryCtrl.uploadFirmwareVersion);
