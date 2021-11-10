@@ -5,6 +5,7 @@ import { mqttClient } from "../../config/mqtt/mqtt";
 import { getHAXValue, getDecimalValue, filterMac } from "../../helpers/utility";
 import { CONSTANTS as MESSAGE } from "../../constants/messages/messageId";
 import deviceHistory from "../../models/deviceHistory.model";
+import AlertsHistory from "../../models/alerthistory.model";
 import * as DeviceSrv from "../../services/device/device.service";
 import { flowUnit } from "../../constants/flowUnit";
 import Alerts from "../../models/alert.model";
@@ -858,13 +859,83 @@ export const handle_FA10_Response = async (macId, msgId, payload) => {
     logger.log(level.info, "❌ Something went wrong!");
   }
 };
-
+export const handle_EA01_Response = async (macId, msgId, payload) => {
+  try {
+    console.log("Inside handle_EA01_Response response");
+    const recievedMACId = macId;
+    let state = payload.slice(2);
+    console.log("state", state);
+    console.log("state", typeof state);
+    let alertHisotyData = {};
+    let alertMessage = await getAlertMessage(state);
+    alertHisotyData = {
+      alertMessage,
+    };
+    let device = await Devices.findOneDocument({
+      $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+    });
+    let { _id, pmac, vmac } = device;
+    if (recievedMACId === pmac) {
+      alertHisotyData = {
+        ...alertHisotyData,
+        errorFrom: "Pump",
+        deviceId: _id,
+      };
+    } else if (recievedMACId === vmac) {
+      alertHisotyData = {
+        ...alertHisotyData,
+        errorFrom: "Valve",
+        deviceId: _id,
+      };
+    }
+    alertHisotyData = {
+      ...alertHisotyData,
+      Date: new Date().toLocaleString("en-US", {
+        timeZone: "Asia/calcutta",
+      }),
+      time: moment.tz(moment().format(), "Asia/calcutta").format("hh:mm:ss"),
+    };
+    console.log("alertHistoryData", alertHisotyData);
+    await AlertsHistory.createData(alertHisotyData);
+    mailAlerts(_id, alertMessage);
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!");
+  }
+};
+export const getAlertMessage = async (errorId) => {
+  try {
+    let alertMessage;
+    switch (errorId) {
+      case "01": {
+        alertMessage = `Negative flow error`;
+        break;
+      }
+      case "02": {
+        alertMessage = `Modbus error `;
+        break;
+      }
+      case "04": {
+        alertMessage = `External RTC failure `;
+        break;
+      }
+      case "08": {
+        alertMessage = `Valve ON , No flow detected error`;
+        break;
+      }
+    }
+    return alertMessage;
+  } catch (error) {
+    logger.log(level.info, "❌ Something went wrong!", error);
+  }
+};
 export const mailAlerts = async (id, alerts) => {
   try {
+    console.log("Inside mailAlerts");
     let alertRecord = await Alerts.findData({
       deviceId: mongoose.Types.ObjectId(id),
       alertName: alerts,
     });
+    console.log("Alert Record  length", alertRecord.length);
     if (alertRecord && alertRecord.length > 0) {
       console.log("Alert Record", alertRecord);
       for (let i = 0; i < alertRecord.length; i++) {
@@ -901,39 +972,39 @@ export const mailAlerts = async (id, alerts) => {
           // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
         });
       }
-    } else {
-      let transporter = nodemailer.createTransport({
-        service: "gmail",
-        port: 25,
-        secure: true,
-        auth: {
-          user: "digi5technologies@gmail.com",
-          pass: "osuvgltfiefskdcm",
-        },
-      });
-      let deviceData = await Devices.findOneDocument({
-        _id: mongoose.Types.ObjectId(id),
-      });
-      const output = `<h2>${alerts}.</h2> <h2>DateTime is ${new Date(
-        moment().tz("Asia/calcutta").format("YYYY/MM/DD hh:mm:ss")
-      )}</h2>  <h2>Site Name:${deviceData.name}</h2>`;
-      let mailOptions = {
-        from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
-        to: "prempanwala710@gmail.com", // list of receivers
-        subject: "Alerts", // Subject line
-        text: "Hello world?", // plain text body
-        html: output, // html body
-      };
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.log("error in sending", error);
-        } else {
-          // res.status(200).send("true");
-          console.log("no error");
-        }
-        // console.log("Message sent: %s", info.messageId);
-        // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-      });
+      // } else {
+      //   let transporter = nodemailer.createTransport({
+      //     service: "gmail",
+      //     port: 25,
+      //     secure: true,
+      //     auth: {
+      //       user: "digi5technologies@gmail.com",
+      //       pass: "osuvgltfiefskdcm",
+      //     },
+      //   });
+      //   let deviceData = await Devices.findOneDocument({
+      //     _id: mongoose.Types.ObjectId(id),
+      //   });
+      //   const output = `<h2>${alerts}.</h2> <h2>DateTime is ${new Date(
+      //     moment().tz("Asia/calcutta").format("YYYY/MM/DD hh:mm:ss")
+      //   )}</h2>  <h2>Site Name:${deviceData.name}</h2>`;
+      //   let mailOptions = {
+      //     from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
+      //     to: "prempanwala710@gmail.com", // list of receivers
+      //     subject: "Alerts", // Subject line
+      //     text: "Hello world?", // plain text body
+      //     html: output, // html body
+      //   };
+      //   transporter.sendMail(mailOptions, (error, info) => {
+      //     if (error) {
+      //       console.log("error in sending", error);
+      //     } else {
+      //       // res.status(200).send("true");
+      //       console.log("no error");
+      //     }
+      //     // console.log("Message sent: %s", info.messageId);
+      //     // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      //   });
     }
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");

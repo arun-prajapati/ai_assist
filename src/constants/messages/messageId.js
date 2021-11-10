@@ -14,4 +14,5 @@ export const CONSTANTS = {
   FA0C: "FA0C",
   FA0D: "FA0D",
   FA0E: "FA0E",
+  EA01: "EA01",
 };
