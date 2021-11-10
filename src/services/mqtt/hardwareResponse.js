@@ -890,7 +890,7 @@ export const handle_EA01_Response = async (macId, msgId, payload) => {
     }
     alertHisotyData = {
       ...alertHisotyData,
-      Date: moment().tz("Asia/calcutta").format("YYYY-MM-DD"),
+      Date: moment.tz(moment().format(), "Asia/calcutta").format("YYYY-mm-dd"),
       time: moment.tz(moment().format(), "Asia/calcutta").format("hh:mm:ss"),
     };
     console.log("alertHistoryData", alertHisotyData);
