@@ -186,21 +186,23 @@ export const getAlertHistoryData = async (req, res, next) => {
         $unwind: "$demo",
       },
       {
-        newRoot: {
-          alertName: {
-            $concat: ["$alertName"],
-          },
-          errorFrom: {
-            $concat: ["$errorFrom"],
-          },
-          Date: {
-            $concat: [{ $toString: "$Date" }],
-          },
-          time: {
-            $concat: [{ $toString: "$time" }],
-          },
-          deviceName: {
-            $concat: ["$demo.name"],
+        $replaceRoot: {
+          newRoot: {
+            alertName: {
+              $concat: ["$alertName"],
+            },
+            errorFrom: {
+              $concat: ["$errorFrom"],
+            },
+            Date: {
+              $concat: [{ $toString: "$Date" }],
+            },
+            time: {
+              $concat: [{ $toString: "$time" }],
+            },
+            deviceName: {
+              $concat: ["$demo.name"],
+            },
           },
         },
       },
