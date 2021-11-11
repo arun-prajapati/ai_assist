@@ -1093,7 +1093,7 @@ export const handle_FA0C_Response = async (macId, msgId, payload) => {
 export const handle_FA0D_Response = async (macId, msgId, payload) => {
   try {
     const recievedMACId = macId;
-    let RSSI_VALUE = payload.slice(2) + "(dBm)";
+    let RSSI_VALUE = payload.slice(2);
     // RSSI_VALUE = RSSI_VALUE.replace(/\b0+/g, "");
     let device = await Devices.findOneDocument({
       $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
