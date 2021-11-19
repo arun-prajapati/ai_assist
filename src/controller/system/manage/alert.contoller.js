@@ -175,6 +175,7 @@ export const getAlertHistoryData = async (req, res, next) => {
   try {
     let alertHistoryData = await AlertsHistory.aggregate([
       { $sort: { Date: -1 } },
+      { $sort: { time: -1 } },
       {
         $lookup: {
           from: "devices",
