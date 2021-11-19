@@ -925,6 +925,77 @@ export const getAlertMessage = async (errorId) => {
         alertMessage = [`Valve ON , No flow detected error`];
         break;
       }
+      case "03": {
+        alertMessage = [`Negative flow error`, `Modbus error`];
+        break;
+      }
+      case "05": {
+        alertMessage = [`Negative flow error`, `External RTC failure`];
+        break;
+      }
+      case "09": {
+        alertMessage = [
+          `Negative flow error`,
+          `Valve ON , No flow detected error`,
+        ];
+        break;
+      }
+      case "06": {
+        alertMessage = [`Modbus error`, `External RTC failure`];
+        break;
+      }
+      case "0A": {
+        alertMessage = [`Modbus error`, `Valve ON , No flow detected error`];
+        break;
+      }
+      case "0C": {
+        alertMessage = [
+          `External RTC failure`,
+          `Valve ON , No flow detected error`,
+        ];
+        break;
+      }
+      case "07": {
+        alertMessage = [
+          `Negative flow error`,
+          `Modbus error`,
+          `External RTC failure`,
+        ];
+        break;
+      }
+      case "0E": {
+        alertMessage = [
+          `Modbus error`,
+          `External RTC failure`,
+          `Valve ON , No flow detected error`,
+        ];
+        break;
+      }
+      case "0B": {
+        alertMessage = [
+          `Negative flow error`,
+          `Modbus error`,
+          `Valve ON , No flow detected error`,
+        ];
+        break;
+      }
+      case "0D": {
+        alertMessage = [
+          `Negative flow error`,
+          `External RTC failure`,
+          `Valve ON , No flow detected error`,
+        ];
+        break;
+      }
+      case "0F": {
+        alertMessage = [
+          `Negative flow error`,
+          `Modbus error`,
+          `External RTC failure`,
+          `Valve ON , No flow detected error`,
+        ];
+        break;
+      }
     }
     return alertMessage;
   } catch (error) {
