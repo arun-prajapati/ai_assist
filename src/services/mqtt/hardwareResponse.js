@@ -905,7 +905,8 @@ export const getAlertMessage = async (errorId) => {
     let alertMessage;
     switch (errorId) {
       case "01": {
-        alertMessage = `Negative flow error`;
+        alertMessage = `
+        Negative flow error`;
         break;
       }
       case "02": {
