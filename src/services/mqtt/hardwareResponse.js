@@ -997,7 +997,7 @@ export const getAlertMessage = async (errorId) => {
         break;
       }
       case "00": {
-        alertMessage = [`No alerts`];
+        alertMessage = [`Alerts Cleared`];
         break;
       }
     }
