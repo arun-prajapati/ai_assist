@@ -1013,22 +1013,23 @@ export const mailAlerts = async (id, alerts) => {
 };
 export const handle_FA0A_Response = async (macId, msgId, payload) => {
   try {
+    const recievedMACId = macId;
+    let device = await Devices.findOneDocument({
+      $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+    });
     let freeMemoryData;
     let payloadLength = payload.slice(0, 2);
     if (payloadLength === "02") {
-      freeMemoryData = "Free memory command failure";
+      let { name } = device;
+      freeMemoryData = { name, error: "Free memory command failure" };
       console.log("payloadlength", payloadLength);
     } else {
-      const recievedMACId = macId;
       let heap_total = payload.slice(2, 10);
       let heap_free = payload.slice(10, 18);
       let iram_total = payload.slice(18, 26);
       let iram_free = payload.slice(26, 34);
       let dram_total = payload.slice(34, 42);
       let dram_free = payload.slice(42, 50);
-      let device = await Devices.findOneDocument({
-        $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
-      });
       if (device) {
         let { name } = device;
         freeMemoryData = {
@@ -1053,10 +1054,15 @@ export const handle_FA0A_Response = async (macId, msgId, payload) => {
 
 export const handle_FA0B_Response = async (macId, msgId, payload) => {
   try {
+    const recievedMACId = macId;
+    let device = await Devices.findOneDocument({
+      $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+    });
     let upTimeData;
     let payloadLength = payload.slice(0, 2);
     if (payloadLength === "02") {
-      upTimeData = "Up time command failure";
+      let { name } = device;
+      upTimeData = { name, error: "Up time command failure" };
       console.log("payloadlength", payloadLength);
     } else {
       const recievedMACId = macId;
@@ -1084,10 +1090,15 @@ export const handle_FA0B_Response = async (macId, msgId, payload) => {
 
 export const handle_FA0C_Response = async (macId, msgId, payload) => {
   try {
+    const recievedMACId = macId;
+    let device = await Devices.findOneDocument({
+      $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+    });
     let ImeiData;
     let payloadLength = payload.slice(0, 2);
     if (payloadLength === "02") {
-      ImeiData = "IMEI value command failure";
+      let { name } = device;
+      ImeiData = { name, error: "IMEI value command failure" };
       console.log("payloadlength", payloadLength);
     } else {
       const recievedMACId = macId;
@@ -1114,10 +1125,15 @@ export const handle_FA0C_Response = async (macId, msgId, payload) => {
 };
 export const handle_FA0D_Response = async (macId, msgId, payload) => {
   try {
+    const recievedMACId = macId;
+    let device = await Devices.findOneDocument({
+      $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+    });
     let RssiData;
     let payloadLength = payload.slice(0, 2);
     if (payloadLength === "02") {
-      RssiData = "RSSI value  command failure";
+      let { name } = device;
+      RssiData = { name, error: "RSSI value  command failure" };
       console.log("payloadlength", payloadLength);
     } else {
       const recievedMACId = macId;
