@@ -903,6 +903,7 @@ export const handle_EA01_Response = async (macId, msgId, payload) => {
 export const getAlertMessage = async (errorId) => {
   try {
     let alertMessage;
+    console.log("ErrorId", errorId);
     switch (errorId) {
       case "01": {
         alertMessage = `Negative flow error`;
