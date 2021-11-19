@@ -174,6 +174,7 @@ export const getAlertHistoryData = async (req, res, next) => {
   logger.log(level.info, `>> Controller: getAlertHistoryData()`);
   try {
     let alertHistoryData = await AlertsHistory.aggregate([
+      { $sort: { Date: -1 } },
       {
         $lookup: {
           from: "devices",
@@ -206,7 +207,6 @@ export const getAlertHistoryData = async (req, res, next) => {
           },
         },
       },
-      { $sort: { Date: -1 } },
     ]);
     let dataObject = {
       message: "Alert History Fetched succesfully",
