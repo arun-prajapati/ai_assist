@@ -1024,7 +1024,12 @@ export const handle_FA0A_Response = async (macId, msgId, payload) => {
       $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
     });
     console.log("device", device);
-    console.log("we1", freeMemoryData);
+    console.log("we1", heap_total);
+    console.log("we1", heap_free);
+    console.log("we1", iram_total);
+    console.log("we1", iram_free);
+    console.log("we1", dram_total);
+    console.log("we1", dram_free);
     if (device) {
       let { name } = device;
       let freeMemoryData = {
