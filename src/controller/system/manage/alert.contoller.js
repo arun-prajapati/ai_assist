@@ -185,7 +185,7 @@ export const getAlertHistoryData = async (req, res, next) => {
       {
         $unwind: "$demo",
       },
-      { $sort: { Date: -1 } },
+      { $sort: { createdAt: -1 } },
       {
         $replaceRoot: {
           newRoot: {
