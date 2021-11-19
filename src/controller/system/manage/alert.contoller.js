@@ -185,6 +185,7 @@ export const getAlertHistoryData = async (req, res, next) => {
       {
         $unwind: "$demo",
       },
+      { $sort: { Date: -1 } },
       {
         $replaceRoot: {
           newRoot: {
@@ -206,7 +207,6 @@ export const getAlertHistoryData = async (req, res, next) => {
           },
         },
       },
-      { $sort: { createdAt: -1 } },
     ]);
     let dataObject = {
       message: "Alert History Fetched succesfully",
