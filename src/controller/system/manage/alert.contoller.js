@@ -206,6 +206,7 @@ export const getAlertHistoryData = async (req, res, next) => {
           },
         },
       },
+      { $sort: { date: 1 } },
     ]);
     let dataObject = {
       message: "Alert History Fetched succesfully",
