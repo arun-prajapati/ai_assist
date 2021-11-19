@@ -868,57 +868,61 @@ export const handle_EA01_Response = async (macId, msgId, payload) => {
     console.log("state", typeof state);
     let alertHisotyData = {};
     let alertMessage = await getAlertMessage(state);
-    alertHisotyData = {
-      alertName: alertMessage,
-    };
-    let device = await Devices.findOneDocument({
-      $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
-    });
-    let { _id, pmac, vmac } = device;
-    if (recievedMACId === pmac) {
+    for (let i = 0; i < alertMessage.length; i++) {
+      alertHisotyData = {
+        alertName: alertMessage[i],
+      };
+      let device = await Devices.findOneDocument({
+        $or: [{ pmac: recievedMACId }, { vmac: recievedMACId }],
+      });
+      let { _id, pmac, vmac } = device;
+      if (recievedMACId === pmac) {
+        alertHisotyData = {
+          ...alertHisotyData,
+          errorFrom: "Pump",
+          deviceId: _id,
+        };
+      } else if (recievedMACId === vmac) {
+        alertHisotyData = {
+          ...alertHisotyData,
+          errorFrom: "Valve",
+          deviceId: _id,
+        };
+      }
       alertHisotyData = {
         ...alertHisotyData,
-        errorFrom: "Pump",
-        deviceId: _id,
+        Date: moment
+          .tz(moment().format(), "Asia/calcutta")
+          .format("YYYY-MM-DD"),
+        time: moment.tz(moment().format(), "Asia/calcutta").format("hh:mm:ss"),
       };
-    } else if (recievedMACId === vmac) {
-      alertHisotyData = {
-        ...alertHisotyData,
-        errorFrom: "Valve",
-        deviceId: _id,
-      };
+      console.log("alertHistoryData", alertHisotyData);
+      await AlertsHistory.createData(alertHisotyData);
+      mailAlerts(_id, alertMessage[i]);
     }
-    alertHisotyData = {
-      ...alertHisotyData,
-      Date: moment.tz(moment().format(), "Asia/calcutta").format("YYYY-MM-DD"),
-      time: moment.tz(moment().format(), "Asia/calcutta").format("hh:mm:ss"),
-    };
-    console.log("alertHistoryData", alertHisotyData);
-    await AlertsHistory.createData(alertHisotyData);
-    mailAlerts(_id, alertMessage);
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
   }
 };
 export const getAlertMessage = async (errorId) => {
   try {
-    let alertMessage;
+    let alertMessage = [];
     console.log("ErrorId", errorId);
     switch (errorId) {
       case "01": {
-        alertMessage = `Negative flow error`;
+        alertMessage = [`Negative flow error`];
         break;
       }
       case "02": {
-        alertMessage = `Modbus error`;
+        alertMessage = [`Modbus error`];
         break;
       }
       case "04": {
-        alertMessage = `External RTC failure`;
+        alertMessage = [`External RTC failure`];
         break;
       }
       case "08": {
-        alertMessage = `Valve ON , No flow detected error`;
+        alertMessage = [`Valve ON , No flow detected error`];
         break;
       }
     }
