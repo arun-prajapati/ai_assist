@@ -35,6 +35,7 @@ export const userLogin = async (req, res, next) => {
         _id: userData._id,
         email: userData.email,
         name: userData.name,
+        role: userData.role,
       },
     };
     return handleResponse(res, dataObject);
