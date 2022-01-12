@@ -12,6 +12,9 @@ const schema = {
     trim: true,
     required: true,
   },
+  role: {
+    type: String,
+  },
 };
 
 let schemaOption = {
