@@ -15,6 +15,7 @@ export const userLogin = async (req, res, next) => {
   let body = req.body;
   try {
     let userData = await Users.findOneDocument({ email: req.body.email });
+    console.log("userData", userData);
     await Usersrv.userDataVerify(userData, body);
     let payload = {
       _id: userData._id,
