@@ -28,15 +28,16 @@ export const userLogin = async (req, res, next) => {
       userId: userData._id,
     };
     Tokens.createData(refreshTokenData);
+    console.log("role", userData.role);
     let dataObject = {
       message: "You have logged in successfully.",
       data: {
         accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,
+        role: userData.role,
         _id: userData._id,
         email: userData.email,
         name: userData.name,
-        role: userData.role,
       },
     };
     return handleResponse(res, dataObject);
