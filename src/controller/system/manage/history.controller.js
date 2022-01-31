@@ -411,7 +411,7 @@ export const mailDeviceHistoryData = async (req, res, next) => {
       secure: true,
       auth: {
         user: "digi5technologies@gmail.com",
-        pass: "Prem0131#",
+        pass: "ngjaexostycijqul",
       },
     });
     setTimeout(() => {

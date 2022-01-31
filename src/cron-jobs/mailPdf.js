@@ -106,7 +106,7 @@ scheduleJob(JOB_TIME, async () => {
         secure: true,
         auth: {
           user: "digi5technologies@gmail.com",
-          pass: "Prem0131#",
+          pass: "ngjaexostycijqul",
         },
       });
 

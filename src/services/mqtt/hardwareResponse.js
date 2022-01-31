@@ -1023,7 +1023,7 @@ export const mailAlerts = async (id, alerts) => {
           secure: true,
           auth: {
             user: "digi5technologies@gmail.com",
-            pass: "Prem0131#",
+            pass: "ngjaexostycijqul",
           },
         });
         // moment.tz(moment().format(), "Asia/calcutta").format("YYYY/MM/DD hh:mm:ss")
