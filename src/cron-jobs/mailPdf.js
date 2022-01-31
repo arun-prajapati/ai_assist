@@ -111,7 +111,7 @@ scheduleJob(JOB_TIME, async () => {
       });
 
       let mailOptions = {
-        from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
+        from: '"sensietech12@gmail.com" <your@email.com>', // sender address
         to: `${notificationdata[i].receiverEmail}`, // list of receivers
         subject: "Requested  Device History", // Subject line
         text: "Hello world?", // plain text body

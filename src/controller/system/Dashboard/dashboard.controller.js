@@ -541,7 +541,7 @@ export const mailDeviceGraphData = async (req, res, next) => {
     });
     setTimeout(() => {
       let mailOptions = {
-        from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
+        from: '"sensietech12@gmail.com" <your@email.com>', // sender address
         to: `${req.body.email}`, // list of receivers
         subject: `Requested ${req.body.type}'s  statistics of  ${deviceData.name} `, // Subject line
         text: "Hello world?", // plain text body

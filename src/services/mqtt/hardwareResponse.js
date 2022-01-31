@@ -1035,7 +1035,7 @@ export const mailAlerts = async (id, alerts) => {
            .format("YYYY/MM/DD hh:mm:ss")}</h2>  `;
         console.log("Recievers email address", alertRecord[i].receiverEmail);
         let mailOptions = {
-          from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
+          from: '"sensietech12@gmail.com" <your@email.com>', // sender address
           to: alertRecord[i].receiverEmail, // list of receivers
           subject: alertRecord[i].subject, // Subject line
           text: "Hello world?", // plain text body

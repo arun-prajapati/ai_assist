@@ -119,7 +119,7 @@ export const createDevice = async (req, res, next) => {
     );
     setTimeout(() => {
       let mailOptions = {
-        from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
+        from: '"sensietech12@gmail.com" <your@email.com>', // sender address
         to: "prempanwala710@gmail.com", // list of receivers
         subject: "New Device Added At NEPL", // Subject line
         text: "Hello world?", // plain text body
@@ -389,7 +389,7 @@ export const removeDevice = async (req, res, next) => {
     );
     setTimeout(() => {
       let mailOptions = {
-        from: '"digi5technologies@gmail.com" <your@email.com>', // sender address
+        from: '"sensietech12@gmail.com" <your@email.com>', // sender address
         to: "prempanwala710@gmail.com", // list of receivers
         subject: "Device Removed From NEPL", // Subject line
         text: "Hello world?", // plain text body
