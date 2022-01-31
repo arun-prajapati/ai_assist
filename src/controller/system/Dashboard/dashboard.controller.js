@@ -536,7 +536,7 @@ export const mailDeviceGraphData = async (req, res, next) => {
       secure: true,
       auth: {
         user: "digi5technologies@gmail.com",
-        pass: "osuvgltfiefskdcm",
+        pass: "Prem0131#",
       },
     });
     setTimeout(() => {
