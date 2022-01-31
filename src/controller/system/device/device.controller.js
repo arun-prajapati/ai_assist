@@ -43,8 +43,8 @@ export const createDevice = async (req, res, next) => {
       port: 25,
       secure: true,
       auth: {
-        user: "digi5technologies@gmail.com",
-        pass: "ngjaexostycijqul",
+        user: "sensietech12@gmail.com",
+        pass: "xhyyfztrknrptrfi",
       },
     });
     let students = [
@@ -307,8 +307,8 @@ export const removeDevice = async (req, res, next) => {
       port: 25,
       secure: true,
       auth: {
-        user: "digi5technologies@gmail.com",
-        pass: "ngjaexostycijqul",
+        user: "sensietech12@gmail.com",
+        pass: "xhyyfztrknrptrfi",
       },
     });
     let students = [

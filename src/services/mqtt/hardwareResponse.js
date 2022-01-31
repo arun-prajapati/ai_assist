@@ -1022,8 +1022,8 @@ export const mailAlerts = async (id, alerts) => {
           port: 25,
           secure: true,
           auth: {
-            user: "digi5technologies@gmail.com",
-            pass: "ngjaexostycijqul",
+            user: "sensietech12@gmail.com",
+            pass: "xhyyfztrknrptrfi",
           },
         });
         // moment.tz(moment().format(), "Asia/calcutta").format("YYYY/MM/DD hh:mm:ss")
