@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "30 17 * * *";
+const JOB_TIME = "* * * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
@@ -21,7 +21,7 @@ scheduleJob(JOB_TIME, async () => {
         {
           _id: { $in: siteId },
         },
-        { totaliser_current_value: 1, name: 1 }
+        { totaliser_current_value: 1, name: 1, threshold: 1 }
       );
       var dates = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates.setDate(dates.getDate() - 1);
@@ -94,10 +94,11 @@ scheduleJob(JOB_TIME, async () => {
           SiteName: deviceData[k].name,
           totaliser_current_value:
             Number(deviceData[k].totaliser_current_value) - Number(datas.date),
+          Threshold: deviceData[k].threshold,
         };
         data.push(historyDataObject);
       }
-      const csvFields = ["SiteName", "totaliser_current_value"];
+      const csvFields = ["SiteName", "totaliser_current_value", "Threshold"];
       const csvParser = new CsvParser({ csvFields });
       const csvData = csvParser.parse(data);
       let transporter = nodemailer.createTransport({
