@@ -119,17 +119,19 @@ scheduleJob(JOB_TIME, async () => {
       console.log("final device data", deviceData);
       console.log("final device history data", historyData);
       let data = [];
+
       for (let k = 0; k < deviceData.length; k++) {
         let datas = historyData.find((x) => {
           return x._id === deviceData[k]._id;
         });
+        console.log("Comparsion", k, deviceData1.length - 1);
         let historyDataObject = {
           SiteName: deviceData[k].name,
           totaliser_current_value:
             Number(deviceData[k].totaliser_current_value) - Number(datas.date),
           Threshold: deviceData[k].threshold,
-          Date: k <= deviceData1.length ? deviceData1[k].date : "NA",
-          Time: k <= deviceData1.length ? deviceData1[k].time : "NA",
+          Date: k <= deviceData1.length - 1 ? deviceData1[k].date : "NA",
+          Time: k <= deviceData1.length - 1 ? deviceData1[k].time : "NA",
         };
         data.push(historyDataObject);
       }
