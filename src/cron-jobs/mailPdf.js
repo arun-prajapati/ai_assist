@@ -128,14 +128,8 @@ scheduleJob(JOB_TIME, async () => {
           totaliser_current_value:
             Number(deviceData[k].totaliser_current_value) - Number(datas.date),
           Threshold: deviceData[k].threshold,
-          Date:
-            deviceData[k].name === deviceData1[k].name
-              ? deviceData1[k].date
-              : "NA",
-          Time:
-            deviceData[k].name === deviceData1[k].name
-              ? deviceData1[k].time
-              : "NA",
+          Date: k <= deviceData1.length ? deviceData1[k].date : "NA",
+          Time: k <= deviceData1.length ? deviceData1[k].time : "NA",
         };
         data.push(historyDataObject);
       }
