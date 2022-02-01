@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "30 17 * * *";
+const JOB_TIME = "* * * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
@@ -23,6 +23,39 @@ scheduleJob(JOB_TIME, async () => {
         },
         { totaliser_current_value: 1, name: 1, threshold: 1 }
       );
+      var datesp = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
+      let deviceData1 = await deviceHistory.aggregate([
+        {
+          $match: {
+            date: {
+              $gte: new Date(new Date(datesp)),
+              $lte: new Date(new Date(datesp).setHours(23, 59, 59)),
+            },
+            pumpCurrentstate: true,
+            valveCurrentstate: true,
+          },
+        },
+        { $sort: { date: 1 } },
+        {
+          $group: {
+            _id: "$deviceId",
+            totaliser: { $push: "$$ROOT" },
+          },
+        },
+        {
+          $match: {
+            _id: { $in: siteId },
+          },
+        },
+        {
+          $project: {
+            date: { $first: "$totaliser.date" },
+            time: { $first: "$totaliser.time" },
+            name: { $first: "$totaliser.name" },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ]);
       var dates = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates.setDate(dates.getDate() - 1);
       console.log(">>===", new Date(new Date(dates)));
@@ -95,10 +128,24 @@ scheduleJob(JOB_TIME, async () => {
           totaliser_current_value:
             Number(deviceData[k].totaliser_current_value) - Number(datas.date),
           Threshold: deviceData[k].threshold,
+          Date:
+            deviceData[k].name === deviceData1[k].name
+              ? deviceData1[k].date
+              : "NA",
+          Time:
+            deviceData[k].name === deviceData1[k].name
+              ? deviceData1[k].time
+              : "NA",
         };
         data.push(historyDataObject);
       }
-      const csvFields = ["SiteName", "totaliser_current_value", "Threshold"];
+      const csvFields = [
+        "SiteName",
+        "totaliser_current_value",
+        "Threshold",
+        "Date",
+        "Time",
+      ];
       const csvParser = new CsvParser({ csvFields });
       const csvData = csvParser.parse(data);
       let transporter = nodemailer.createTransport({
