@@ -111,6 +111,20 @@ export const graphData = async (req, res, next) => {
   try {
     let pipeline;
     if (req.query.type === "day") {
+      let historyData1 = deviceHistory.findData(
+        {
+          deviceId: mongoose.Types.ObjectId(req.query.deviceId),
+          date: {
+            $gte: new Date(new Date(dates222)),
+            $lte: new Date(new Date(dates222).setHours(23, 59, 59)),
+          },
+          totaliser_current_value: {
+            $gte: midnightBase,
+          },
+        },
+        { createdAt: 0 },
+        { sort: { date: -1 }, limit: 1 }
+      );
       let midnightBase = 0;
       var dates1 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates1.setDate(dates1.getDate() - 1);
@@ -219,20 +233,7 @@ export const graphData = async (req, res, next) => {
         "dates222",
         new Date(new Date(dates222).setHours(23, 59, 59))
       );
-      let historyData1 = await deviceHistory.findData(
-        {
-          deviceId: mongoose.Types.ObjectId(req.query.deviceId),
-          date: {
-            $gte: new Date(new Date(dates222)),
-            $lte: new Date(new Date(dates222).setHours(23, 59, 59)),
-          },
-          totaliser_current_value: {
-            $gte: midnightBase,
-          },
-        },
-        { createdAt: 0 },
-        { sort: { date: -1 }, limit: 1 }
-      );
+      console.log("historydata1", historyData1[0].totaliser_current_value);
       for (let i = mergeArrayResponse.length - 1; i >= 0; i--) {
         var dates2223 = new Date(
           moment().tz("Asia/calcutta").format("YYYY/MM/DD HH:mm:ss ")
