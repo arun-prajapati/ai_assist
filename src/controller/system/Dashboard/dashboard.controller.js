@@ -212,6 +212,9 @@ export const graphData = async (req, res, next) => {
       console.log("Inside Day", mergeArrayResponse.length - 1);
       console.log("mid night base", midnightBase);
       for (let i = mergeArrayResponse.length - 1; i >= 0; i--) {
+        var dates2223 = new Date(moment().tz("Asia/calcutta").format(""));
+        console.log("dates2223", dates2223);
+        console.log("dates2223", typeof dates2223);
         if (
           graphData[i]["totaliser_current_value"] !== 0 &&
           graphData[i]["totaliser_current_value"] >= midnightBase
