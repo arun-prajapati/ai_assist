@@ -219,6 +219,11 @@ export const graphData = async (req, res, next) => {
           graphData[i]["totaliser_current_value"] =
             graphData[i]["totaliser_current_value"] - midnightBase;
         } else {
+          console.log("data", graphData[i]["totaliser_current_value"]);
+          console.log(
+            "data type ",
+            typeof graphData[i]["totaliser_current_value"]
+          );
           var dates222 = new Date(
             moment().tz("Asia/calcutta").format("YYYY-MM-DD")
           );
@@ -242,6 +247,7 @@ export const graphData = async (req, res, next) => {
             { sort: { date: -1 }, limit: 1 }
           );
           let newans = 0;
+
           if (historyData1 && historyData1.length > 0) {
             newans =
               Number(historyData1[0].totaliser_current_value) -
