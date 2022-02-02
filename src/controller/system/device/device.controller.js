@@ -207,34 +207,47 @@ export const getSingleDevice = async (req, res, next) => {
     //console.log("deviceData.threshold", deviceData.threshold);
     if (historyData && historyData.length > 0) {
       let midnightBase = historyData[0].totaliser_current_value;
-      if (historyData[0].totaliser_current_value === 0) {
+      // if (historyData[0].totaliser_current_value === 0) {
+
+      //   if (historyData1) {
+      //     midnightBase = historyData1.totaliser_current_value;
+      //   }
+      //   console.log(
+      //     "Device history totalise value is 0 so finding next document",
+      //     midnightBase
+      //   );
+      // }
+
+      let Flow = flowCoversion(deviceData.flowValue, deviceData.flowUnit);
+      totaliserValue = deviceData.totaliser_current_value - midnightBase;
+      if (totaliserValue < 0) {
         var dates2 = new Date(
           moment().tz("Asia/calcutta").format("YYYY-MM-DD")
         );
         console.log("dates2", new Date(new Date(dates2)));
         console.log("dates2", new Date(new Date(dates2).setHours(23, 59, 59)));
-        let historyData1 = await deviceHistory.findOneDocument({
-          deviceId: mongoose.Types.ObjectId(deviceData._id),
-          date: {
-            $gte: new Date(new Date(dates2)),
-            $lte: new Date(new Date(dates2).setHours(23, 59, 59)),
+        let historyData1 = await deviceHistory.findData(
+          {
+            deviceId: mongoose.Types.ObjectId(deviceData._id),
+            date: {
+              $gte: new Date(new Date(dates2)),
+              $lte: new Date(new Date(dates2).setHours(23, 59, 59)),
+            },
+            totaliser_current_value: {
+              $gte: midnightBase,
+            },
           },
-          totaliser_current_value: {
-            $gt: 0,
-          },
-        });
-        if (historyData1) {
-          midnightBase = historyData1.totaliser_current_value;
-        }
-        console.log(
-          "Device history totalise value is 0 so finding next document",
-          midnightBase
+          { createdAt: 0 },
+          { sort: { date: -1 }, limit: 1 }
         );
-      }
-      let Flow = flowCoversion(deviceData.flowValue, deviceData.flowUnit);
-      totaliserValue = deviceData.totaliser_current_value - midnightBase;
-      if (totaliserValue < 0) {
-        totaliserValue = deviceData.totaliser_current_value;
+        let newans = 0;
+        if (historyData1 && historyData1.length > 0) {
+          newans =
+            Number(historyData1[0].totaliser_current_value) -
+            Number(midnightBase);
+        }
+        totaliserValue =
+          Number(deviceData.totaliser_current_value) + Number(newans);
       }
       console.log("totaliserValue", totaliserValue);
       tankValue = Math.round(
