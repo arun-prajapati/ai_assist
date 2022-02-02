@@ -245,13 +245,11 @@ export const graphData = async (req, res, next) => {
             graphData[i]["totaliser_current_value"] - midnightBase;
         } else if (graphData[i]["_id"] <= dates2223.getHours()) {
           let newans = 0;
-          if (historyData1 && historyData1.length > 0) {
-            newans =
-              Number(historyData1[0].totaliser_current_value) -
-              Number(midnightBase);
-            graphData[i]["totaliser_current_value"] =
-              Number(graphData[i]["totaliser_current_value"]) + Number(newans);
-          }
+          newans =
+            Number(historyData1[0].totaliser_current_value) -
+            Number(midnightBase);
+          graphData[i]["totaliser_current_value"] =
+            Number(graphData[i]["totaliser_current_value"]) + Number(newans);
         }
       }
     } else if (req.query.type === "week") {
