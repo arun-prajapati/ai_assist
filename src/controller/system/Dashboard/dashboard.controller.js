@@ -247,7 +247,10 @@ export const graphData = async (req, res, next) => {
         ) {
           graphData[i]["totaliser_current_value"] =
             graphData[i]["totaliser_current_value"] - midnightBase;
-        } else if (graphData[i]["_id"] <= dates2223.getHours()) {
+        } else if (
+          graphData[i]["_id"] <= dates2223.getHours() &&
+          graphData[i]["totaliser_current_value"] > 0
+        ) {
           let newans = 0;
           if (flag) {
             newans =
