@@ -213,7 +213,7 @@ export const graphData = async (req, res, next) => {
       console.log("mid night base", midnightBase);
       for (let i = mergeArrayResponse.length - 1; i >= 0; i--) {
         var dates2223 = new Date(
-          moment().tz("Asia/calcutta").format("YYYY/MM/DD hh:mm:ss")
+          moment().tz("Asia/calcutta").format("YYYY/MM/DD HH:mm:ss ")
         );
         console.log("dates2223", dates2223);
         console.log("dates2223", dates2223.getHours());
