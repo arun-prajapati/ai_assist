@@ -212,7 +212,7 @@ export const graphData = async (req, res, next) => {
       console.log("Inside Day", mergeArrayResponse.length - 1);
       console.log("mid night base", midnightBase);
       for (let i = mergeArrayResponse.length - 1; i >= 0; i--) {
-        var dates2223 = new Date(moment().tz("Asia/calcutta").format(""));
+        var dates2223 = new Date(moment().tz("Asia/calcutta"));
         console.log("dates2223", dates2223.getHours());
         console.log("dates2223", typeof dates2223.getHours());
         if (
