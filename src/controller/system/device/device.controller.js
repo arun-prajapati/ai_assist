@@ -233,7 +233,7 @@ export const getSingleDevice = async (req, res, next) => {
       }
       let Flow = flowCoversion(deviceData.flowValue, deviceData.flowUnit);
       totaliserValue = deviceData.totaliser_current_value - midnightBase;
-      if (totaliserValue < 0) {
+      if (totaliserValue <= 0) {
         totaliserValue = deviceData.totaliser_current_value;
       }
       console.log("totaliserValue", totaliserValue);
