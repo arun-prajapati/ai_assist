@@ -215,9 +215,6 @@ export const graphData = async (req, res, next) => {
         var dates2223 = new Date(
           moment().tz("Asia/calcutta").format("YYYY/MM/DD HH:mm:ss ")
         );
-        console.log("dates2223", dates2223);
-        console.log("dates2223", dates2223.getHours());
-        console.log("dates2223", typeof dates2223.getHours());
         if (
           graphData[i]["totaliser_current_value"] !== 0 &&
           graphData[i]["totaliser_current_value"] >= midnightBase
@@ -225,8 +222,6 @@ export const graphData = async (req, res, next) => {
           graphData[i]["totaliser_current_value"] =
             graphData[i]["totaliser_current_value"] - midnightBase;
         } else if (graphData[i]["_id"] <= dates2223.getHours()) {
-          console.log("data", graphData[i]["_id"]);
-          console.log("data type ", typeof graphData[i]["_id"]);
           var dates222 = new Date(
             moment().tz("Asia/calcutta").format("YYYY-MM-DD")
           );
