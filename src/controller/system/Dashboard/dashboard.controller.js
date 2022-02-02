@@ -178,20 +178,7 @@ export const graphData = async (req, res, next) => {
           { $sort: { _id: 1 } },
         ];
         midnightBase = historyData[0].totaliser_current_value;
-        historyData1 = deviceHistory.findData(
-          {
-            deviceId: mongoose.Types.ObjectId(req.query.deviceId),
-            date: {
-              $gte: new Date(new Date(dates222)),
-              $lte: new Date(new Date(dates222).setHours(23, 59, 59)),
-            },
-            totaliser_current_value: {
-              $gte: midnightBase,
-            },
-          },
-          { createdAt: 0 },
-          { sort: { date: -1 }, limit: 1 }
-        );
+
         graphData = await deviceHistory.aggregate(pipeline);
         console.log("Hours graph Data", graphData);
         // graphData = JSON.parse(JSON.stringify(graphData));
@@ -217,14 +204,6 @@ export const graphData = async (req, res, next) => {
         graphData.push(demo);
         //graphData = [];
       }
-      graphData = JSON.parse(JSON.stringify(graphData));
-      console.log("Graph Data", graphData);
-      let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
-      console.log("Default propeties BY hours", defaultgraphData);
-      let mergeArrayResponse = [...graphData, ...defaultgraphData];
-      graphData = sortResponsePeriodWiseByHours(mergeArrayResponse);
-      console.log("Inside Day", mergeArrayResponse.length - 1);
-      console.log("mid night base", midnightBase);
       var dates222 = new Date(
         moment().tz("Asia/calcutta").format("YYYY-MM-DD")
       );
@@ -233,7 +212,29 @@ export const graphData = async (req, res, next) => {
         "dates222",
         new Date(new Date(dates222).setHours(23, 59, 59))
       );
-      console.log("historydata1", historyData1);
+      historyData1 = deviceHistory.findData(
+        {
+          deviceId: mongoose.Types.ObjectId(req.query.deviceId),
+          date: {
+            $gte: new Date(new Date(dates222)),
+            $lte: new Date(new Date(dates222).setHours(23, 59, 59)),
+          },
+          totaliser_current_value: {
+            $gte: midnightBase,
+          },
+        },
+        { createdAt: 0 },
+        { sort: { date: -1 }, limit: 1 }
+      );
+      graphData = JSON.parse(JSON.stringify(graphData));
+      console.log("Graph Data", graphData);
+      let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
+      console.log("Default propeties BY hours", defaultgraphData);
+      let mergeArrayResponse = [...graphData, ...defaultgraphData];
+      graphData = sortResponsePeriodWiseByHours(mergeArrayResponse);
+      console.log("Inside Day", mergeArrayResponse.length - 1);
+      console.log("mid night base", midnightBase);
+      console.log("historydata1", historyData1[0].totaliser_current_value);
       for (let i = mergeArrayResponse.length - 1; i >= 0; i--) {
         var dates2223 = new Date(
           moment().tz("Asia/calcutta").format("YYYY/MM/DD HH:mm:ss ")
