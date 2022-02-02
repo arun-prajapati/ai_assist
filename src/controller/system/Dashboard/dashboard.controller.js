@@ -234,7 +234,7 @@ export const graphData = async (req, res, next) => {
       graphData = sortResponsePeriodWiseByHours(mergeArrayResponse);
       console.log("Inside Day", mergeArrayResponse.length - 1);
       console.log("mid night base", midnightBase);
-      console.log("historydata1", historyData1[0].totaliser_current_value);
+      console.log("historydata1", historyData1);
       for (let i = mergeArrayResponse.length - 1; i >= 0; i--) {
         var dates2223 = new Date(
           moment().tz("Asia/calcutta").format("YYYY/MM/DD HH:mm:ss ")
