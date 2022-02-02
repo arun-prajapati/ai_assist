@@ -212,7 +212,7 @@ export const graphData = async (req, res, next) => {
         "dates222",
         new Date(new Date(dates222).setHours(23, 59, 59))
       );
-      historyData1 = deviceHistory.findData(
+      historyData1 = await deviceHistory.findData(
         {
           deviceId: mongoose.Types.ObjectId(req.query.deviceId),
           date: {
