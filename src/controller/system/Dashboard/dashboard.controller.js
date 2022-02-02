@@ -224,7 +224,7 @@ export const graphData = async (req, res, next) => {
         ) {
           graphData[i]["totaliser_current_value"] =
             graphData[i]["totaliser_current_value"] - midnightBase;
-        } else {
+        } else if (graphData[i]["_id"] <= dates2223.getHours()) {
           console.log("data", graphData[i]["_id"]);
           console.log("data type ", typeof graphData[i]["_id"]);
           var dates222 = new Date(
