@@ -235,6 +235,8 @@ export const graphData = async (req, res, next) => {
       console.log("Inside Day", mergeArrayResponse.length - 1);
       console.log("mid night base", midnightBase);
       console.log("historydata1", historyData1);
+      let flag = historyData1.length > 0 ? true : false;
+      console.log("flag value", flag);
       for (let i = mergeArrayResponse.length - 1; i >= 0; i--) {
         var dates2223 = new Date(
           moment().tz("Asia/calcutta").format("YYYY/MM/DD HH:mm:ss ")
@@ -247,9 +249,11 @@ export const graphData = async (req, res, next) => {
             graphData[i]["totaliser_current_value"] - midnightBase;
         } else if (graphData[i]["_id"] <= dates2223.getHours()) {
           let newans = 0;
-          newans =
-            Number(historyData1[0].totaliser_current_value) -
-            Number(midnightBase);
+          if (flag) {
+            newans =
+              Number(historyData1[0].totaliser_current_value) -
+              Number(midnightBase);
+          }
           graphData[i]["totaliser_current_value"] =
             Number(graphData[i]["totaliser_current_value"]) + Number(newans);
         }
