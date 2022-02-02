@@ -211,6 +211,28 @@ export const graphData = async (req, res, next) => {
       graphData = sortResponsePeriodWiseByHours(mergeArrayResponse);
       console.log("Inside Day", mergeArrayResponse.length - 1);
       console.log("mid night base", midnightBase);
+      var dates222 = new Date(
+        moment().tz("Asia/calcutta").format("YYYY-MM-DD")
+      );
+      console.log("dates222", new Date(new Date(dates222)));
+      console.log(
+        "dates222",
+        new Date(new Date(dates222).setHours(23, 59, 59))
+      );
+      let historyData1 = await deviceHistory.findData(
+        {
+          deviceId: mongoose.Types.ObjectId(req.query.deviceId),
+          date: {
+            $gte: new Date(new Date(dates222)),
+            $lte: new Date(new Date(dates222).setHours(23, 59, 59)),
+          },
+          totaliser_current_value: {
+            $gte: midnightBase,
+          },
+        },
+        { createdAt: 0 },
+        { sort: { date: -1 }, limit: 1 }
+      );
       for (let i = mergeArrayResponse.length - 1; i >= 0; i--) {
         var dates2223 = new Date(
           moment().tz("Asia/calcutta").format("YYYY/MM/DD HH:mm:ss ")
@@ -222,30 +244,7 @@ export const graphData = async (req, res, next) => {
           graphData[i]["totaliser_current_value"] =
             graphData[i]["totaliser_current_value"] - midnightBase;
         } else if (graphData[i]["_id"] <= dates2223.getHours()) {
-          var dates222 = new Date(
-            moment().tz("Asia/calcutta").format("YYYY-MM-DD")
-          );
-          console.log("dates222", new Date(new Date(dates222)));
-          console.log(
-            "dates222",
-            new Date(new Date(dates222).setHours(23, 59, 59))
-          );
-          let historyData1 = await deviceHistory.findData(
-            {
-              deviceId: mongoose.Types.ObjectId(req.query.deviceId),
-              date: {
-                $gte: new Date(new Date(dates222)),
-                $lte: new Date(new Date(dates222).setHours(23, 59, 59)),
-              },
-              totaliser_current_value: {
-                $gte: midnightBase,
-              },
-            },
-            { createdAt: 0 },
-            { sort: { date: -1 }, limit: 1 }
-          );
           let newans = 0;
-
           if (historyData1 && historyData1.length > 0) {
             newans =
               Number(historyData1[0].totaliser_current_value) -
