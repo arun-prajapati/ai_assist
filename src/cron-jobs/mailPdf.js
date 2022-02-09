@@ -87,7 +87,7 @@ scheduleJob(JOB_TIME, async () => {
             name: 1,
           },
         },
-        { $sort: { _id: 1 } },
+        { $sort: { _id: -1 } },
         // { $sort: { date: -1 } },
       ]);
       console.log("deviceData111 ", deviceData);
