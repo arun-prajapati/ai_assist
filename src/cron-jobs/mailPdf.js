@@ -44,8 +44,8 @@ scheduleJob(JOB_TIME, async () => {
               $gte: new Date(new Date(datesp)),
               $lte: new Date(new Date(datesp).setHours(23, 59, 59)),
             },
-            // pumpCurrentstate: true,
-            // valveCurrentstate: true,
+            pumpCurrentstate: true,
+            valveCurrentstate: true,
           },
         },
         { $sort: { date: 1 } },
@@ -184,6 +184,7 @@ scheduleJob(JOB_TIME, async () => {
         };
         data.push(historyDataObject);
       }
+      console.log("datass", data);
       const csvFields = [
         "SiteName",
         "totaliser_current_value",
@@ -193,37 +194,37 @@ scheduleJob(JOB_TIME, async () => {
       ];
       const csvParser = new CsvParser({ csvFields });
       const csvData = csvParser.parse(data);
-      //   let transporter = nodemailer.createTransport({
-      //     service: "gmail",
-      //     port: 25,
-      //     secure: true,
-      //     auth: {
-      //       user: "sensietech12@gmail.com",
-      //       pass: "xhyyfztrknrptrfi",
-      //     },
-      //   });
+      let transporter = nodemailer.createTransport({
+        service: "gmail",
+        port: 25,
+        secure: true,
+        auth: {
+          user: "sensietech12@gmail.com",
+          pass: "xhyyfztrknrptrfi",
+        },
+      });
 
-      //   let mailOptions = {
-      //     from: '"sensietech12@gmail.com" <your@email.com>', // sender address
-      //     to: `${notificationdata[i].receiverEmail}`, // list of receivers
-      //     subject: "Requested  Device History", // Subject line
-      //     text: "Hello world?", // plain text body
-      //     html: "Device History", // html body
-      //     attachments: [
-      //       {
-      //         filename: "History.csv",
-      //         content: csvData,
-      //       },
-      //     ],
-      //   };
+      let mailOptions = {
+        from: '"sensietech12@gmail.com" <your@email.com>', // sender address
+        to: `${notificationdata[i].receiverEmail}`, // list of receivers
+        subject: "Requested  Device History", // Subject line
+        text: "Hello world?", // plain text body
+        html: "Device History", // html body
+        attachments: [
+          {
+            filename: "History.csv",
+            content: csvData,
+          },
+        ],
+      };
 
-      //   transporter.sendMail(mailOptions, (error, info) => {
-      //     if (error) {
-      //       console.log("error in sending", error);
-      //     } else {
-      //       console.log("no error");
-      //     }
-      //   });
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log("error in sending", error);
+        } else {
+          console.log("no error");
+        }
+      });
     }
 
     logger.log(level.info, `>> PREM PANWALA at ${moment().format()}`);
