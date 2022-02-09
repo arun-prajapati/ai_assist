@@ -18,6 +18,8 @@ export default class SchemaModel {
 
   async findData(query, projection, options) {
     const opArgs = {};
+    console.log("options", options);
+    console.log("opArgs", opArgs);
     if (options && options.page && options.limit) {
       opArgs.skip = options.page > 0 ? (options.page - 1) * options.limit : 0;
     }
