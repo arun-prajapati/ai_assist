@@ -106,6 +106,9 @@ scheduleJob(JOB_TIME, async () => {
       console.log("devicedata222 ", deviceData1);
       console.log("historyData ", historyData);
       // console.log("siteId", siteId);
+      for (let i = 0; i < deviceData1.length; i++) {
+        deviceData1[i]._id = deviceData1[i]._id.toString();
+      }
       for (let i = 0; i < deviceData.length; i++) {
         deviceData[i]._id = deviceData[i]._id.toString();
       }
