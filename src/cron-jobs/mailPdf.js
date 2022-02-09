@@ -132,7 +132,7 @@ scheduleJob(JOB_TIME, async () => {
         historyData.push(notIncludedInHistoryDataArray[i]);
       }
       let testing = historyData.sort(function (a, b) {
-        return a._id - b._id;
+        return String(a._id) - String(b._id);
       });
       console.log("testing", testing);
       console.log("final device data", deviceData);
