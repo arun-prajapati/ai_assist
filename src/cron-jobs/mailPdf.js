@@ -102,14 +102,13 @@ scheduleJob(JOB_TIME, async () => {
         { $sort: { _id: -1 } },
         // { $sort: { date: -1 } },
       ]);
-      console.log("deviceData111 ", deviceData);
-
+      console.log("deviceData ", deviceData);
+      console.log("deviedata1", deviceData1);
       console.log("historyData ", historyData);
       // console.log("siteId", siteId);
       for (let i = 0; i < deviceData1.length; i++) {
         deviceData1[i]._id = deviceData1[i]._id.toString();
       }
-      console.log("devicedata222 ", deviceData1);
       for (let i = 0; i < deviceData.length; i++) {
         deviceData[i]._id = deviceData[i]._id.toString();
       }
@@ -118,10 +117,15 @@ scheduleJob(JOB_TIME, async () => {
       }
 
       let demo = [];
+      let demo1 = [];
       for (let i = 0; i < historyData.length; i++) {
         demo.push(historyData[i]._id);
       }
+      for (let i = 0; i < deviceData1.length; i++) {
+        demo1.push(deviceData1[i]._id);
+      }
       let notIncludedInHistoryDataArray = [];
+      let notIncludedInHistoryDataArray1 = [];
       for (let i = 0; i < deviceData.length; i++) {
         if (!demo.includes(deviceData[i]._id)) {
           let dummyDataObject = {
@@ -131,17 +135,38 @@ scheduleJob(JOB_TIME, async () => {
           notIncludedInHistoryDataArray.push(dummyDataObject);
         }
       }
+      for (let i = 0; i < deviceData.length; i++) {
+        if (!demo1.includes(deviceData[i]._id)) {
+          let dummyDataObject = {
+            _id: deviceData[i]._id,
+            date: "NA",
+            time: "NA",
+          };
+          notIncludedInHistoryDataArray1.push(dummyDataObject);
+        }
+      }
       console.log("not include", notIncludedInHistoryDataArray);
       for (let i = 0; i < notIncludedInHistoryDataArray.length; i++) {
         historyData.push(notIncludedInHistoryDataArray[i]);
       }
+      for (let i = 0; i < notIncludedInHistoryDataArray1.length; i++) {
+        deviceData1.push(notIncludedInHistoryDataArray1[i]);
+      }
+      console.log("after add deviceData ", deviceData);
+      console.log("after add deviedata1", deviceData1);
+      console.log("after add historyData ", historyData);
       //Below Function Will short history array once again as dummy data are added and
       //it is not gurantee that they are already shorted so we are shorting once again
       historyData = historyData.sort(function (a, b) {
         return b._id.localeCompare(a._id);
       });
+      deviceData1 = deviceData1.sort(function (a, b) {
+        return b._id.localeCompare(a._id);
+      });
       console.log("final device data", deviceData);
+      console.log("final device  data1", deviceData1);
       console.log("final device history data", historyData);
+
       let data = [];
 
       for (let k = 0; k < deviceData.length; k++) {
@@ -149,27 +174,13 @@ scheduleJob(JOB_TIME, async () => {
           return x._id === deviceData[k]._id;
         });
         console.log("Comparsion", k, deviceData1.length - 1);
-        console.log("testing", deviceData1.includes(deviceData[i]._id));
-        let demot = deviceData1.includes(deviceData[i]._id)
-          ? deviceData1.findIndex((i) => i._id === deviceData[i]._id)
-          : "";
-        console.log("demot", demot);
-        console.log("result", deviceData1.includes(deviceData[i]._id));
         let historyDataObject = {
           SiteName: deviceData[k].name,
           totaliser_current_value:
             Number(deviceData[k].totaliser_current_value) - Number(datas.date),
           Threshold: deviceData[k].threshold,
-          Date:
-            k <= deviceData1.length - 1 &&
-            deviceData1[k]._id === deviceData[k]._id
-              ? deviceData1[k].date
-              : "NA",
-          Time:
-            k <= deviceData1.length - 1 &&
-            deviceData1[k]._id === deviceData[k]._id
-              ? deviceData1[k].time
-              : "NA",
+          Date: deviceData1[k].date,
+          Time: deviceData1[k].time,
         };
         data.push(historyDataObject);
       }
