@@ -21,7 +21,8 @@ scheduleJob(JOB_TIME, async () => {
         {
           _id: { $in: siteId },
         },
-        { totaliser_current_value: 1, name: 1, threshold: 1 }
+        { totaliser_current_value: 1, name: 1, threshold: 1 },
+        { $sort: { _id: 1 } }
       );
       var datesp = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       let deviceData1 = await deviceHistory.aggregate([
@@ -89,15 +90,17 @@ scheduleJob(JOB_TIME, async () => {
         { $sort: { _id: 1 } },
         // { $sort: { date: -1 } },
       ]);
-      console.log("siteId", siteId);
+      console.log("deviceData ", deviceData);
+      console.log("devicedata ", deviceData1);
+      console.log("historyData ", historyData);
+      // console.log("siteId", siteId);
       for (let i = 0; i < deviceData.length; i++) {
         deviceData[i]._id = deviceData[i]._id.toString();
       }
       for (let i = 0; i < historyData.length; i++) {
         historyData[i]._id = historyData[i]._id.toString();
       }
-      console.log("deviceData After", deviceData);
-      console.log("historyData After", historyData);
+
       let demo = [];
       for (let i = 0; i < historyData.length; i++) {
         demo.push(historyData[i]._id);
@@ -144,37 +147,37 @@ scheduleJob(JOB_TIME, async () => {
       ];
       const csvParser = new CsvParser({ csvFields });
       const csvData = csvParser.parse(data);
-      let transporter = nodemailer.createTransport({
-        service: "gmail",
-        port: 25,
-        secure: true,
-        auth: {
-          user: "sensietech12@gmail.com",
-          pass: "xhyyfztrknrptrfi",
-        },
-      });
+      //   let transporter = nodemailer.createTransport({
+      //     service: "gmail",
+      //     port: 25,
+      //     secure: true,
+      //     auth: {
+      //       user: "sensietech12@gmail.com",
+      //       pass: "xhyyfztrknrptrfi",
+      //     },
+      //   });
 
-      let mailOptions = {
-        from: '"sensietech12@gmail.com" <your@email.com>', // sender address
-        to: `${notificationdata[i].receiverEmail}`, // list of receivers
-        subject: "Requested  Device History", // Subject line
-        text: "Hello world?", // plain text body
-        html: "Device History", // html body
-        attachments: [
-          {
-            filename: "History.csv",
-            content: csvData,
-          },
-        ],
-      };
+      //   let mailOptions = {
+      //     from: '"sensietech12@gmail.com" <your@email.com>', // sender address
+      //     to: `${notificationdata[i].receiverEmail}`, // list of receivers
+      //     subject: "Requested  Device History", // Subject line
+      //     text: "Hello world?", // plain text body
+      //     html: "Device History", // html body
+      //     attachments: [
+      //       {
+      //         filename: "History.csv",
+      //         content: csvData,
+      //       },
+      //     ],
+      //   };
 
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.log("error in sending", error);
-        } else {
-          console.log("no error");
-        }
-      });
+      //   transporter.sendMail(mailOptions, (error, info) => {
+      //     if (error) {
+      //       console.log("error in sending", error);
+      //     } else {
+      //       console.log("no error");
+      //     }
+      //   });
     }
 
     logger.log(level.info, `>> PREM PANWALA at ${moment().format()}`);
