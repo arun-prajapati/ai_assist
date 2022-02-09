@@ -140,8 +140,11 @@ scheduleJob(JOB_TIME, async () => {
           return x._id === deviceData[k]._id;
         });
         console.log("Comparsion", k, deviceData1.length - 1);
-        console.log("Both  IDs", deviceData1[k].id, deviceData[k].id);
-        console.log("condition result", deviceData1[k].id === deviceData[k].id);
+        console.log("Both  IDs", deviceData1[k]._id, deviceData[k]._id);
+        console.log(
+          "condition result",
+          deviceData1[k]._id === deviceData[k]._id
+        );
         let historyDataObject = {
           SiteName: deviceData[k].name,
           totaliser_current_value:
@@ -149,12 +152,12 @@ scheduleJob(JOB_TIME, async () => {
           Threshold: deviceData[k].threshold,
           Date:
             k <= deviceData1.length - 1 &&
-            deviceData1[k].id === deviceData[k].id
+            deviceData1[k]._id === deviceData[k]._id
               ? deviceData1[k].date
               : "NA",
           Time:
             k <= deviceData1.length - 1 &&
-            deviceData1[k].id === deviceData[k].id
+            deviceData1[k]._id === deviceData[k]._id
               ? deviceData1[k].time
               : "NA",
         };
