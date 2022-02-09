@@ -131,7 +131,7 @@ scheduleJob(JOB_TIME, async () => {
       for (let i = 0; i < notIncludedInHistoryDataArray.length; i++) {
         historyData.push(notIncludedInHistoryDataArray[i]);
       }
-      historyData = historyData.sort();
+      historyData = historyData.sort((a, b) => a._id - b._id);
       console.log("final device data", deviceData);
       console.log("final device history data", historyData);
       let data = [];
@@ -141,7 +141,6 @@ scheduleJob(JOB_TIME, async () => {
           return x._id === deviceData[k]._id;
         });
         console.log("Comparsion", k, deviceData1.length - 1);
-        console.log("Both  IDs", deviceData1[k]._id, deviceData[k]._id);
         console.log(
           "condition result",
           deviceData1[k]._id === deviceData[k]._id
