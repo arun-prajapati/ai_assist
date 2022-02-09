@@ -90,8 +90,8 @@ scheduleJob(JOB_TIME, async () => {
         { $sort: { _id: 1 } },
         // { $sort: { date: -1 } },
       ]);
-      console.log("deviceData ", deviceData);
-      console.log("devicedata ", deviceData1);
+      console.log("deviceData111 ", deviceData);
+      console.log("devicedata222 ", deviceData1);
       console.log("historyData ", historyData);
       // console.log("siteId", siteId);
       for (let i = 0; i < deviceData.length; i++) {
