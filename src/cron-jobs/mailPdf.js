@@ -32,7 +32,7 @@ scheduleJob(JOB_TIME, async () => {
         },
         {
           $sort: {
-            _id: 1,
+            _id: -1,
           },
         },
       ]);
@@ -44,8 +44,8 @@ scheduleJob(JOB_TIME, async () => {
               $gte: new Date(new Date(datesp)),
               $lte: new Date(new Date(datesp).setHours(23, 59, 59)),
             },
-            // pumpCurrentstate: true,
-            // valveCurrentstate: true,
+            pumpCurrentstate: true,
+            valveCurrentstate: true,
           },
         },
         // { $sort: { date: 1 } },
@@ -131,6 +131,7 @@ scheduleJob(JOB_TIME, async () => {
       for (let i = 0; i < notIncludedInHistoryDataArray.length; i++) {
         historyData.push(notIncludedInHistoryDataArray[i]);
       }
+      historyData = historyData.sort();
       console.log("final device data", deviceData);
       console.log("final device history data", historyData);
       let data = [];
