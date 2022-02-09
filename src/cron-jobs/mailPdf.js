@@ -131,7 +131,9 @@ scheduleJob(JOB_TIME, async () => {
       for (let i = 0; i < notIncludedInHistoryDataArray.length; i++) {
         historyData.push(notIncludedInHistoryDataArray[i]);
       }
-      historyData = historyData.sort((a, b) => a._id - b._id);
+      historyData = historyData.sort(function (a, b) {
+        return a._id - b._id;
+      });
       console.log("final device data", deviceData);
       console.log("final device history data", historyData);
       let data = [];
@@ -141,10 +143,7 @@ scheduleJob(JOB_TIME, async () => {
           return x._id === deviceData[k]._id;
         });
         console.log("Comparsion", k, deviceData1.length - 1);
-        console.log(
-          "condition result",
-          deviceData1[k]._id === deviceData[k]._id
-        );
+
         let historyDataObject = {
           SiteName: deviceData[k].name,
           totaliser_current_value:
