@@ -140,6 +140,7 @@ scheduleJob(JOB_TIME, async () => {
           return x._id === deviceData[k]._id;
         });
         console.log("Comparsion", k, deviceData1.length - 1);
+        console.log("Both  IDs", deviceData1[k].id, deviceData[k].id);
         console.log("condition result", deviceData1[k].id === deviceData[k].id);
         let historyDataObject = {
           SiteName: deviceData[k].name,
