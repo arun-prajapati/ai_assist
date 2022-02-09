@@ -145,6 +145,7 @@ scheduleJob(JOB_TIME, async () => {
           return x._id === deviceData[k]._id;
         });
         console.log("Comparsion", k, deviceData1.length - 1);
+        console.log("testing", deviceData1.includes(deviceData[i]._id));
         let demot = deviceData1.includes(deviceData[i]._id)
           ? deviceData1.findIndex((i) => i._id === deviceData[i]._id)
           : "";
