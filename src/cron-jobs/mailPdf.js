@@ -55,7 +55,7 @@ scheduleJob(JOB_TIME, async () => {
             name: { $first: "$totaliser.name" },
           },
         },
-        { $sort: { _id: 1 } },
+        { $sort: { _id: -1 } },
       ]);
       var dates = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates.setDate(dates.getDate() - 1);
