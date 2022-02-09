@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "30 17 * * *";
+const JOB_TIME = "* * * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
@@ -35,7 +35,7 @@ scheduleJob(JOB_TIME, async () => {
             valveCurrentstate: true,
           },
         },
-        { $sort: { date: 1 } },
+        // { $sort: { date: 1 } },
         {
           $group: {
             _id: "$deviceId",
