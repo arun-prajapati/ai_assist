@@ -22,7 +22,7 @@ scheduleJob(JOB_TIME, async () => {
           _id: { $in: siteId },
         },
         { totaliser_current_value: 1, name: 1, threshold: 1 },
-        { $sort: { _id: 1 } }
+        { $sort: { _id: -1 } }
       );
       var datesp = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       let deviceData1 = await deviceHistory.aggregate([
