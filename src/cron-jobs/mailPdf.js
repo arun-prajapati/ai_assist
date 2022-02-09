@@ -132,7 +132,7 @@ scheduleJob(JOB_TIME, async () => {
         historyData.push(notIncludedInHistoryDataArray[i]);
       }
       let testing = historyData.sort(function (a, b) {
-        return a._id.localeCompare(b._id);
+        return b._id.localeCompare(a._id);
       });
       console.log("testing", testing);
       console.log("final device data", deviceData);
