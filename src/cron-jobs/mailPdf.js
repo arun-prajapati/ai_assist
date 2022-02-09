@@ -44,11 +44,11 @@ scheduleJob(JOB_TIME, async () => {
               $gte: new Date(new Date(datesp)),
               $lte: new Date(new Date(datesp).setHours(23, 59, 59)),
             },
-            pumpCurrentstate: true,
-            valveCurrentstate: true,
+            // pumpCurrentstate: true,
+            // valveCurrentstate: true,
           },
         },
-        // { $sort: { date: 1 } },
+        { $sort: { date: 1 } },
         {
           $group: {
             _id: "$deviceId",
@@ -131,10 +131,11 @@ scheduleJob(JOB_TIME, async () => {
       for (let i = 0; i < notIncludedInHistoryDataArray.length; i++) {
         historyData.push(notIncludedInHistoryDataArray[i]);
       }
-      let testing = historyData.sort(function (a, b) {
+      //Below Function Will short history array once again as dummy data are added and
+      //it is not gurantee that they are already shorted so we are shorting once again
+      historyData = historyData.sort(function (a, b) {
         return b._id.localeCompare(a._id);
       });
-      console.log("testing", testing);
       console.log("final device data", deviceData);
       console.log("final device history data", historyData);
       let data = [];
@@ -144,7 +145,11 @@ scheduleJob(JOB_TIME, async () => {
           return x._id === deviceData[k]._id;
         });
         console.log("Comparsion", k, deviceData1.length - 1);
-
+        let demot = deviceData1.includes(deviceData[i]._id)
+          ? deviceData1.findIndex((i) => i._id === deviceData[i]._id)
+          : "";
+        console.log("demot", demot);
+        console.log("result", deviceData1.includes(deviceData[i]._id));
         let historyDataObject = {
           SiteName: deviceData[k].name,
           totaliser_current_value:
