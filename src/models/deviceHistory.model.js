@@ -10,6 +10,7 @@ const schema = {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Device",
     trim: true,
+    index: true,
   },
   pmac: {
     type: String,
@@ -91,6 +92,7 @@ const schema = {
     // default: new Date().toLocaleString("en-US", {
     //   timeZone: "Asia/calcutta",
     // }),
+    index: true,
   },
   time: String,
   pumpCurrentstate: {

@@ -115,6 +115,9 @@ export const graphData = async (req, res, next) => {
       let historyData1;
       var dates1 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates1.setDate(dates1.getDate() - 1);
+      var dates222 = new Date(
+        moment().tz("Asia/calcutta").format("YYYY-MM-DD")
+      );
       //dates.setHours(0, 0, 0);
       console.log(">>===", dates1);
       let historyData = await deviceHistory.findData(
@@ -144,38 +147,41 @@ export const graphData = async (req, res, next) => {
         );
         pipeline = [
           {
-            $addFields: {
-              date_timezone: {
-                $dateToParts: { date: "$date" },
+            $match: {
+              deviceId: mongoose.Types.ObjectId(req.query.deviceId),
+              date: {
+                $gte: new Date(new Date(dates222)),
+                $lte: new Date(new Date(dates222)).setHours(23, 59, 59),
               },
             },
           },
           {
-            $match: {
-              deviceId: mongoose.Types.ObjectId(req.query.deviceId),
-              "date_timezone.year": dateData.yy,
-              "date_timezone.month": dateData.mm,
-              "date_timezone.day": dateData.dd,
+            $sort: {
+              date: -1,
             },
           },
           {
             $group: {
-              _id: "$date_timezone.hour",
-              totaliser: { $push: "$$ROOT" },
-            },
-          }, //totaliserValue: {
-          //   $subtract: [
-          //     "$totaliser.totaliser_current_value",
-          //     historyData[0].totaliser_current_value,
-          //   ],
-          {
-            $project: {
-              totaliser_current_value: {
-                $last: "$totaliser.totaliser_current_value",
+              _id: {
+                $hour: "$date",
+              },
+              totaliser: {
+                $push: "$$ROOT",
               },
             },
           },
-          { $sort: { _id: 1 } },
+          {
+            $project: {
+              totaliser_current_value: {
+                $first: "$totaliser.totaliser_current_value",
+              },
+            },
+          },
+          {
+            $sort: {
+              _id: 1,
+            },
+          },
         ];
         midnightBase = historyData[0].totaliser_current_value;
 
@@ -204,9 +210,7 @@ export const graphData = async (req, res, next) => {
         graphData.push(demo);
         //graphData = [];
       }
-      var dates222 = new Date(
-        moment().tz("Asia/calcutta").format("YYYY-MM-DD")
-      );
+
       console.log("dates222", new Date(new Date(dates222)));
       console.log(
         "dates222",
