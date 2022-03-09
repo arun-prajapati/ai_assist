@@ -115,11 +115,10 @@ export const graphData = async (req, res, next) => {
       let historyData1;
       var dates1 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates1.setDate(dates1.getDate() - 1);
-      var dates222 = new Date(
-        moment().tz("Asia/calcutta").format("YYYY-MM-DD")
-      );
+
       //dates.setHours(0, 0, 0);
       console.log(">>===", dates1);
+
       let historyData = await deviceHistory.findData(
         {
           deviceId: mongoose.Types.ObjectId(req.query.deviceId),
@@ -145,13 +144,21 @@ export const graphData = async (req, res, next) => {
           "historyData totalizer values",
           historyData[0].totaliser_current_value
         );
+        var dates223 = new Date(
+          moment().tz("Asia/calcutta").format("YYYY-MM-DD")
+        );
+        console.log("dates223", new Date(new Date(dates223)));
+        console.log(
+          "dates223",
+          new Date(new Date(dates223).setHours(23, 59, 59))
+        );
         pipeline = [
           {
             $match: {
               deviceId: mongoose.Types.ObjectId(req.query.deviceId),
               date: {
-                $gte: new Date(new Date(dates222)),
-                $lte: new Date(new Date(dates222)).setHours(23, 59, 59),
+                $gte:  new Date (dates223),
+                $lte: new Date (new Date(dates223).setHours(23, 59, 59)),
               },
             },
           },
@@ -187,10 +194,6 @@ export const graphData = async (req, res, next) => {
 
         graphData = await deviceHistory.aggregate(pipeline);
         console.log("Hours graph Data", graphData);
-        // graphData = JSON.parse(JSON.stringify(graphData));
-        // let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
-        // let mergeArrayResponse = [...graphData, ...defaultgraphData];
-        // graphData = sortResponsePeriodWise(mergeArrayResponse);
       } else {
         let deviceData = await Devices.findOneDocument({
           _id: mongoose.Types.ObjectId(req.query.deviceId),
@@ -210,7 +213,9 @@ export const graphData = async (req, res, next) => {
         graphData.push(demo);
         //graphData = [];
       }
-
+      var dates222 = new Date(
+        moment().tz("Asia/calcutta").format("YYYY-MM-DD")
+      );
       console.log("dates222", new Date(new Date(dates222)));
       console.log(
         "dates222",

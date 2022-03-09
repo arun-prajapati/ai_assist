@@ -13,6 +13,7 @@ const ERROR_EVENT = "error";
       useCreateIndex: true,
       useUnifiedTopology: true,
     });
+    mongoose.set('debug', true)
   } catch (e) {
     logger.log(level.error, `connection error ${e}`);
   }
@@ -22,6 +23,7 @@ const db = mongoose.connection;
 // initialize(db);
 db.once(OPEN_EVENT, async () => {
   logger.log(level.info, `✔ Successfully connected to mongodb database`);
+  
   await defaultUserData();
 });
 db.on(ERROR_EVENT, () => {
