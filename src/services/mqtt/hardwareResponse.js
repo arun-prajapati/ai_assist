@@ -395,10 +395,10 @@ export const VALVE_STATUS = async (macId, payload) => {
       flowValue = x[0];
     }
     console.log("Outside flow valuess", flowValue);
-    console.time('bunch-of-stuff');
     let deviceExist = await Devices.findOneDocument({ vmac: macId }); 
-    console.timeEnd('bunch-of-stuff');
+    console.time('bunch-of-stuff');
     let deviceHistoryExist = await deviceHistory.isExist({ vmac: macId });
+    console.timeEnd('bunch-of-stuff');
     if (deviceExist) {
       if (deviceExist.vstate !== 1) {
         let {
