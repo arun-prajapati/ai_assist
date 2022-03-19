@@ -16,7 +16,7 @@ const PATH = {
   API: "/api/v1",
 };
 
-// app.use(PATH.API, ApiRoutes);
+app.use(PATH.API, ApiRoutes);
 
 app.all("*", (_req, _res) => {
   throw new NotFoundError();
