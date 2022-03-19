@@ -263,114 +263,114 @@ const updateDeviceFirmwareVersion = async (
 
 export const PUMP_STATUS = async (macId, payload) => {
   try {
-    // let state = getStatusOfDeviceFA05(payload);
-    // let deviceExist = await Devices.findOneDocument({ pmac: macId });
-    // let deviceHistoryExist = await deviceHistory.isExist({ pmac: macId });
-    // if (deviceExist) {
-    //   if (deviceExist.pstate !== 1) {
-    //     let {
-    //       pmac,
-    //       vmac,
-    //       startDate,
-    //       endDate,
-    //       threshold,
-    //       startTime,
-    //       endTime,
-    //       payloadInterval,
-    //       operationMode,
-    //     } = deviceExist;
-    //     let PUMP_MAC = pmac; //pmac
-    //     let VALVE_MAC = vmac;
-    //     var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(
-    //       REPLACE_DELIMETER,
-    //       PUMP_MAC
-    //     );
-    //     var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(
-    //       REPLACE_DELIMETER,
-    //       VALVE_MAC
-    //     );
-    //     const FA03payload = createFA03payload(
-    //       MESSAGE.FA03,
-    //       pmac,
-    //       vmac,
-    //       threshold,
-    //       payloadInterval
-    //     );
-    //     //pmac:B8F0098F81B0
-    //     //vmac:083AF22BD318
-    //     const FA04payload = createFA04payload(
-    //       MESSAGE.FA04,
-    //       startDate,
-    //       endDate,
-    //       startTime,
-    //       endTime
-    //     );
-    //     publishPumpOperationType(pmac, vmac, operationMode);
-    //     mqttClient.publish(PUMP_TOPIC, FA03payload);
-    //     mqttClient.publish(PUMP_TOPIC, FA04payload);
-    //     //! for valve send FA02,FA03
-    //     mqttClient.publish(VALVE_TOPIC, FA03payload);
-    //     mqttClient.publish(VALVE_TOPIC, FA04payload);
-    //   }
-    //   if (state === "00") {
-    //     //  pump OFF
-    //     let updateDeviceData = await Devices.updateData(
-    //       {
-    //         pmac: macId,
-    //       },
-    //       {
-    //         pstate: 1,
-    //         pumpCurrentstate: false,
-    //         pumpLastUpdated: moment().format(),
-    //       }
-    //     );
-    //     updateDeviceData.updatedBy = "Pump";
-    //     if (!deviceHistoryExist) {
-    //       // updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
-    //       var dates = new Date(moment().tz("Asia/calcutta").format());
-    //       dates.setDate(dates.getDate() - 1);
-    //       console.log(">>dates", dates);
-    //       updateDeviceData.date = new Date(new Date(dates).setHours(0, 0, 0));
-    //       updateDeviceData.time = moment
-    //         .tz(moment().format(), "Asia/calcutta")
-    //         .format("hh:mm:ss");
-    //       updateDeviceData.deviceId = updateDeviceData._id;
-    //       delete updateDeviceData._id;
-    //       await deviceHistory.createData(updateDeviceData);
-    //       return true;
-    //     }
-    //     await DeviceSrv.addDeviceHistoryData(updateDeviceData);
-    //   } else if (state === "01") {
-    //     // pump ON
-    //     let updateDeviceData = await Devices.updateData(
-    //       {
-    //         pmac: macId,
-    //       },
-    //       {
-    //         pstate: 1, //! this will make sure that when pump is on our pump controller is also online
-    //         pumpCurrentstate: true,
-    //         pumpLastUpdated: moment().format(),
-    //       }
-    //     );
+    let state = getStatusOfDeviceFA05(payload);
+    let deviceExist = await Devices.findOneDocument({ pmac: macId });
+    let deviceHistoryExist = await deviceHistory.isExist({ pmac: macId });
+    if (deviceExist) {
+      if (deviceExist.pstate !== 1) {
+        let {
+          pmac,
+          vmac,
+          startDate,
+          endDate,
+          threshold,
+          startTime,
+          endTime,
+          payloadInterval,
+          operationMode,
+        } = deviceExist;
+        let PUMP_MAC = pmac; //pmac
+        let VALVE_MAC = vmac;
+        var PUMP_TOPIC = CLOUD_TO_ESP_TOPIC.replace(
+          REPLACE_DELIMETER,
+          PUMP_MAC
+        );
+        var VALVE_TOPIC = CLOUD_TO_ESP_TOPIC.replace(
+          REPLACE_DELIMETER,
+          VALVE_MAC
+        );
+        const FA03payload = createFA03payload(
+          MESSAGE.FA03,
+          pmac,
+          vmac,
+          threshold,
+          payloadInterval
+        );
+        //pmac:B8F0098F81B0
+        //vmac:083AF22BD318
+        const FA04payload = createFA04payload(
+          MESSAGE.FA04,
+          startDate,
+          endDate,
+          startTime,
+          endTime
+        );
+        publishPumpOperationType(pmac, vmac, operationMode);
+        mqttClient.publish(PUMP_TOPIC, FA03payload);
+        mqttClient.publish(PUMP_TOPIC, FA04payload);
+        //! for valve send FA02,FA03
+        mqttClient.publish(VALVE_TOPIC, FA03payload);
+        mqttClient.publish(VALVE_TOPIC, FA04payload);
+      }
+      if (state === "00") {
+        //  pump OFF
+        let updateDeviceData = await Devices.updateData(
+          {
+            pmac: macId,
+          },
+          {
+            pstate: 1,
+            pumpCurrentstate: false,
+            pumpLastUpdated: moment().format(),
+          }
+        );
+        updateDeviceData.updatedBy = "Pump";
+        if (!deviceHistoryExist) {
+          // updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
+          var dates = new Date(moment().tz("Asia/calcutta").format());
+          dates.setDate(dates.getDate() - 1);
+          console.log(">>dates", dates);
+          updateDeviceData.date = new Date(new Date(dates).setHours(0, 0, 0));
+          updateDeviceData.time = moment
+            .tz(moment().format(), "Asia/calcutta")
+            .format("hh:mm:ss");
+          updateDeviceData.deviceId = updateDeviceData._id;
+          delete updateDeviceData._id;
+          await deviceHistory.createData(updateDeviceData);
+          return true;
+        }
+        await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+      } else if (state === "01") {
+        // pump ON
+        let updateDeviceData = await Devices.updateData(
+          {
+            pmac: macId,
+          },
+          {
+            pstate: 1, //! this will make sure that when pump is on our pump controller is also online
+            pumpCurrentstate: true,
+            pumpLastUpdated: moment().format(),
+          }
+        );
 
-    //     updateDeviceData.updatedBy = "Pump";
-    //     if (!deviceHistoryExist) {
-    //       //updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
-    //       dates = new Date(moment().tz("Asia/calcutta").format());
-    //       dates.setDate(dates.getDate() - 1);
-    //       console.log(">>dates", dates);
-    //       updateDeviceData.date = new Date(new Date(dates).setHours(0, 0, 0));
-    //       updateDeviceData.time = moment
-    //         .tz(moment().format(), "Asia/calcutta")
-    //         .format("hh:mm:ss");
-    //       updateDeviceData.deviceId = updateDeviceData._id;
-    //       delete updateDeviceData._id;
-    //       await deviceHistory.createData(updateDeviceData);
-    //       return true;
-    //     }
-    //     await DeviceSrv.addDeviceHistoryData(updateDeviceData);
-    //   }
-    // }
+        updateDeviceData.updatedBy = "Pump";
+        if (!deviceHistoryExist) {
+          //updateDeviceData = JSON.parse(JSON.stringify(updateDeviceData));
+          dates = new Date(moment().tz("Asia/calcutta").format());
+          dates.setDate(dates.getDate() - 1);
+          console.log(">>dates", dates);
+          updateDeviceData.date = new Date(new Date(dates).setHours(0, 0, 0));
+          updateDeviceData.time = moment
+            .tz(moment().format(), "Asia/calcutta")
+            .format("hh:mm:ss");
+          updateDeviceData.deviceId = updateDeviceData._id;
+          delete updateDeviceData._id;
+          await deviceHistory.createData(updateDeviceData);
+          return true;
+        }
+        await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+      }
+    }
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
   }
