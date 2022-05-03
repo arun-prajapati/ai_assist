@@ -112,7 +112,7 @@ export const graphData = async (req, res, next) => {
     let pipeline;
     if (req.query.type === "day") {
       let midnightBase = 0;
-      let historyData1;
+      let historyData1=[];
       var dates1 = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates1.setDate(dates1.getDate() - 1);
 
