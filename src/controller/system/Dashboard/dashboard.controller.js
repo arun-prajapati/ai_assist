@@ -221,6 +221,8 @@ export const graphData = async (req, res, next) => {
         "dates222",
         new Date(new Date(dates222).setHours(23, 59, 59))
       );
+      if(midnightBase === 0)
+      {
       historyData1 = await deviceHistory.findData(
         {
           deviceId: mongoose.Types.ObjectId(req.query.deviceId),
@@ -235,6 +237,7 @@ export const graphData = async (req, res, next) => {
         { createdAt: 0 },
         { sort: { date: -1 }, limit: 1 }
       );
+      }
       graphData = JSON.parse(JSON.stringify(graphData));
       console.log("Graph Data", graphData);
       let defaultgraphData = generateDefaultPropertiesOfHours(graphData);
@@ -246,10 +249,10 @@ export const graphData = async (req, res, next) => {
       console.log("historydata1", historyData1);
       let flag = historyData1.length > 0 ? true : false;
       console.log("flag value", flag);
+      var dates2223 = new Date(
+        moment().tz("Asia/calcutta").format("YYYY/MM/DD HH:mm:ss ")
+      );
       for (let i = mergeArrayResponse.length - 1; i >= 0; i--) {
-        var dates2223 = new Date(
-          moment().tz("Asia/calcutta").format("YYYY/MM/DD HH:mm:ss ")
-        );
         if (
           graphData[i]["totaliser_current_value"] !== 0 &&
           graphData[i]["totaliser_current_value"] >= midnightBase
