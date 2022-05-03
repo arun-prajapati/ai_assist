@@ -177,6 +177,7 @@ scheduleJob(JOB_TIME, async () => {
         let historyDataObject = {
           SiteName: deviceData[k].name,
           totaliser_current_value:
+            Number(deviceData[k].totaliser_current_value) - Number(datas.date) < 0 ? "NA":
             Number(deviceData[k].totaliser_current_value) - Number(datas.date),
           Threshold: deviceData[k].threshold,
           Date: deviceData1[k].date,
