@@ -14,5 +14,9 @@ export const addDeviceHistoryData = async (deviceData) => {
   delete deviceData._id;
   console.log(">>afterdate modified", deviceData.date);
   console.log(">>aftertime modified", deviceData.time);
+  deviceHistory.createData(deviceData);
+  /*
+  code commented
   await deviceHistory.createData(deviceData);
+  */
 };

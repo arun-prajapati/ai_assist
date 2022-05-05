@@ -265,7 +265,9 @@ export const PUMP_STATUS = async (macId, payload) => {
   try {
     let state = getStatusOfDeviceFA05(payload);
     let deviceExist = await Devices.findOneDocument({ pmac: macId });
-    let deviceHistoryExist = await deviceHistory.findOneDocument({ pmac: macId });
+    let deviceHistoryExist = await deviceHistory.findOneDocument({
+      pmac: macId,
+    });
     if (deviceExist) {
       if (deviceExist.pstate !== 1) {
         let {
@@ -336,10 +338,16 @@ export const PUMP_STATUS = async (macId, payload) => {
             .format("hh:mm:ss");
           updateDeviceData.deviceId = updateDeviceData._id;
           delete updateDeviceData._id;
+          deviceHistory.createData(updateDeviceData);
+          /* code commented
           await deviceHistory.createData(updateDeviceData);
+          */
           return true;
         }
+        DeviceSrv.addDeviceHistoryData(updateDeviceData);
+        /*
         await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+        */
       } else if (state === "01") {
         // pump ON
         let updateDeviceData = await Devices.updateData(
@@ -365,10 +373,17 @@ export const PUMP_STATUS = async (macId, payload) => {
             .format("hh:mm:ss");
           updateDeviceData.deviceId = updateDeviceData._id;
           delete updateDeviceData._id;
+          deviceHistory.createData(updateDeviceData);
+          /*
+          code commented
           await deviceHistory.createData(updateDeviceData);
+          */
           return true;
         }
+        DeviceSrv.addDeviceHistoryData(updateDeviceData);
+        /* code commented
         await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+        */
       }
     }
   } catch (error) {
@@ -395,8 +410,10 @@ export const VALVE_STATUS = async (macId, payload) => {
       flowValue = x[0];
     }
     // console.log("Outside flow valuess", flowValue);
-    let deviceExist = await Devices.findOneDocument({ vmac: macId }); 
-    let deviceHistoryExist = await deviceHistory.findOneDocument({ vmac: macId });
+    let deviceExist = await Devices.findOneDocument({ vmac: macId });
+    let deviceHistoryExist = await deviceHistory.findOneDocument({
+      vmac: macId,
+    });
     if (deviceExist) {
       if (deviceExist.vstate !== 1) {
         let {
@@ -470,10 +487,16 @@ export const VALVE_STATUS = async (macId, payload) => {
             .format("hh:mm:ss");
           updateDeviceData.deviceId = updateDeviceData._id;
           delete updateDeviceData._id;
+          deviceHistory.createData(updateDeviceData);
+          /* code commented
           await deviceHistory.createData(updateDeviceData);
+          */
           return true;
         }
+        DeviceSrv.addDeviceHistoryData(updateDeviceData);
+        /* code commented
         await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+        */
       } else if (state === "01") {
         // valve ON
         let updateDeviceData = await Devices.updateData(
@@ -501,10 +524,17 @@ export const VALVE_STATUS = async (macId, payload) => {
             .format("hh:mm:ss");
           updateDeviceData.deviceId = updateDeviceData._id;
           delete updateDeviceData._id;
+          deviceHistory.createData(updateDeviceData);
+          /* code commented
           await deviceHistory.createData(updateDeviceData);
+          */
           return true;
         }
+        DeviceSrv.addDeviceHistoryData(updateDeviceData);
+        /*
+        code commented
         await DeviceSrv.addDeviceHistoryData(updateDeviceData);
+        */
       }
     }
   } catch (error) {
