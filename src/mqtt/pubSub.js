@@ -12,7 +12,7 @@ const CHANNEL_PREFIX = "SensieTech";
 mqttClient.on("connect", function (client) {
   logger.log(level.info, "✔ Broker connected successfully");
   // Subscribe hardware topic here
-  console.log(">>client id", client);  
+  console.log(">>client id", client);
   mqttClient.subscribe(ESPToCloudTopic);
 });
 
@@ -22,7 +22,10 @@ mqttClient.on("message", async function (topic, message) {
 
   let macId = getMacId(topic);
   if (macId && macId.length === 12) {
+    handleMQTTData(macId, mqttData); // handle message data
+    /*code commented
     await handleMQTTData(macId, mqttData); // handle message data
+    */
   }
 });
 
