@@ -210,21 +210,37 @@ const getFirmwareVersionOfDeviceFA02 = (payload) => {
 const updateDeviceStatus = async (recievedMACId, pmac, vmac) => {
   if (recievedMACId === pmac) {
     // update pstate
+    let updateDeviceData = Devices.updateData(
+      {
+        pmac,
+      },
+      { pstate: 1, pumpLastUpdated: moment().format() }
+    );
+    /*code commented
     let updateDeviceData = await Devices.updateData(
       {
         pmac,
       },
       { pstate: 1, pumpLastUpdated: moment().format() }
     );
+    */
     // await DeviceSrv.addDeviceHistoryData(updateDeviceData);
   } else if (recievedMACId === vmac) {
     // update vstate
+    let updateDeviceData = Devices.updateData(
+      {
+        vmac,
+      },
+      { vstate: 1, valveLastUpdated: moment().format() }
+    );
+    /*code commented
     let updateDeviceData = await Devices.updateData(
       {
         vmac,
       },
       { vstate: 1, valveLastUpdated: moment().format() }
     );
+    */
     //await DeviceSrv.addDeviceHistoryData(updateDeviceData);
   }
 };
@@ -236,6 +252,17 @@ const updateDeviceFirmwareVersion = async (
 ) => {
   if (recievedMACId === pmac) {
     // update pump version
+    Devices.updateData(
+      {
+        pmac,
+      },
+      {
+        pstate: 1,
+        pumpLastUpdated: moment().format(),
+        pumpVersion: firmwareVersion,
+      }
+    );
+    /*code commented
     await Devices.updateData(
       {
         pmac,
@@ -246,8 +273,20 @@ const updateDeviceFirmwareVersion = async (
         pumpVersion: firmwareVersion,
       }
     );
+    */
   } else if (recievedMACId === vmac) {
     // update valve version
+    Devices.updateData(
+      {
+        vmac,
+      },
+      {
+        vstate: 1,
+        valveLastUpdated: moment().format(),
+        valveVersion: firmwareVersion,
+      }
+    );
+    /*code commented
     await Devices.updateData(
       {
         vmac,
@@ -258,6 +297,7 @@ const updateDeviceFirmwareVersion = async (
         valveVersion: firmwareVersion,
       }
     );
+    */
   }
 };
 

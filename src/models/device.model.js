@@ -140,7 +140,10 @@ let schemaOption = {
 
 let modelName = "Devices";
 let deviceSchema = Schema(schema, schemaOption);
-
+deviceSchema.index({ pmac: 1, vmac: 1 });
+deviceSchema.index({ pmac: 1 });
+deviceSchema.index({ vmac: 1 });
+deviceSchema.index({ _id: 1 });
 let deviceModel = model(modelName, deviceSchema);
 let Devices = new SchemaModel(deviceModel);
 
