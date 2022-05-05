@@ -95,7 +95,7 @@ scheduleJob(JOB_TIME, async () => {
         },
         {
           $project: {
-            date: { $last: "$totaliser.totaliser_current_value" },
+            date: { $first: "$totaliser.totaliser_current_value" },
             name: 1,
           },
         },
