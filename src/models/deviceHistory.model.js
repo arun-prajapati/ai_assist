@@ -126,6 +126,11 @@ let schemaOption = {
 let modelName = "deviceHistory";
 let deviceHistorySchema = Schema(schema, schemaOption);
 deviceHistorySchema.index({ deviceId: 1, date: -1 });
+deviceHistorySchema.index({
+  deviceId: 1,
+  date: -1,
+  totaliser_current_value: 1,
+});
 let deviceHistoryModel = model(modelName, deviceHistorySchema);
 let deviceHistory = new SchemaModel(deviceHistoryModel);
 
