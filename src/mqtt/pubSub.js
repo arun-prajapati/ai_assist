@@ -22,7 +22,8 @@ mqttClient.on("message", async function (topic, message) {
 
   let macId = getMacId(topic);
   if (macId && macId.length === 12) {
-    handleMQTTData(macId, mqttData); // handle message data
+   handleMQTTData(macId, mqttData); // handle message data
+
     /*code commented
     await handleMQTTData(macId, mqttData); // handle message data
     */

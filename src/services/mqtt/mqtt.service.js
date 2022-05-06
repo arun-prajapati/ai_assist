@@ -99,6 +99,7 @@ export const handleMQTTData = async (macId, data) => {
         break;
       }
     }
+    return true;
   } catch (error) {
     logger.log(level.info, "❌ Something went wrong!");
   }
