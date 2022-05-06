@@ -14,20 +14,32 @@ mqttClient.on("connect", function (client) {
   // Subscribe hardware topic here
   console.log(">>client ids", client);
   mqttClient.subscribe(ESPToCloudTopic);
+  mqttClient.on("message", async function (topic, message) {
+    let mqttData = message.toString(); // this is in string
+    // mqttData = JSON.parse(mqttData); // this will parse above string and return object
+
+    let macId = getMacId(topic);
+    if (macId && macId.length === 12) {
+      handleMQTTData(macId, mqttData); // handle message data
+      /*code commented
+      await handleMQTTData(macId, mqttData); // handle message data
+      */
+    }
+  });
 });
 
-mqttClient.on("message", async function (topic, message) {
-  let mqttData = message.toString(); // this is in string
-  // mqttData = JSON.parse(mqttData); // this will parse above string and return object
+// mqttClient.on("message", async function (topic, message) {
+//   let mqttData = message.toString(); // this is in string
+//   // mqttData = JSON.parse(mqttData); // this will parse above string and return object
 
-  let macId = getMacId(topic);
-  if (macId && macId.length === 12) {
-    handleMQTTData(macId, mqttData); // handle message data
-    /*code commented
-    await handleMQTTData(macId, mqttData); // handle message data
-    */
-  }
-});
+//   let macId = getMacId(topic);
+//   if (macId && macId.length === 12) {
+//     handleMQTTData(macId, mqttData); // handle message data
+//     /*code commented
+//     await handleMQTTData(macId, mqttData); // handle message data
+//     */
+//   }
+// });
 
 const getMacId = (topic) => {
   try {
