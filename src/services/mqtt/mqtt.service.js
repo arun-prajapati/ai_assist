@@ -1,6 +1,9 @@
 import { CONSTANTS as MESSAGE } from "../../constants/messages/messageId";
 import { logger, level } from "../../config/logger/logger";
 import * as HR from "./hardwareResponse";
+import { Queue } from "bullmq";
+import { Worker } from "bullmq";
+const queue = new Queue("Paint");
 
 const START_DELIMETER = "AAAA";
 const END_DELIMETER = "5555";
@@ -54,12 +57,18 @@ export const handleMQTTData = async (macId, data) => {
         break;
       }
       case MESSAGE.FA05: {
-        HR.PUMP_STATUS(macId, payload);
+        queue.add("PUMP", { macId, payload, color: "blue" });
+        /*code commented
+         HR.PUMP_STATUS(macId, payload);
+         */
         break;
       }
 
       case MESSAGE.FA06: {
+        queue.add("VALVE", { macId, payload, color: "pink" });
+        /*code commented
         HR.VALVE_STATUS(macId, payload);
+        */
         break;
       }
       case MESSAGE.FA07: {
