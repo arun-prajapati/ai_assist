@@ -16,15 +16,15 @@ const START_DELIMETER = "AAAA";
 const END_DELIMETER = "5555";
 const REPLACE_DELIMETER = "*";
 const CLOUD_TO_ESP_TOPIC = process.env.CLOUD_TO_ESP || "SensieTech/*/c2f";
-const worker = new Worker("Paint", async (job) => {
-  console.log(job);
-  if (job.name === "PUMP") {
-    console.log("ABE TOPA THAI GAYU JALSA KAR");
-    PUMP_STATUS(job.data.macId, job.data.payload);
-  } else if (job.name === "VALVE") {
-    VALVE_STATUS(job.data.macId, job.data.payload);
-  }
-});
+// const worker = new Worker("Paint", async (job) => {
+//   console.log(job);
+//   if (job.name === "PUMP") {
+//     console.log("ABE TOPA THAI GAYU JALSA KAR");
+//     PUMP_STATUS(job.data.macId, job.data.payload);
+//   } else if (job.name === "VALVE") {
+//     VALVE_STATUS(job.data.macId, job.data.payload);
+//   }
+// });
 export const DEVICE_CONNECTION = async (macId, msgId, payload) => {
   try {
     const recievedMACId = macId;

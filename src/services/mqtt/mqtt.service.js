@@ -57,18 +57,16 @@ export const handleMQTTData = async (macId, data) => {
         break;
       }
       case MESSAGE.FA05: {
-        queue.add("PUMP", { macId, payload, color: "blue" });
-        /*code commented
-         HR.PUMP_STATUS(macId, payload);
-         */
+        // queue.add("PUMP", { macId, payload, color: "blue" });
+
+        HR.PUMP_STATUS(macId, payload);
+
         break;
       }
 
       case MESSAGE.FA06: {
-        queue.add("VALVE", { macId, payload, color: "pink" });
-        /*code commented
+        // queue.add("VALVE", { macId, payload, color: "pink" });
         HR.VALVE_STATUS(macId, payload);
-        */
         break;
       }
       case MESSAGE.FA07: {
