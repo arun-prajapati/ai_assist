@@ -3,7 +3,7 @@ import { logger, level } from "../../config/logger/logger";
 import * as HR from "./hardwareResponse";
 import { Queue } from "bullmq";
 import { Worker } from "bullmq";
-const queue = new Queue("Paint");
+// const queue = new Queue("Paint");
 
 const START_DELIMETER = "AAAA";
 const END_DELIMETER = "5555";
