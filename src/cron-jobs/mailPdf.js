@@ -6,7 +6,7 @@ import Notifications from "../models/notification.model";
 import Devices from "../models/device.model";
 import deviceHistory from "../models/deviceHistory.model";
 import * as DeviceSrv from "../services/device/device.service";
-const JOB_TIME = "30 17 * * *";
+const JOB_TIME = "37 02 * * *";
 const mongoose = require("mongoose");
 const CsvParser = require("json2csv").Parser;
 const MIN = 15; // this minute ago data should be update
@@ -177,8 +177,11 @@ scheduleJob(JOB_TIME, async () => {
         let historyDataObject = {
           SiteName: deviceData[k].name,
           totaliser_current_value:
-            Number(deviceData[k].totaliser_current_value) - Number(datas.date) < 0 ? "NA":
-            Number(deviceData[k].totaliser_current_value) - Number(datas.date),
+            Number(deviceData[k].totaliser_current_value) - Number(datas.date) <
+            0
+              ? "NA"
+              : Number(deviceData[k].totaliser_current_value) -
+                Number(datas.date),
           Threshold: deviceData[k].threshold,
           Date: deviceData1[k].date,
           Time: deviceData1[k].time,
