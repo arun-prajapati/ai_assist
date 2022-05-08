@@ -240,6 +240,7 @@ export const getSingleDevice = async (req, res, next) => {
           { createdAt: 0 },
           { sort: { date: -1 }, limit: 1 }
         );
+        console.log("historyData1", historyData1);
         let newans = 0;
         if (historyData1 && historyData1.length > 0) {
           newans =
