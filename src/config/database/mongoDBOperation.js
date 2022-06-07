@@ -73,7 +73,10 @@ export default class SchemaModel {
   }
 
   async aggregate(pipeline) {
-    const dbOperation = await this.model.aggregate(pipeline).exec();
+    const dbOperation = await this.model
+      .aggregate(pipeline)
+      .allowDiskUse(true)
+      .exec();
     return dbOperation;
   }
 }

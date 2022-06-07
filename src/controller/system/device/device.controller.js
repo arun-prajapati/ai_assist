@@ -252,12 +252,13 @@ export const getSingleDevice = async (req, res, next) => {
               $lte: new Date(new Date(dates2).setHours(23, 59, 59)),
             },
             totaliser_current_value: {
-              $gte: midnightBase,
+              $gte: 0,
             },
           },
           { createdAt: 0 },
-          { sort: { date: -1 }, limit: 1 }
+          { sort: { date: 1 }, limit: 1 }
         );
+        console.log("historyData1", historyData1);
         let newans = 0;
         if (historyData1 && historyData1.length > 0) {
           newans =
