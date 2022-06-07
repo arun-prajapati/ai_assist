@@ -19,7 +19,6 @@
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.4",
     "aws-sdk": "^2.998.0",
-    "babel": "^6.23.0",
     "bcryptjs": "^2.4.3",
     "bullmq": "^1.85.3",
     "cluster": "^0.7.7",
