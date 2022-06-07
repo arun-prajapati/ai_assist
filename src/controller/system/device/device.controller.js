@@ -215,7 +215,7 @@ export const getSingleDevice = async (req, res, next) => {
         dates221.setDate(dates221.getDate() - 1);
         console.log("dates221", new Date(new Date(dates221)));
         console.log("dates221", new Date(new Date(dates221).setHours(23, 59, 59)));
-        let historyData1 = await deviceHistory.findData(
+        let historyData12 = await deviceHistory.findData(
           {
             deviceId: mongoose.Types.ObjectId(deviceData._id),
             date: {
@@ -229,8 +229,9 @@ export const getSingleDevice = async (req, res, next) => {
           { createdAt: 0 },
           { sort: { date: -1 }, limit: 1 }
         );
-        if (historyData1.length>0 ) {
-          midnightBase = historyData1[0].totaliser_current_value;
+          console.log("historyData12",historyData12,historyData12.length)
+        if (historyData12.length>0 ) {
+          midnightBase = historyData12[0].totaliser_current_value;
         }
         console.log(
           "Device history totalise value is 0 so finding next document",
