@@ -223,7 +223,7 @@ export const getSingleDevice = async (req, res, next) => {
               $lte: new Date(new Date(dates221).setHours(23, 59, 59)),
             },
             totaliser_current_value: {
-              $gte: midnightBase,
+              $gt: midnightBase,
             },
           },
           { createdAt: 0 },
