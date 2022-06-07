@@ -206,11 +206,13 @@ export const getSingleDevice = async (req, res, next) => {
     console.log("histroydata", historyData);
     //console.log("deviceData.threshold", deviceData.threshold);
     if (historyData && historyData.length > 0) {
+      console.log("midnightbase before",historyData[0].totaliser_current_value)
       let midnightBase = historyData[0].totaliser_current_value;
       if (historyData[0].totaliser_current_value === 0) {
         var dates221 = new Date(
           moment().tz("Asia/calcutta").format("YYYY-MM-DD")
         );
+        dates221.setDate(dates221.getDate() - 1);
         console.log("dates221", new Date(new Date(dates221)));
         console.log("dates221", new Date(new Date(dates221).setHours(23, 59, 59)));
         let historyData1 = await deviceHistory.findData(
