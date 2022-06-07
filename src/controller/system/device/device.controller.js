@@ -240,6 +240,7 @@ export const getSingleDevice = async (req, res, next) => {
 
       let Flow = flowCoversion(deviceData.flowValue, deviceData.flowUnit);
       totaliserValue = deviceData.totaliser_current_value - midnightBase;
+      console.log("Before If Condition Line no 243",totaliserValue)
       if (totaliserValue < 0) {
         var dates2 = new Date(
           moment().tz("Asia/calcutta").format("YYYY-MM-DD")
@@ -285,7 +286,6 @@ export const getSingleDevice = async (req, res, next) => {
         tankValue = 100;
       }
     }
-    console.log("historydata", historyData);
     let deviceDataObject = {
       tankCapacity,
       tankValue,
