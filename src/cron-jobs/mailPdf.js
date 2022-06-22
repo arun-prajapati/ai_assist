@@ -238,6 +238,8 @@ scheduleJob(JOB_TIME, async () => {
       );
     }
     console.log("outside scope",changedcurrenttotaliservalue,changedmidnightvalue)
+    console.log("condition1",Number(deviceData[k].totaliser_current_value)=== 0)
+    console.log("condition2",Number(datas.date)=== 0 )
         console.log("Comparsion", k, deviceData1.length - 1);
         let historyDataObject = {
           SiteName: deviceData[k].name,
