@@ -242,7 +242,7 @@ scheduleJob(JOB_TIME, async () => {
           SiteName: deviceData[k].name,
           totaliser_current_value:
             Number(deviceData[k].totaliser_current_value)=== 0 ? Number(changedcurrenttotaliservalue):Number(deviceData[k].totaliser_current_value) 
-            -( Number(datas.date)=== 0 ? Number(changedmidnightvalue): Number(datas.date))   <
+            - Number(datas.date)=== 0 ? Number(changedmidnightvalue): Number(datas.date)  <
             0
               ? "NA"
               : Number(deviceData[k].totaliser_current_value) -
