@@ -248,8 +248,8 @@ scheduleJob(JOB_TIME, async () => {
             - Number(Number(datas.date)=== 0 ? Number(changedmidnightvalue):Number(datas.date))  <
             0
               ? "NA"
-              : Number(deviceData[k].totaliser_current_value) -
-                Number(datas.date),
+              : Number(Number(deviceData[k].totaliser_current_value)=== 0 ? Number(changedcurrenttotaliservalue):Number(deviceData[k].totaliser_current_value) )
+              - Number(Number(datas.date)=== 0 ? Number(changedmidnightvalue):Number(datas.date)),
           Threshold: deviceData[k].threshold,
           Date: deviceData1[k].date,
           Time: deviceData1[k].time,
