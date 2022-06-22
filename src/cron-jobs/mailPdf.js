@@ -173,11 +173,76 @@ scheduleJob(JOB_TIME, async () => {
         let datas = historyData.find((x) => {
           return x._id === deviceData[k]._id;
         });
+        let changedmidnightvalue=0;
+        if (datas.date === 0) {
+          console.log("Inside As midnight base is 0")
+          var dates221 = new Date(
+            moment().tz("Asia/calcutta").format("YYYY-MM-DD")
+          );
+        dates221.setDate(dates221.getDate() - 1);
+        console.log("dates221", new Date(new Date(dates221)));
+        console.log("dates221", new Date(new Date(dates221).setHours(23, 59, 59)));
+        let historyData12 = await deviceHistory.findData(
+          {
+            deviceId: mongoose.Types.ObjectId(deviceData[k]._id),
+            date: {
+              $gte: new Date(new Date(dates221)),
+              $lte: new Date(new Date(dates221).setHours(23, 59, 59)),
+            },
+            totaliser_current_value: {
+              $gt: 0,
+            },
+          },
+          { createdAt: 0 },
+          { sort: { date: -1 }, limit: 1 }
+        );
+          console.log("historyData12",historyData12,historyData12.length)
+        if (historyData12.length>0 ) {
+          changedmidnightvalue = historyData12[0].totaliser_current_value;
+        }
+        console.log(
+          "Device history totalise value is 0 so finding next document",
+          changedmidnightvalue
+        );
+      }
+      let changedcurrenttotaliservalue=0;
+      if (deviceData[k].totaliser_current_value === 0) {
+        console.log("Inside As current totaliser at 11:00PM is 0")
+        var dates221 = new Date(
+          moment().tz("Asia/calcutta").format("YYYY-MM-DD")
+        );
+      // dates221.setDate(dates221.getDate() - 1);
+      console.log("dates221", new Date(new Date(dates221)));
+      console.log("dates221", new Date(new Date(dates221).setHours(23, 59, 59)));
+      let historyData12 = await deviceHistory.findData(
+        {
+          deviceId: mongoose.Types.ObjectId(deviceData[k]._id),
+          date: {
+            $gte: new Date(new Date(dates221)),
+            $lte: new Date(new Date(dates221).setHours(23, 59, 59)),
+          },
+          totaliser_current_value: {
+            $gt: 0,
+          },
+        },
+        { createdAt: 0 },
+        { sort: { date: -1 }, limit: 1 }
+      );
+        console.log("historyData12",historyData12,historyData12.length)
+      if (historyData12.length>0 ) {
+        changedcurrenttotaliservalue = historyData12[0].totaliser_current_value;
+      }
+      console.log(
+        "Device current totalise value is 0 so finding next document",
+        changedcurrenttotaliservalue
+      );
+    }
         console.log("Comparsion", k, deviceData1.length - 1);
         let historyDataObject = {
           SiteName: deviceData[k].name,
           totaliser_current_value:
-            Number(deviceData[k].totaliser_current_value) - Number(datas.date) <
+            Number(deviceData[k].totaliser_current_value)=== 0 ? Number(changedcurrenttotaliservalue):Number(deviceData[k].totaliser_current_value) 
+            -( Number(datas.date)=== 0 ? Number(changedmidnightvalue): Number(datas.date))   <
             0
               ? "NA"
               : Number(deviceData[k].totaliser_current_value) -
