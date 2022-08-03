@@ -9,11 +9,13 @@ const PATH = {
   ROOT: "/",
   DEVICECOUNTS: "/deviceCount",
   STATS: "/stats",
+  GENERATE_SITE_DISCHARGE_DATA:"/generatesitedischargedata"
 };
 routes.route(PATH.DEVICECOUNTS).get(AuthMiddleware, DashboardCtrl.deviceCount);
 routes
   .route(PATH.STATS)
   .get(/*AuthMiddleware,*/ DashboardCtrl.graphData)
   .post(DashboardCtrl.mailDeviceGraphData);
+routes.route(PATH.GENERATE_SITE_DISCHARGE_DATA).post(DashboardCtrl.generateSitedischargeData)
 
 export default routes;

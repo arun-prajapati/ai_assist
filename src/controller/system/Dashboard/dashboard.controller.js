@@ -448,6 +448,146 @@ export const graphData = async (req, res, next) => {
     return next(new InternalServerError());
   }
 };
+
+
+export const generateSitedischargeData = async (req, res, next) => {
+  logger.log(level.info, `✔ Controller generateSitedischargeData()`);
+  let graphData = [];
+  // let dates = new Date(
+  //   moment().tz("Asia/calcutta").format("YYYY/MM/DD hh:mm:ss")
+  // );
+  // let dateData = {
+  //   yy: dates.getFullYear(),
+  //   mm: dates.getMonth() + 1,
+  //   dd: dates.getDate(),
+  // };
+  // console.log("dateData", dates);
+  // console.log("DASHBOARD GRAPH DATE", dateData);
+  try {
+    let pipeline;
+      var dates2 = new Date(moment(req.body.endDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
+      // dates2.setDate(dates2.getDate() - 1);
+      var dates3 = new Date(moment(req.body.startDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
+      // dates3.setDate(dates3.getDate() - 8);
+      console.log(
+        "Search Time Period",
+        new Date(new Date(dates2).setHours(23, 59, 59),"<=======>",dates3)
+      );
+      pipeline = [
+        {
+          $addFields: {
+            date_timezone: {
+              $dateToParts: { date: "$date" },
+            },
+          },
+        },
+        {
+          $match: {
+            deviceId: mongoose.Types.ObjectId(req.query.deviceId),
+            date: {
+              $gte: new Date(new Date(dates3)),
+              $lte: new Date(new Date(dates2).setHours(23, 59, 59)),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: "$date_timezone.day",
+            totaliser: { $push: "$$ROOT" },
+          },
+        },
+        {
+          $project: {
+            date: { $first: "$totaliser.date" },
+            totaliser_current_value: {
+              $last: "$totaliser.totaliser_current_value",
+            },
+          },
+        },
+        { $sort: { date: -1 } },
+      ];
+      // graphData = await deviceHistory.aggregate(pipeline);
+      //graphData = JSON.parse(JSON.stringify(graphData));
+      deviceHistory.aggregate(pipeline).then(graphData=>{
+      console.log("graph Data date ", graphData);
+      let defaultgraphData = generateDefaultPropertiesOfSitedischargeData(graphData,dates2,dates3);
+      // console.log(" Default graph Data date ", defaultgraphData);
+      let mergeArrayResponse = [...graphData, ...defaultgraphData];
+      graphData = sortResponsePeriodWise(mergeArrayResponse);
+      // console.log("merger array", graphData);
+      for (let i = 7; i > 0; i--) {
+        if (
+          graphData[i]["totaliser_current_value"] !== 0 &&
+          graphData[i]["totaliser_current_value"] >=
+            graphData[i - 1]["totaliser_current_value"]
+        ) {
+          graphData[i]["totaliser_current_value"] =
+            graphData[i]["totaliser_current_value"] -
+            graphData[i - 1]["totaliser_current_value"];
+          console.log("i, i-1", i, i - 1);
+          console.log(
+            "SUbstraction",
+            graphData[i]["totaliser_current_value"] -
+              graphData[i - 1]["totaliser_current_value"]
+          );
+        }
+      }
+      // console.log("lopp result", graphData);
+    
+
+    res.send(graphData);
+  })
+  console.log("Optimization")
+  // res.send("Done")
+  }
+   catch (e) {
+    if (e && e.message) return next(new BadRequestError(e.message));
+    logger.log(level.error, `Error: ${JSON.stringify(e)}`);
+    return next(new InternalServerError());
+  }
+};
+
+const generateDefaultPropertiesOfSitedischargeData = (data,endDate,startDate) => {
+  let dates1 = new Date(moment(startDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
+  console.log("origin timezone Date", dates1);
+  let totalDays = [];
+  //dates1.setDate(dates.getDate() + 2);
+  // dates1.setDate(dates1.getDate() - 9);
+  let difference = endDate.getTime() - startDate.getTime();
+    let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
+  console.log(">>++", dates1);
+  for (let i = 0; i <= TotalDays; i++) {
+    let ansDate = new Date(
+      moment(dates1.setDate(dates1.getDate() + 1))
+        .tz("Asia/calcutta")
+        .format("YYYY-MM-DD")
+    ); //.toDateString();
+    totalDays.push(ansDate);
+  }
+  console.log("list of week days", totalDays);
+  totalDays = JSON.parse(JSON.stringify(totalDays));
+  let dayIncludedInDBResponse = data.map(
+    (day) => new Date(moment(day.date).format("YYYY-MM-DD:h:m:s"))
+  );
+  dayIncludedInDBResponse = JSON.parse(JSON.stringify(dayIncludedInDBResponse));
+  dayIncludedInDBResponse = dayIncludedInDBResponse.map(
+    (day) => day.split("T")[0]
+  );
+  totalDays = totalDays.map((day) => day.split("T")[0]);
+  // console.log(" After dayincluded", dayIncludedInDBResponse);
+  // console.log("After  daynotincluded", totalDays);
+  let dayNotIncludedInDBResponse = totalDays.filter((x) => {
+    console.log(dayIncludedInDBResponse.includes(x));
+    return !dayIncludedInDBResponse.includes(x);
+  });
+
+  // console.log("notinculded", dayNotIncludedInDBResponse);
+  let generateNotIncludedDayResponse = dayNotIncludedInDBResponse.map((day) => {
+    return defaultBatteryPropertyOfWeek(day);
+  });
+  // console.log("generated response", generateNotIncludedDayResponse);
+  return generateNotIncludedDayResponse;
+};
 const sortResponsePeriodWise = (array) => {
   let sortedPeriodWiseArray = array.sort(function (a, b) {
     return Number(new Date(a.date)) - Number(new Date(b.date));
