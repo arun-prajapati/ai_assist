@@ -569,7 +569,7 @@ export const mailSitedischargeData = async (req, res, next) => {
       var dates2 = new Date(moment(req.body.endDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
       // dates2.setDate(dates2.getDate() - 1);
       var dates3 = new Date(moment(req.body.startDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
-      // dates3.setDate(dates3.getDate() - 8);
+      dates3.setDate(dates3.getDate() - 1);
       console.log(
         "Search Time Period",
         new Date(new Date(dates2).setHours(23, 59, 59),"<=======>",dates3)
@@ -731,7 +731,7 @@ export const downloadSitedischargeData = async (req, res, next) => {
       var dates2 = new Date(moment(req.body.endDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
       // dates2.setDate(dates2.getDate() - 1);
       var dates3 = new Date(moment(req.body.startDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
-      // dates3.setDate(dates3.getDate() - 8);
+      dates3.setDate(dates3.getDate() - 1);
       console.log(
         "Search Time Period",
         new Date(new Date(dates2).setHours(23, 59, 59),"<=======>",dates3)
@@ -772,7 +772,7 @@ export const downloadSitedischargeData = async (req, res, next) => {
       // graphData = await deviceHistory.aggregate(pipeline);
       //graphData = JSON.parse(JSON.stringify(graphData));
       deviceHistory.aggregate(pipeline).then(async(graphData)=>{
-      console.log("graph Data date ", graphData);
+      // console.log("graph Data date ", graphData);
       let defaultgraphData = generateDefaultPropertiesOfSitedischargeData(graphData,dates2,dates3);
       // console.log(" Default graph Data date ", defaultgraphData);
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
@@ -796,7 +796,7 @@ export const downloadSitedischargeData = async (req, res, next) => {
         }
       }
       graphData.splice(0, 1);
-      // console.log("lopp result", graphData);
+      console.log("lopp result", graphData);
       let data = [];
       for (const row of graphData) {
         let historyDataObject = {
