@@ -616,7 +616,7 @@ export const mailSitedischargeData = async (req, res, next) => {
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
       graphData = sortResponsePeriodWise(mergeArrayResponse);
       // console.log("merger array", graphData);
-      for (let i = 7; i > 0; i--) {
+      for (let i = mergeArrayResponse.length-1; i > 0; i--) {
         if (
           graphData[i]["totaliser_current_value"] !== 0 &&
           graphData[i]["totaliser_current_value"] >=
@@ -633,6 +633,7 @@ export const mailSitedischargeData = async (req, res, next) => {
           );
         }
       }
+      graphData.splice(0, 1);
       // console.log("lopp result", graphData);
       let data = [];
       for (const row of graphData) {
@@ -777,7 +778,7 @@ export const downloadSitedischargeData = async (req, res, next) => {
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
       graphData = sortResponsePeriodWise(mergeArrayResponse);
       // console.log("merger array", graphData);
-      for (let i = 7; i > 0; i--) {
+      for (let i = mergeArrayResponse.length-1; i > 0; i--) {
         if (
           graphData[i]["totaliser_current_value"] !== 0 &&
           graphData[i]["totaliser_current_value"] >=
@@ -794,6 +795,7 @@ export const downloadSitedischargeData = async (req, res, next) => {
           );
         }
       }
+      graphData.splice(0, 1);
       // console.log("lopp result", graphData);
       let data = [];
       for (const row of graphData) {
