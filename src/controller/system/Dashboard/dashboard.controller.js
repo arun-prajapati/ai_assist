@@ -469,7 +469,7 @@ export const generateSitedischargeData = async (req, res, next) => {
       var dates2 = new Date(moment(req.body.endDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
       // dates2.setDate(dates2.getDate() - 1);
       var dates3 = new Date(moment(req.body.startDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
-      // dates3.setDate(dates3.getDate() - 8);
+      dates3.setDate(dates3.getDate() - 1);
       console.log(
         "Search Time Period",
         new Date(new Date(dates2).setHours(23, 59, 59),"<=======>",dates3)
@@ -515,8 +515,8 @@ export const generateSitedischargeData = async (req, res, next) => {
       // console.log(" Default graph Data date ", defaultgraphData);
       let mergeArrayResponse = [...graphData, ...defaultgraphData];
       graphData = sortResponsePeriodWise(mergeArrayResponse);
-      // console.log("merger array", graphData);
-      for (let i = 7; i > 0; i--) {
+      console.log("merger array length", mergeArrayResponse.length);
+      for (let i = mergeArrayResponse.length-1; i > 0; i--) {
         if (
           graphData[i]["totaliser_current_value"] !== 0 &&
           graphData[i]["totaliser_current_value"] >=
@@ -533,8 +533,10 @@ export const generateSitedischargeData = async (req, res, next) => {
           );
         }
       }
+      //  delete graphData[0]
+    // let haha=  [...graphData]
       // console.log("lopp result", graphData);
-    
+      graphData.splice(0, 1);
 
     res.send(graphData);
   })
@@ -835,7 +837,7 @@ const generateDefaultPropertiesOfSitedischargeData = (data,endDate,startDate) =>
   let difference = endDate.getTime() - startDate.getTime();
     let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
   console.log(">>++", dates1);
-  for (let i = 0; i <= TotalDays; i++) {
+  for (let i = 0; i <TotalDays; i++) {
     let ansDate = new Date(
       moment(dates1.setDate(dates1.getDate() + 1))
         .tz("Asia/calcutta")
