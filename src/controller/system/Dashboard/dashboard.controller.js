@@ -10,6 +10,7 @@ import {
 import nodemailer from "nodemailer";
 //import * as DeviceSrv from "../../../services/system/device/device.service";
 import { logger, level } from "../../../config/logger/logger";
+const CsvParser = require("json2csv").Parser;
 import Devices from "../../../models/device.model";
 import deviceHistory from "../../../models/deviceHistory.model";
 import { CONSTANTS as PERIOD_DATA } from "../../../constants/periodData";
@@ -547,6 +548,284 @@ export const generateSitedischargeData = async (req, res, next) => {
   }
 };
 
+
+export const mailSitedischargeData = async (req, res, next) => {
+  logger.log(level.info, `✔ Controller mailSitedischargeData()`);
+  let graphData = [];
+  // let dates = new Date(
+  //   moment().tz("Asia/calcutta").format("YYYY/MM/DD hh:mm:ss")
+  // );
+  // let dateData = {
+  //   yy: dates.getFullYear(),
+  //   mm: dates.getMonth() + 1,
+  //   dd: dates.getDate(),
+  // };
+  // console.log("dateData", dates);
+  // console.log("DASHBOARD GRAPH DATE", dateData);
+  try {
+    let pipeline;
+      var dates2 = new Date(moment(req.body.endDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
+      // dates2.setDate(dates2.getDate() - 1);
+      var dates3 = new Date(moment(req.body.startDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
+      // dates3.setDate(dates3.getDate() - 8);
+      console.log(
+        "Search Time Period",
+        new Date(new Date(dates2).setHours(23, 59, 59),"<=======>",dates3)
+      );
+      pipeline = [
+        {
+          $addFields: {
+            date_timezone: {
+              $dateToParts: { date: "$date" },
+            },
+          },
+        },
+        {
+          $match: {
+            deviceId: mongoose.Types.ObjectId(req.query.deviceId),
+            date: {
+              $gte: new Date(new Date(dates3)),
+              $lte: new Date(new Date(dates2).setHours(23, 59, 59)),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: "$date_timezone.day",
+            totaliser: { $push: "$$ROOT" },
+          },
+        },
+        {
+          $project: {
+            date: { $first: "$totaliser.date" },
+            totaliser_current_value: {
+              $last: "$totaliser.totaliser_current_value",
+            },
+          },
+        },
+        { $sort: { date: -1 } },
+      ];
+      // graphData = await deviceHistory.aggregate(pipeline);
+      //graphData = JSON.parse(JSON.stringify(graphData));
+      deviceHistory.aggregate(pipeline).then(async(graphData)=>{
+      console.log("graph Data date ", graphData);
+      let defaultgraphData = generateDefaultPropertiesOfSitedischargeData(graphData,dates2,dates3);
+      // console.log(" Default graph Data date ", defaultgraphData);
+      let mergeArrayResponse = [...graphData, ...defaultgraphData];
+      graphData = sortResponsePeriodWise(mergeArrayResponse);
+      // console.log("merger array", graphData);
+      for (let i = 7; i > 0; i--) {
+        if (
+          graphData[i]["totaliser_current_value"] !== 0 &&
+          graphData[i]["totaliser_current_value"] >=
+            graphData[i - 1]["totaliser_current_value"]
+        ) {
+          graphData[i]["totaliser_current_value"] =
+            graphData[i]["totaliser_current_value"] -
+            graphData[i - 1]["totaliser_current_value"];
+          console.log("i, i-1", i, i - 1);
+          console.log(
+            "SUbstraction",
+            graphData[i]["totaliser_current_value"] -
+              graphData[i - 1]["totaliser_current_value"]
+          );
+        }
+      }
+      // console.log("lopp result", graphData);
+      let data = [];
+      for (const row of graphData) {
+        let historyDataObject = {
+          DATE: row.date,
+          TOTALIZER: row.totaliser_current_value,
+        };
+        data.push(historyDataObject);
+      }
+      //console.log("Final Array of object of history Data", data);
+      const csvFields = [
+        "DATE",
+        "TOTALIZER",
+      ];
+      const csvParser = new CsvParser({ csvFields });
+      const csvData = csvParser.parse(data);
+      // console.log("deviceId", req.query.deviceId);
+      let deviceData = await Devices.findOneDocument({
+        _id: mongoose.Types.ObjectId(req.query.deviceId),
+      });
+      // console.log("deviceData", deviceData);
+      const output = `
+      <h2>Hello</h2>
+      <h3>Requested Device History ${deviceData.name} details are below attached with.</h3>
+      <h4>Regards,<h4>
+     <h4>Bacancy Systems</h4>`;
+      let transporter = nodemailer.createTransport({
+        service: "gmail",
+        port: 25,
+        secure: true,
+        auth: {
+          user: "sensietech12@gmail.com",
+          pass: "xhyyfztrknrptrfi",
+        },
+      });
+      setTimeout(() => {
+        let mailOptions = {
+          from: '"sensietech12@gmail.com" <your@email.com>', // sender address
+          to: `${req.body.email}`, // list of receivers
+          subject: "Requested  Device History", // Subject line
+          text: "Hello world?", // plain text body
+          html: output, // html body
+          attachments: [
+            {
+              filename: "History.csv",
+              content: csvData,
+            },
+          ],
+        };
+  
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.log("error in sending", error);
+          } else {
+            // res.status(200).send("true");
+            console.log("no error");
+          }
+          // console.log("Message sent: %s", info.messageId);
+          // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        });
+        let dataObject = {
+          message: "Mail sent succesfully",
+        };
+        return handleResponse(res, dataObject);
+      }, 2000);
+
+    // res.send(graphData);
+  })
+  console.log("Optimization")
+  // res.send("Done")
+  }
+   catch (e) {
+    if (e && e.message) return next(new BadRequestError(e.message));
+    logger.log(level.error, `Error: ${JSON.stringify(e)}`);
+    return next(new InternalServerError());
+  }
+};
+
+
+export const downloadSitedischargeData = async (req, res, next) => {
+  logger.log(level.info, `✔ Controller downloadSitedischargeData()`);
+  let graphData = [];
+  // let dates = new Date(
+  //   moment().tz("Asia/calcutta").format("YYYY/MM/DD hh:mm:ss")
+  // );
+  // let dateData = {
+  //   yy: dates.getFullYear(),
+  //   mm: dates.getMonth() + 1,
+  //   dd: dates.getDate(),
+  // };
+  // console.log("dateData", dates);
+  // console.log("DASHBOARD GRAPH DATE", dateData);
+  try {
+    let pipeline;
+      var dates2 = new Date(moment(req.body.endDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
+      // dates2.setDate(dates2.getDate() - 1);
+      var dates3 = new Date(moment(req.body.startDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
+      // dates3.setDate(dates3.getDate() - 8);
+      console.log(
+        "Search Time Period",
+        new Date(new Date(dates2).setHours(23, 59, 59),"<=======>",dates3)
+      );
+      pipeline = [
+        {
+          $addFields: {
+            date_timezone: {
+              $dateToParts: { date: "$date" },
+            },
+          },
+        },
+        {
+          $match: {
+            deviceId: mongoose.Types.ObjectId(req.query.deviceId),
+            date: {
+              $gte: new Date(new Date(dates3)),
+              $lte: new Date(new Date(dates2).setHours(23, 59, 59)),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: "$date_timezone.day",
+            totaliser: { $push: "$$ROOT" },
+          },
+        },
+        {
+          $project: {
+            date: { $first: "$totaliser.date" },
+            totaliser_current_value: {
+              $last: "$totaliser.totaliser_current_value",
+            },
+          },
+        },
+        { $sort: { date: -1 } },
+      ];
+      // graphData = await deviceHistory.aggregate(pipeline);
+      //graphData = JSON.parse(JSON.stringify(graphData));
+      deviceHistory.aggregate(pipeline).then(async(graphData)=>{
+      console.log("graph Data date ", graphData);
+      let defaultgraphData = generateDefaultPropertiesOfSitedischargeData(graphData,dates2,dates3);
+      // console.log(" Default graph Data date ", defaultgraphData);
+      let mergeArrayResponse = [...graphData, ...defaultgraphData];
+      graphData = sortResponsePeriodWise(mergeArrayResponse);
+      // console.log("merger array", graphData);
+      for (let i = 7; i > 0; i--) {
+        if (
+          graphData[i]["totaliser_current_value"] !== 0 &&
+          graphData[i]["totaliser_current_value"] >=
+            graphData[i - 1]["totaliser_current_value"]
+        ) {
+          graphData[i]["totaliser_current_value"] =
+            graphData[i]["totaliser_current_value"] -
+            graphData[i - 1]["totaliser_current_value"];
+          console.log("i, i-1", i, i - 1);
+          console.log(
+            "SUbstraction",
+            graphData[i]["totaliser_current_value"] -
+              graphData[i - 1]["totaliser_current_value"]
+          );
+        }
+      }
+      // console.log("lopp result", graphData);
+      let data = [];
+      for (const row of graphData) {
+        let historyDataObject = {
+          DATE: row.date,
+          TOTALIZER: row.totaliser_current_value,
+        };
+        data.push(historyDataObject);
+      }
+      //console.log("Final Array of object of history Data", data);
+      const csvFields = [
+        "DATE",
+        "TOTALIZER",
+      ];
+      const csvParser = new CsvParser({ csvFields });
+      const csvData = csvParser.parse(data);
+      res.setHeader("Content-Type", "csv");
+      res.setHeader(
+        "Content-Disposition",
+        "attachment; filename=Devicehistory.csv"
+      );
+      res.status(200).end(csvData);
+
+    // res.send(graphData);
+  })
+  console.log("Optimization")
+  // res.send("Done")
+  }
+   catch (e) {
+    if (e && e.message) return next(new BadRequestError(e.message));
+    logger.log(level.error, `Error: ${JSON.stringify(e)}`);
+    return next(new InternalServerError());
+  }
+};
 const generateDefaultPropertiesOfSitedischargeData = (data,endDate,startDate) => {
   let dates1 = new Date(moment(startDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
   console.log("origin timezone Date", dates1);
