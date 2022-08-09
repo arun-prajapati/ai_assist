@@ -20,6 +20,6 @@ routes
   .post(DashboardCtrl.mailDeviceGraphData);
 routes.route(PATH.GENERATE_SITE_DISCHARGE_DATA).post(DashboardCtrl.generateSitedischargeData)
 routes.route(PATH.MAIL_SITE_DISCHARGE_DATA).post(DashboardCtrl.mailSitedischargeData);
-routes.route(PATH.DOWNLOAD_SITE_DISCHARGE_DATA).post(DashboardCtrl.downloadSitedischargeData)
+routes.route(PATH.DOWNLOAD_SITE_DISCHARGE_DATA).get(DashboardCtrl.downloadSitedischargeData)
 
 export default routes;

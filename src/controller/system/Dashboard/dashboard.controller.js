@@ -728,9 +728,9 @@ export const downloadSitedischargeData = async (req, res, next) => {
   // console.log("DASHBOARD GRAPH DATE", dateData);
   try {
     let pipeline;
-      var dates2 = new Date(moment(req.body.endDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
+      var dates2 = new Date(moment(req.query.endDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
       // dates2.setDate(dates2.getDate() - 1);
-      var dates3 = new Date(moment(req.body.startDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
+      var dates3 = new Date(moment(req.query.startDate).tz("Asia/calcutta").format("YYYY-MM-DD"));
       dates3.setDate(dates3.getDate() - 1);
       console.log(
         "Search Time Period",
