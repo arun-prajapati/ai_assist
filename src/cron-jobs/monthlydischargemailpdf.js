@@ -14,12 +14,13 @@ const MIN = 15; // this minute ago data should be update
 let flag=true;
 scheduleJob(JOB_TIME, async () => {
   try {
-    logger.log(level.info, `>> Mail Service Run  at ${moment().format()}`);
-    var cuurentDate = new Date(moment().tz("Asia/calcutta").format("YYYY-MM-DD"));
-    var lastDayOfMonth = new Date(cuurentDate.getFullYear(), cuurentDate.getMonth()+1, 0);
+    logger.log(level.info, `>> Monthly Mail Service Run  at ${moment().format()}`);
+    var cuurentDate = moment().tz("Asia/calcutta").format("YYYY-MM-DD");
+    var lastDayOfMonth = new Date(cuurentDate[0], cuurentDate[1], 0);
     console.log("last Day of month",lastDayOfMonth.getDate())
     console.log("Current Day of month",cuurentDate.getDate())
-    
+    console.log("last Day of month",typeof lastDayOfMonth.getDate())
+    console.log("Current Day of month",typeof cuurentDate.getDate())
     console.log("Result Please",lastDayOfMonth.getDate() === cuurentDate.getDate())
     if(lastDayOfMonth.getDate() === cuurentDate.getDate())
     {

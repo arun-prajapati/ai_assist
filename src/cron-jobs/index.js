@@ -1,3 +1,3 @@
 import "./deviceUpdate";
 import "./mailPdf";
-import "./monthlydischargemailpdf"
+import "./monthlydischargemailpdf";
