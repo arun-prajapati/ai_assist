@@ -1,5 +1,5 @@
 {
-  "name": "rms-backend",
+  "name": "wms-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,7 +12,7 @@
     "lint": "./node_modules/.bin/eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Morker Mehul ",
+  "author": "Panwala Prem",
   "license": "ISC",
   "dependencies": {
     "@babel/cli": "^7.15.4",
@@ -42,6 +42,7 @@
     "node-schedule": "^2.0.0",
     "node-schedule-tz": "^1.2.1-4",
     "nodemailer": "^6.6.5",
+    "twilio": "^3.83.4",
     "uniqid": "^5.4.0",
     "uuid": "^8.3.2",
     "winston": "^3.3.3"

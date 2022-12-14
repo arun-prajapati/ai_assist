@@ -24,7 +24,7 @@ const db = mongoose.connection;
 db.once(OPEN_EVENT, async () => {
   logger.log(level.info, `✔ Successfully connected to mongodb database`);
   
-  await defaultUserData();
+  // await defaultUserData();
 });
 db.on(ERROR_EVENT, () => {
   logger.log(level.error, `connection error while connection at ${URL}`);
