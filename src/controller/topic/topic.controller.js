@@ -55,6 +55,7 @@ import {
       let topicData = await Topics.findOneDocument({
         _id: req.params.topicId,
       });   
+      console.log("topicData",topicData)
       let dataObject = {
         message: "topic details fetched succesfully",
         data: topicData,

@@ -7,7 +7,7 @@ import * as TopicCtrl from "../../controller/topic/topic.controller";
 const routes = new Router();
 const PATH = {
   ROOT: "/",
-  SINGLE_TOPIC_OPERATION:"/topicopertion/:subjectId"
+  SINGLE_TOPIC_OPERATION:"/topicopertion/:topicId"
 };
 routes.route(PATH.ROOT).post(TopicCtrl.createTopic);
 routes.route(PATH.ROOT).get(TopicCtrl.getTopics);
