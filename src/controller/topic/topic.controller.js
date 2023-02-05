@@ -12,17 +12,18 @@ import {
   import path from "path";
   import { logger, level } from "../../config/logger/logger";
   import Subjects from "../../models/subject.model";
+  import Topics from "../../models/topic.model";
   import nodemailer from "nodemailer";
   import ejs from "ejs";
   import pdf from "html-pdf";
   const mongoose = require("mongoose");
   
-  export const createSubject = async (req, res, next) => {
-    logger.log(level.info, `✔ Controller createSubject()`);
+  export const createTopic = async (req, res, next) => {
+    logger.log(level.info, `✔ Controller createTopic()`);
     let body = req.body;
     try {
-      let subjectData = await Subjects.createData(body);
-      let dataObject = { message: "Subject created succesfully" };
+      let topicData = await Topics.createData(body);
+      let dataObject = { message: "Topic created succesfully" };
       return handleResponse(res, dataObject);
     } catch (e) {
       if (e && e.message) return next(new BadRequestError(e.message));
@@ -31,14 +32,14 @@ import {
     }
   };
   
-  export const getSubjects = async (req, res, next) => {
-    logger.log(level.info, `✔ Controller getSubjects()`);
+  export const getTopics = async (req, res, next) => {
+    logger.log(level.info, `✔ Controller getTopics()`);
     try {
-      let subjectData = await Subjects.findData({studentId:req.body.studentId});
+      let topicData = await Topics.findData({subjectId:req.body.subjectId});
       let dataObject = {
-        message: "subject data fetched succesfully",
-        count: subjectData.length,
-        data: subjectData,
+        message: "topicData data fetched succesfully",
+        count: topicData.length,
+        data: topicData,
       };
       return handleResponse(res, dataObject);
     } catch (e) {
@@ -48,15 +49,15 @@ import {
     }
   };
   
-  export const getSingleSubject = async (req, res, next) => {
-    logger.log(level.info, `✔ Controller getSingleSubject()`);
+  export const getSingleTopic = async (req, res, next) => {
+    logger.log(level.info, `✔ Controller getSingleTopic()`);
     try {
-      let subjectData = await Subjects.findOneDocument({
-        _id: req.params.subjectId,
+      let topicData = await Topics.findOneDocument({
+        _id: req.params.topicId,
       });   
       let dataObject = {
-        message: "subject details fetched succesfully",
-        data: subjectData,
+        message: "topic details fetched succesfully",
+        data: topicData,
       };
       return handleResponse(res, dataObject);
     } catch (e) {
@@ -66,11 +67,11 @@ import {
     }
   };
   
-  export const removeSingleSubject = async (req, res, next) => {
-    logger.log(level.info, `✔ Controller removeSingleSubject()`);
+  export const removeSingleTopic = async (req, res, next) => {
+    logger.log(level.info, `✔ Controller removeSingleTopic()`);
     try {
-      let subjectData = await Subjects.deleteData({ _id: req.params.subjectId });
-      let dataObject = { message: "subject details deleted succesfully" };
+      let topicData = await Topics.deleteData({ _id: req.params.topicId });
+      let dataObject = { message: "topic details deleted succesfully" };
       return handleResponse(res, dataObject);
     } catch (e) {
       if (e && e.message) return next(new BadRequestError(e.message));
@@ -79,22 +80,32 @@ import {
     }
   };
   
-  export const updateSubject = async (req, res, next) => {
-    logger.log(level.info, `>> Controller: updateSubject()`);
+  export const updateTopic = async (req, res, next) => {
+    logger.log(level.info, `>> Controller: updateTopic()`);
     try {
       let {
         name,
-        is_favourite
+        exploration_rate,
+        progress_score,
+        description,
+        is_favourite,
+        studentId,
+        subjectId
       } = req.body;
-      let updateSubjectObject = {
+      let updateTopicObject = {
         name,
-        is_favourite
+        exploration_rate,
+        progress_score,
+        description,
+        is_favourite,
+        studentId,
+        subjectId
       };
-      let updatesubjectData = await Subjects.updateData(
-        { _id: req.params.subjectId },
-        updateSubjectObject
+      let updatetopicData = await Topics.updateData(
+        { _id: req.params.topicId },
+        updateTopicObject
       );   
-      let dataObject = { message: "Subject Updated succesfully" };
+      let dataObject = { message: "Topic Updated succesfully" };
       return handleResponse(res, dataObject);
     } catch (e) {
       if (e && e.message) return next(new BadRequestError(e.message));

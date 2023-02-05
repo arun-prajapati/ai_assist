@@ -4,13 +4,15 @@ import SystemRoutes from "./system";
 import RoleRoutes from "./role";
 import UserRoutes from "./user";
 import SubjectRoutes from "./subject";
+import TopicRoutes from "./topic";
 const routes = new Router();
 const PATH = {
   ROOT: "/",
   SYSTEM: "/sys",
   USER: "/users",
   ROLES: "/roles",
-  SUBJECT:"/subject"
+  SUBJECT:"/subject",
+  TOPIC:"/topic"
 };
 
 routes.get("/healthCheck", (req, res) => {
@@ -24,5 +26,6 @@ routes.use(PATH.SYSTEM, SystemRoutes);
 routes.use(PATH.USER, UserRoutes);
 routes.use(PATH.ROLES, RoleRoutes);
 routes.use(PATH.SUBJECT, SubjectRoutes);
+routes.use(PATH.TOPIC, TopicRoutes);
 
 export default routes;
