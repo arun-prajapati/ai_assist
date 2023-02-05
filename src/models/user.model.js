@@ -7,7 +7,7 @@ const schema = {
   password: {
     type: String,
   },
-  mobile_no: Number,
+  mobile_no: String,
   gender: String,
   DOB: Date,
   provider:String
