@@ -10,7 +10,7 @@ const PATH = {
   SIGNUP: "/signup",
   VERIFY_OTP: "/verifyOTP",
   FETCH_USER_ROLE_WISE: "/fetchuserrolewise",
-  WEB_LOGIN: "/webLogin",
+  WEB_LOGIN: "/userLogin",
   UPDATE_USER: "/updateuser/:userId",
   OPERATION_USER: "/useroperation/:userId",
 };

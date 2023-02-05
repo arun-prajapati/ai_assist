@@ -3,12 +3,14 @@ import { handleResponse } from "../helpers/utility";
 import SystemRoutes from "./system";
 import RoleRoutes from "./role";
 import UserRoutes from "./user";
+import SubjectRoutes from "./subject";
 const routes = new Router();
 const PATH = {
   ROOT: "/",
   SYSTEM: "/sys",
   USER: "/users",
   ROLES: "/roles",
+  SUBJECT:"/subject"
 };
 
 routes.get("/healthCheck", (req, res) => {
@@ -21,5 +23,6 @@ routes.get("/healthCheck", (req, res) => {
 routes.use(PATH.SYSTEM, SystemRoutes);
 routes.use(PATH.USER, UserRoutes);
 routes.use(PATH.ROLES, RoleRoutes);
+routes.use(PATH.SUBJECT, SubjectRoutes);
 
 export default routes;

@@ -6,15 +6,16 @@ export const validate = (method) => {
   switch (method) {
     case USER_CONSTANTS.CREATE_USER: {
       error = [
-        body("Name", "Name should be valid")
+        body("first_name", "Invalid first_name")
+          .not()
+          .isEmpty(),
+          body("last_name", "Invalid last_name")
+          .not()
+          .isEmpty(),
+        body("email", "Invalid email")
           .not()
           .isEmpty()
-          .trim()
-          .isLength({ min: 2, max: 20 }),
-        body("userName", "Invalid userName")
-          .not()
-          .isEmpty()
-          // .isEmail()
+          .isEmail()
           .toLowerCase()
           .custom(verifyEmailId),
         body("password", "Password should not be empty").not().isEmpty(),
@@ -25,27 +26,13 @@ export const validate = (method) => {
           .isLength({ min: 10, max: 10 })
           .isNumeric(),
         body("Address", "Address should be valid").not().isEmpty(),
-        body("adharcard", "aadharcard should be valid")
-          .not()
-          .isEmpty()
-          .optional()
-          .trim()
-          .isLength({ min: 12, max: 12 })
-          .isNumeric(),
-        body("licenseno", "licenseno should be valid")
-          .not()
-          .isEmpty()
-          .trim()
-          .optional()
-          // .isLength({ min: 15, max: 15 })
-          .isAlphanumeric(),
         body("gender", "gender should be valid")
           .not()
           .isEmpty()
           .trim()
-          .isLength({ min: 4, max: 10 })
           .isAlpha(),
         body("DOB", "DOB should be valid").not().isEmpty().trim().isDate(),
+        body("provider", "provider should be valid").not().isEmpty().trim(),
       ];
       break;
     }
@@ -77,8 +64,8 @@ export const validate = (method) => {
 };
 
 export const verifyEmailId = async (value) => {
-  let emailExist = await Users.findOneDocument({ userName: value });
-  if (emailExist) throw new Error("This userName already exist");
+  let emailExist = await Users.findOneDocument({ email: value });
+  if (emailExist) throw new Error("This email already exist");
   return true;
 };
 

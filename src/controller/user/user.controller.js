@@ -25,17 +25,12 @@ import {
 const mongoose = require("mongoose");
 import { logger, level } from "../../config/logger/logger";
 
-export const register = async (req, res, next) => {
+export const  register = async (req, res, next) => {
   logger.log(level.info, `✔ Controller register()`);
   try {
     const hashPwd = await encrypt(req.body.password);
-    if (!req.body.roleId) {
-      let customerRoleData = await Roles.findOneDocument({ title: "Customer" });
-      req.body.roleId = customerRoleData._id;
-    }
     let userData = {
       ...req.body,
-      last_otp_time: new Date(),
       password: hashPwd,
     };
     console.log("userData", userData);
@@ -851,30 +846,19 @@ export const weblogin = async (req, res, next) => {
         },
       },
       {
-        $lookup: {
-          from: "roles",
-          localField: "roleId",
-          foreignField: "_id",
-          as: "demo",
-        },
-      },
-      {
-        $unwind: "$demo",
-      },
-      {
         $replaceRoot: {
           newRoot: {
             userId: {
               $concat: [{ $toString: "$_id" }],
             },
-            Name: {
-              $concat: ["$Name"],
+            first_name: {
+              $concat: ["$first_name"],
             },
-            licenseno: {
-              $concat: ["$licenseno"],
+            last_name: {
+              $concat: ["$last_name"],
             },
-            userName: {
-              $concat: ["$userName"],
+            email: {
+              $concat: ["$email"],
             },
             password: {
               $concat: ["$password"],
@@ -882,29 +866,14 @@ export const weblogin = async (req, res, next) => {
             mobile_no: {
               $toLong: ["$mobile_no"],
             },
-            Address: {
-              $concat: ["$Address"],
-            },
-            adharcard: {
-              $concat: ["$adharcard"],
-            },
             gender: {
               $concat: ["$gender"],
             },
             DOB: {
               $toDate: ["$DOB"],
             },
-            roleId: {
-              $concat: [{ $toString: "$roleId" }],
-            },
-            wardId: {
-              $concat: [{ $toString: "$wardId" }],
-            },
-            nagarparlikaId: {
-              $concat: [{ $toString: "$nagarparlikaId" }],
-            },
-            role: {
-              $concat: ["$demo.title"],
+            provider: {
+              $concat: ["$provider"],
             },
           },
         },
@@ -913,47 +882,10 @@ export const weblogin = async (req, res, next) => {
     console.log("userData", userData);
     const validateUserData = await decrypt(password, userData[0].password);
     if (validateUserData) {
-      console.log(userData[0].roleId);
-      // const tabData = await Rolespermission.aggregate([
-      //   {
-      //     $match: {
-      //       roleId: mongoose.Types.ObjectId(userData[0].roleId),
-      //     },
-      //   },
-      //   {
-      //     $lookup: {
-      //       from: "tabs",
-      //       localField: "tabId",
-      //       foreignField: "_id",
-      //       as: "tabInfomration",
-      //     },
-      //   },
-      //   {
-      //     $unwind: {
-      //       path: "$tabInfomration",
-      //       preserveNullAndEmptyArrays: true,
-      //     },
-      //   },
-      //   {
-      //     $project: {
-      //       _id: 1,
-      //       add: 1,
-      //       view: 1,
-      //       edit: 1,
-      //       delete: 1,
-      //       roleId: 1,
-      //       tabId: 1,
-      //       tabName: "$tabInfomration.tab_name",
-      //       icon: "$tabInfomration.icon",
-      //       link: "$tabInfomration.link",
-      //     },
-      //   },
-      // ]);
       let dataObject = {
         message: "User login successfully.",
         data: {
           userData,
-          // tabData,
         },
       };
       return handleResponse(res, dataObject);
