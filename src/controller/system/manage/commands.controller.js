@@ -15,7 +15,7 @@ import { mqttClient } from "../../../config/mqtt/mqtt";
 import { logger, level } from "../../../config/logger/logger";
 import deviceHistory from "../../../models/deviceHistory.model";
 import Devices from "../../../models/device.model";
-import Alerts from "../../../models/alert.model";
+// import Alerts from "../../../models/alert.model";
 import moment from "moment";
 const mongoose = require("mongoose");
 //const  multer=require('multer')

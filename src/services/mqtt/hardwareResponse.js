@@ -8,7 +8,7 @@ import deviceHistory from "../../models/deviceHistory.model";
 import AlertsHistory from "../../models/alerthistory.model";
 import * as DeviceSrv from "../../services/device/device.service";
 import { flowUnit } from "../../constants/flowUnit";
-import Alerts from "../../models/alert.model";
+// import Alerts from "../../models/alert.model";
 import nodemailer from "nodemailer";
 const mongoose = require("mongoose");
 import { Worker } from "bullmq";
