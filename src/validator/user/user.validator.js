@@ -23,7 +23,7 @@ export const validate = (method) => {
           .not()
           .isEmpty()
           .trim()
-          .isLength({ min: 12, max: 12 }),
+          .isLength({ min: 13, max: 13 }),
         body("gender", "gender should be valid")
           .not()
           .isEmpty()
