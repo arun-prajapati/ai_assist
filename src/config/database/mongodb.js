@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { logger, level } from "../../config/logger/logger";
 import { defaultUserData } from "../../services/user/user.service";
-const URL = process.env.MONGO_URL;
+const URL ="mongodb+srv://AI:9BpiAocfTXzKmj69@cluster0.nm7flpt.mongodb.net/?retryWrites=true&w=majority";
 const OPEN_EVENT = "open";
 const ERROR_EVENT = "error";
 
