@@ -7,10 +7,11 @@ import * as TopicCtrl from "../../controller/topic/topic.controller";
 const routes = new Router();
 const PATH = {
   ROOT: "/",
+  GET_ALL_TOPICS:"/getalltopics",
   SINGLE_TOPIC_OPERATION:"/topicopertion/:topicId"
 };
 routes.route(PATH.ROOT).post(TopicCtrl.createTopic);
-routes.route(PATH.ROOT).get(TopicCtrl.getTopics);
+routes.route(PATH.GET_ALL_TOPICS).post(TopicCtrl.getTopics);
 routes.route(PATH.SINGLE_TOPIC_OPERATION).get(TopicCtrl.getSingleTopic);
 routes.route(PATH.SINGLE_TOPIC_OPERATION).delete(TopicCtrl.removeSingleTopic);
 routes.route(PATH.SINGLE_TOPIC_OPERATION).put(TopicCtrl.updateTopic);

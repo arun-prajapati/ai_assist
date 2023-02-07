@@ -839,7 +839,7 @@ export const weblogin = async (req, res, next) => {
   try {
     logger.log(level.info, `✔ Controller weblogin()`);
     const { email, password } = req.body;
-    const userData = await Users.aggregate([
+    let data = await Users.aggregate([
       {
         $match: {
           email,
@@ -879,14 +879,14 @@ export const weblogin = async (req, res, next) => {
         },
       },
     ]);
-    console.log("userData", userData);
-    const validateUserData = await decrypt(password, userData[0].password);
+    console.log("userData", data[0]);
+    const validateUserData = await decrypt(password, data[0].password);
     if (validateUserData) {
+      data=data[0]
+    console.log("userData", data);
       let dataObject = {
         message: "User login successfully.",
-        data: {
-          userData,
-        },
+        data
       };
       return handleResponse(res, dataObject);
     }

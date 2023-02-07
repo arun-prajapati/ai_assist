@@ -5,6 +5,9 @@ import RoleRoutes from "./role";
 import UserRoutes from "./user";
 import SubjectRoutes from "./subject";
 import TopicRoutes from "./topic";
+import CardRoutes from "./card";
+import TestresultRoutes from "./testresult";
+import TestqaRoutes from "./testqa";
 const routes = new Router();
 const PATH = {
   ROOT: "/",
@@ -12,7 +15,10 @@ const PATH = {
   USER: "/users",
   ROLES: "/roles",
   SUBJECT:"/subject",
-  TOPIC:"/topic"
+  TOPIC:"/topic",
+  CARD:"/card",
+  TESTRESULT:"/testresult",
+  TESTQA:"/testqa"
 };
 
 routes.get("/healthCheck", (req, res) => {
@@ -27,5 +33,8 @@ routes.use(PATH.USER, UserRoutes);
 routes.use(PATH.ROLES, RoleRoutes);
 routes.use(PATH.SUBJECT, SubjectRoutes);
 routes.use(PATH.TOPIC, TopicRoutes);
+routes.use(PATH.CARD, CardRoutes);
+routes.use(PATH.TESTRESULT, TestresultRoutes);
+routes.use(PATH.TESTQA, TestqaRoutes);
 
 export default routes;
