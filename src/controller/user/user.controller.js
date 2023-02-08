@@ -879,17 +879,20 @@ export const weblogin = async (req, res, next) => {
         },
       },
     ]);
-    console.log("userData", data[0]);
-    const validateUserData = await decrypt(password, data[0].password);
-    if (validateUserData) {
-      data=data[0]
-    console.log("userData", data);
-      let dataObject = {
-        message: "User login successfully.",
-        data
-      };
-      return handleResponse(res, dataObject);
-    }
+    if(data.length>0)
+    {
+      console.log("userData", data[0]);
+      const validateUserData = await decrypt(password, data[0].password);
+      if (validateUserData) {
+        data=data[0]
+      console.log("userData", data);
+        let dataObject = {
+          message: "User login successfully.",
+          data
+        };
+        return handleResponse(res, dataObject);
+      }
+  }
     return next(new UnauthorizationError());
   } catch (e) {
     if (e && e.message) return next(new BadRequestError(e.message));
