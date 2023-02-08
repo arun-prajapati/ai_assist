@@ -7,10 +7,11 @@ import * as SubjectCtrl from "../../controller/subject/subject.controller";
 const routes = new Router();
 const PATH = {
   ROOT: "/",
+  GET_ALL_SUBJECT:"/getallsubject",
   SINGLE_SUBJECT_OPERATION:"/subjectopertion/:subjectId"
 };
 routes.route(PATH.ROOT).post(SubjectCtrl.createSubject);
-routes.route(PATH.ROOT).get(SubjectCtrl.getSubjects);
+routes.route(PATH.GET_ALL_SUBJECT).post(SubjectCtrl.getSubjects);
 routes.route(PATH.SINGLE_SUBJECT_OPERATION).get(SubjectCtrl.getSingleSubject);
 routes.route(PATH.SINGLE_SUBJECT_OPERATION).delete(SubjectCtrl.removeSingleSubject);
 routes.route(PATH.SINGLE_SUBJECT_OPERATION).put(SubjectCtrl.updateSubject);
