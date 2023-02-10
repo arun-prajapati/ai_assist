@@ -7,10 +7,10 @@ import OTPS from "../../models/otp.model";
 //   "AC3456b4c0c25aa698404ac6e6305d90f0",
 //   "d207acd630da1d97d14561c9846ad729"
 // );
-const client = require("twilio")(
-  "ACcb836729333f607e0f276c5aaca57011",
-  "5cc6ff3b5dc1dc08af5c9f98b3ef0375" 
-);
+// const client = require("twilio")(
+//   "ACcb836729333f607e0f276c5aaca57011",
+//   "5cc6ff3b5dc1dc08af5c9f98b3ef0375" 
+// );
 const { encode, decode } = require("../../middleware/crypt");
 // const crypto = require("crypto");
 import nodemailer from "nodemailer";

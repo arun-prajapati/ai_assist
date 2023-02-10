@@ -8,6 +8,8 @@ import TopicRoutes from "./topic";
 import CardRoutes from "./card";
 import TestresultRoutes from "./testresult";
 import TestqaRoutes from "./testqa";
+import StudyRoutes from "./study";
+import StudyqaRoutes from "./studyqa";
 const routes = new Router();
 const PATH = {
   ROOT: "/",
@@ -18,7 +20,9 @@ const PATH = {
   TOPIC:"/topic",
   CARD:"/card",
   TESTRESULT:"/testresult",
-  TESTQA:"/testqa"
+  TESTQA:"/testqa",
+  STUDY:"/study",
+  STUDYQA:"/studyqa",
 };
 
 routes.get("/healthCheck", (req, res) => {
@@ -36,5 +40,7 @@ routes.use(PATH.TOPIC, TopicRoutes);
 routes.use(PATH.CARD, CardRoutes);
 routes.use(PATH.TESTRESULT, TestresultRoutes);
 routes.use(PATH.TESTQA, TestqaRoutes);
+routes.use(PATH.STUDY, StudyRoutes);
+routes.use(PATH.STUDYQA, StudyqaRoutes);
 
 export default routes;
