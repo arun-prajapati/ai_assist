@@ -35,7 +35,32 @@ import {
   export const getTopics = async (req, res, next) => {
     logger.log(level.info, `✔ Controller getTopics()`);
     try {
-      let topicData = await Topics.findData({subjectId:req.body.subjectId});
+      let topicData = await Topics.aggregate([
+        {
+          '$match': {
+            'subjectId':  mongoose.Types.ObjectId(req.body.subjectId)
+          }
+        }, {
+          '$lookup': {
+            'from': 'cards', 
+            'localField': '_id', 
+            'foreignField': 'topicId', 
+            'as': 'cardData'
+          }
+        }, {
+          '$project': {
+            '_id': 1, 
+            'is_favourite': 1, 
+            'name': 1, 
+            'studentId': 1, 
+            'createdAt': 1, 
+            'updatedAt': 1, 
+            'cardLength': {
+              '$size': '$cardData'
+            }
+          }
+        }
+      ]);
       let dataObject = {
         message: "topicData data fetched succesfully",
         count: topicData.length,
