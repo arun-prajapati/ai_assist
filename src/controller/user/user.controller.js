@@ -36,7 +36,7 @@ export const  register = async (req, res, next) => {
     console.log("userData", userData);
     let ans = await Users.createData(userData);
     console.log("ans", ans);
-    let dataObject = { message: "User created succesfully" };
+    let dataObject = { message: "User created succesfully" ,data:ans};
     return handleResponse(res, dataObject, 201);
   } catch (e) {
     if (e && e.message) return next(new BadRequestError(e.message));
