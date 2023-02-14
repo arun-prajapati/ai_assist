@@ -53,6 +53,10 @@ import {
             'is_favourite': 1, 
             'name': 1, 
             'studentId': 1, 
+            'subjectId':1,
+            'exploration_rate':1,
+            'progress_score':1,
+            'description':1,
             'createdAt': 1, 
             'updatedAt': 1, 
             'cardLength': {
