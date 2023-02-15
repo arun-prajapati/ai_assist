@@ -33,7 +33,7 @@ import {
           'size': parseInt(req.body.no_of_question)
         }
       }])
-      let dataObject = { message: "test result created succesfully",data:testResultData };
+      let dataObject = { message: "test result created succesfully",data:{testResultData,cardData} };
       return handleResponse(res, dataObject);
     } catch (e) {
       if (e && e.message) return next(new BadRequestError(e.message));
