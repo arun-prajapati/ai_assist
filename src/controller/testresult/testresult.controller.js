@@ -13,6 +13,7 @@ import {
   import { logger, level } from "../../config/logger/logger";
   import TestResults from "../../models/testresult.model";
   import Topics from "../../models/topic.model";
+  import Cards from "../../models/card.model";
   import nodemailer from "nodemailer";
   import ejs from "ejs";
   import pdf from "html-pdf";
@@ -23,6 +24,15 @@ import {
     let body = req.body;
     try {
       let testResultData = await TestResults.createData(body);
+      let cardData=await Cards.aggregate([{
+        '$match': {
+          'topicId': mongoose.Types.ObjectId(req.body.topicId)
+        }
+      }, {
+        '$sample': {
+          'size': req.body.no_of_question
+        }
+      }])
       let dataObject = { message: "test result created succesfully",data:testResultData };
       return handleResponse(res, dataObject);
     } catch (e) {
