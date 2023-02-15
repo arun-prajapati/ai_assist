@@ -33,7 +33,7 @@ import {
           'size': parseInt(req.body.no_of_question)
         }
       }])
-      testResultData["cardData"]=cardData
+      testResultData["cardDatas"]=cardData
       let dataObject = { message: "test result created succesfully",data:{testResultData} };
       return handleResponse(res, dataObject);
     } catch (e) {
