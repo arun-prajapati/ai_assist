@@ -34,7 +34,7 @@ import {
         }
       }])
       testResultData["cardData"]=cardData
-      let dataObject = { message: "test result created succesfully",data:{testResultData,cardData} };
+      let dataObject = { message: "test result created succesfully",data:{testResultData} };
       return handleResponse(res, dataObject);
     } catch (e) {
       if (e && e.message) return next(new BadRequestError(e.message));
