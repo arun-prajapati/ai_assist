@@ -30,7 +30,7 @@ import {
         }
       }, {
         '$sample': {
-          'size': req.body.no_of_question
+          'size': parseInt(req.body.no_of_question)
         }
       }])
       let dataObject = { message: "test result created succesfully",data:testResultData };
