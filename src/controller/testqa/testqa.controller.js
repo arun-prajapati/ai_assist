@@ -19,7 +19,7 @@ import {
   const mongoose = require("mongoose");
   
   export const createTestresultqa = async (req, res, next) => {
-    logger.log(level.info, `✔ Controller createTestresultqa()`);
+    logger.log(level.info, `✔ Controllers createTestresultqa()`);
     let body = req.body;
     try {
       let testResultqaData = await Testqa.createData(body);
