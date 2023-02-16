@@ -15,6 +15,7 @@ const schema = {
     question:String,
     answer:String,
     usersanswer:String,
+    system_generated:String,
     is_default:Boolean
 };
 
