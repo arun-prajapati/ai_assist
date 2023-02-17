@@ -31,7 +31,7 @@ export const  register = async (req, res, next) => {
     const hashPwd = await encrypt(req.body.password);
     let userData = {
       ...req.body,
-      password: hashPwd,
+      password: req.body.password,
     };
     console.log("userData", userData);
     let ans = await Users.createData(userData);
