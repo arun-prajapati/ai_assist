@@ -9,6 +9,7 @@ const PATH = {
   LOGIN: "/login",
   SIGNUP: "/signup",
   VERIFY_OTP: "/verifyOTP",
+  VERIFY_EMAIL:"/verifyemail",
   FETCH_USER_ROLE_WISE: "/fetchuserrolewise",
   WEB_LOGIN: "/userLogin",
   UPDATE_USER: "/updateuser/:userId",
@@ -44,10 +45,10 @@ routes.route(PATH.LOGIN).post(
   usersCtrl.login);
 routes.route(PATH.VERIFY_OTP).post(usersCtrl.verifyOTP);
 routes.route(PATH.UPDATE_USER).patch(
-  [
-    UserValidate(USER_CONSTANTS.UPDATE_SINGLE_USER),
-    ErrorMiddleware.ExpressValidatorError,
-  ], 
+  // [
+  //   UserValidate(USER_CONSTANTS.UPDATE_SINGLE_USER),
+  //   ErrorMiddleware.ExpressValidatorError,
+  // ], 
   usersCtrl.updateSingleUser);
 routes
   .route(PATH.OPERATION_USER)
@@ -73,4 +74,5 @@ routes
 //     usersCtrl.updateSingleUser
 //   );
 routes.route(PATH.WEB_LOGIN).post(usersCtrl.weblogin);
+routes.route(PATH.VERIFY_EMAIL).post(usersCtrl.verifyEmailId);
 export default routes;

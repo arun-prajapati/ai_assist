@@ -674,41 +674,24 @@ export const updateSingleUser = async (req, res, next) => {
     let {
       first_Name,
       last_Name,
-      licenseno,
       email,
       password,
       mobile_no,
-      Address,
-      GSTNO,
-      roleId,
-      adharcard,
       gender,
-      DOB,
+      provider,
     } = req.body;
-    let updateDeviceObject = {
+    let updateUserObject = {
       first_Name,
       last_Name,
       email,
-      GSTNO,
-      licenseno,
-      // password,
+      password,
       mobile_no,
-      Address,
-      roleId,
-      adharcard,
       gender,
-      DOB,
+      provider,
     };
-    if (password) {
-      password = await encrypt(password);
-      updateDeviceObject = {
-        ...updateDeviceObject,
-        password,
-      };
-    }
     let userData = await Users.updateData(
       { _id: mongoose.Types.ObjectId(req.params.userId) },
-      updateDeviceObject
+      updateUserObject
     );
     let dataObject = {
       message: "user details updated successfully.",
@@ -994,4 +977,24 @@ export const getAllUserRoleWise = async (req, res, next) => {
     logger.log(level.error, `Error: ${JSON.stringify(e)}`);
     return next(new InternalServerError());
   }
+};
+export const verifyEmailId = async (req, res, next) => {
+  try{
+  let emailExist = await Users.findOneDocument({ email: req.body.email });
+  if (emailExist) throw new Error("This email already exist");
+  if(!emailExist)
+  {
+    let dataObject = {
+      message: "email not exists.",
+      // data: userData,
+      // count: userData.length,
+    };
+    return handleResponse(res, dataObject);
+  }
+  }catch (e) {
+    if (e && e.message) return next(new BadRequestError(e.message));
+    logger.log(level.error, `Error: ${JSON.stringify(e)}`);
+    return next(new InternalServerError());
+  }
+  
 };
