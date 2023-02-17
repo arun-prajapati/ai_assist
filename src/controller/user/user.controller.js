@@ -843,6 +843,7 @@ export const weblogin = async (req, res, next) => {
       {
         $match: {
           email,
+          password
         },
       },
       {
@@ -882,8 +883,8 @@ export const weblogin = async (req, res, next) => {
     if(data.length>0)
     {
       console.log("userData", data[0]);
-      const validateUserData = await decrypt(password, data[0].password);
-      if (validateUserData) {
+      // const validateUserData = await decrypt(password, data[0].password);
+      // if (validateUserData) {
         data=data[0]
       console.log("userData", data);
         let dataObject = {
@@ -891,7 +892,7 @@ export const weblogin = async (req, res, next) => {
           data
         };
         return handleResponse(res, dataObject);
-      }
+      // }
   }
     return next(new UnauthorizationError());
   } catch (e) {
