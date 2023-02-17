@@ -692,7 +692,7 @@ export const updateSingleUser = async (req, res, next) => {
       provider,
       DOB
     };
-    console.log("updateUserObject",updateUserObject)
+    console.log("updatesUserObject",updateUserObject)
     let userData = await Users.updateData(
       { _id: mongoose.Types.ObjectId(req.params.userId) },
       updateUserObject
