@@ -671,24 +671,28 @@ export const getSingleUser = async (req, res, next) => {
 export const updateSingleUser = async (req, res, next) => {
   try {
     logger.log(level.info, `✔ Controller updateSingleUser()`);
+    console.log("req.body",req.body)
     let {
-      first_Name,
-      last_Name,
+      first_name,
+      last_name,
       email,
       password,
       mobile_no,
       gender,
       provider,
+      DOB
     } = req.body;
     let updateUserObject = {
-      first_Name,
-      last_Name,
+      first_name,
+      last_name,
       email,
       password,
       mobile_no,
       gender,
       provider,
+      DOB
     };
+    console.log("updateUserObject",updateUserObject)
     let userData = await Users.updateData(
       { _id: mongoose.Types.ObjectId(req.params.userId) },
       updateUserObject
