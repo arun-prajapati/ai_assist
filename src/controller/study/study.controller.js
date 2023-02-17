@@ -94,13 +94,21 @@ import {
     console.log("demo",demo)
     let finalanswer=[]
     finalanswer.push({studyresultData})
-    finalanswer.push({demo})
-      let dataObject = {
+    finalanswer.push({...demo})
+      // let dataObject = {
+      //   message: "studyresult data fetched succesfully",
+      //   count: studyresultData.length,
+      //   data: finalanswer,
+      // };
+      res.status(200).json({
+        error: false,
+        statusCode:200,
         message: "studyresult data fetched succesfully",
         count: studyresultData.length,
-        data: finalanswer,
-      };
-      return handleResponse(res, dataObject);
+        data:finalanswer,
+        dailyTimeForLastSevenDays:demo
+      });
+      // return handleResponse(res, dataObject);
     } catch (e) {
       if (e && e.message) return next(new BadRequestError(e.message));
       logger.log(level.error, `Error: ${JSON.stringify(e)}`);
