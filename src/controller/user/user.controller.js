@@ -1,6 +1,6 @@
 import Users from "../../models/user.model";
 import Roles from "../../models/role.model";
-import OTPS from "../../models/otp.model";
+// import OTPS from "../../models/otp.model";
 // import Vehicles from "../../models/vechicle.model";
 // import Rolespermission from "../../models/roles_permission.model";
 // const client = require("twilio")(
