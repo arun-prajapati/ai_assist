@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { handleResponse } from "../helpers/utility";
-import SystemRoutes from "./system";
+// import SystemRoutes from "./system";
 import RoleRoutes from "./role";
 import UserRoutes from "./user";
 import SubjectRoutes from "./subject";
@@ -32,7 +32,7 @@ routes.get("/healthCheck", (req, res) => {
   return handleResponse(res, dataObject);
 });
 
-routes.use(PATH.SYSTEM, SystemRoutes);
+// routes.use(PATH.SYSTEM, SystemRoutes);
 routes.use(PATH.USER, UserRoutes);
 routes.use(PATH.ROLES, RoleRoutes);
 routes.use(PATH.SUBJECT, SubjectRoutes);
