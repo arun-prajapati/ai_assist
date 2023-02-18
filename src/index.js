@@ -1,8 +1,5 @@
 import app from "./app";
-// const app=require("./app")
 import "./config/database/mongodb";
-// require("./config/database/mongodb")
-// import "./mqtt/pubSub";
 // import "./cron-jobs";
 
 import { logger, level } from "./config/logger/logger";
