@@ -87,11 +87,21 @@ import {
             '$sum': {
               '$toDouble': '$time'
             }
+          }, 
+          'dates': {
+            '$first': '$createdAt'
           }
         }
-      } 
+      }
     ])
     console.log("demo",demo)
+    for(let i=0;i<demo.length;i++)
+    {
+      var date = new Date(demo[i]["dates"]);
+      demo[i]["dates"]=demo[i]["dates"].toLocaleDateString().split("T")[0]
+      demo[i]["day"]=date.toLocaleDateString("en-US", { weekday: 'long' })
+    }
+    console.log('demo',demo)
     let finalanswer=[]
     finalanswer.push({studyresultData})
     finalanswer.push({...demo})
