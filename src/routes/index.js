@@ -27,7 +27,7 @@ const PATH = {
 
 routes.get("/healthCheck", (req, res) => {
   let dataObject = {
-    message: "Server is running fine",
+    message: "Servers is running fine",
   };
   return handleResponse(res, dataObject);
 });
