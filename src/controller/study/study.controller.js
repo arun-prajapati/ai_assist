@@ -2,7 +2,7 @@ import {
     BadRequestError,
     InternalServerError,
   } from "../../helpers/errors/custom-error";
-  import moment from "moment";
+  import moment from "moment-timezone";
   import {
     //createResponse,
     handleResponse,
