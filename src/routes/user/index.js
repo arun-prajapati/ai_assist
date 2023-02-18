@@ -37,13 +37,13 @@ routes
     usersCtrl.register
   );
 
-routes.route(PATH.LOGIN).post(
-  [
-    UserValidate(USER_CONSTANTS.LOGIN_USER),
-    ErrorMiddleware.ExpressValidatorError,
-  ],
-  usersCtrl.login);
-routes.route(PATH.VERIFY_OTP).post(usersCtrl.verifyOTP);
+// routes.route(PATH.LOGIN).post(
+//   [
+//     UserValidate(USER_CONSTANTS.LOGIN_USER),
+//     ErrorMiddleware.ExpressValidatorError,
+//   ],
+//   usersCtrl.login);
+// routes.route(PATH.VERIFY_OTP).post(usersCtrl.verifyOTP);
 routes.route(PATH.UPDATE_USER).patch(
   // [
   //   UserValidate(USER_CONSTANTS.UPDATE_SINGLE_USER),
