@@ -825,7 +825,7 @@ export const updateSingleUser = async (req, res, next) => {
 
 export const weblogin = async (req, res, next) => {
   try {
-    logger.log(level.info, `✔ Controllerr weblogin()`);
+    logger.log(level.info, `✔ Controllerrr weblogin()`);
     const { email, password } = req.body;
     let data = await Users.aggregate([
       {
